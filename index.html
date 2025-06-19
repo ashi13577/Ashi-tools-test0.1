@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-            <style></style>
-        </head>
-        <body data-new-gr-c-s-check-loaded="14.1240.0" data-gr-ext-installed="">
-            
-
+    <style></style>
+</head>
+<body data-new-gr-c-s-check-loaded="14.1240.0" data-gr-ext-installed="">
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@400;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -853,6 +851,23 @@
         .section-hidden {
             display: none !important;
         }
+
+        /* Reset button styling */
+        .reset-stats-btn {
+            background: var(--card-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .reset-stats-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
         
         /* Enhanced Animations */
         @keyframes fadeIn {
@@ -951,7 +966,6 @@
         }
     </style>
 
-
     <!-- Loading Screen -->
     <div class="loading hide" id="loading">
         <div class="spinner"></div>
@@ -960,7 +974,7 @@
     <header>
         <h1>Ashi Tools</h1>
         <p>Empowering Tomorrow's Management Leaders</p>
-        <p class="header-sub"><span id="total-tools-count">51</span>+ specialized tools for academic excellence and business strategy</p>
+        <p class="header-sub"><span id="total-tools-count">53</span>+ specialized tools for academic excellence and business strategy</p>
         
         <!-- Enhanced Quote Rotator -->
         <div id="quote-rotator">
@@ -972,7 +986,7 @@
         <div class="hero-content">
             <div class="hero-stats">
                 <div class="stat">
-                    <span class="stat-number" data-target="51" id="tools-counter">51+</span>
+                    <span class="stat-number" data-target="53" id="tools-counter">53+</span>
                     <span class="stat-label">Professional Tools</span>
                 </div>
                 
@@ -985,7 +999,7 @@
             <!-- OPTIMIZED: Compact CTA section -->
             <div class="cta-section">
                 <div class="cta-container">
-                    <a href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank" class="cta-button" rel="noopener">
+                    <a href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="cta-button" rel="noopener">
                         <i class="fab fa-instagram social-icon"></i>
                         DM me on Instagram
                     </a>
@@ -1009,34 +1023,10 @@
 
     <nav class="category-nav" role="navigation" aria-label="Category navigation">
         <div class="category-tabs" id="category-tabs-container">
-                <button class="category-tab active" data-category="all">
-                    All Tools
-                </button>
-            
-                        <button class="category-tab" data-category="marketing">
-                            Marketing &amp; Strategy
-                        </button>
-                    
-                        <button class="category-tab" data-category="operations">
-                            Operations &amp; Analytics
-                        </button>
-                    
-                        <button class="category-tab" data-category="finance">
-                            Finance &amp; Valuation
-                        </button>
-                    
-                        <button class="category-tab" data-category="business">
-                            Business Frameworks
-                        </button>
-                    
-                        <button class="category-tab" data-category="academic">
-                            Academic &amp; Professional Tools
-                        </button>
-                    
-                        <button class="category-tab" data-category="productivity">
-                            Productivity &amp; Other Tools
-                        </button>
-                    </div>
+            <button class="category-tab active" data-category="all">
+                All Tools
+            </button>
+        </div>
     </nav>
 
     <!-- Search Results Container -->
@@ -1055,70 +1045,14 @@
         <h2><i class="fas fa-star"></i> Most Used Tools</h2>
         <div class="most-used">
             <div class="tool-container" id="popular-tools-container">
-                <a href="7ps of marketing" target="_blank" class="tool-card" rel="noopener" data-tool-name="7Ps of Marketing">
-                    <div class="popular-badge">🔥 Most Popular</div>
-                    <div class="card-icon"><i class="fas fa-shopping-bag"></i></div>
-                    <h3>7Ps of Marketing</h3>
-                </a>
-            
-                <a href="SMART Goal Planner0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="SMART Goal Planner">
-                    <div class="popular-badge">🔥 Most Popular</div>
-                    <div class="card-icon"><i class="fas fa-bullseye"></i></div>
-                    <h3>SMART Goal Planner</h3>
-                </a>
-            
-                <a href="Financial Ratios Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Financial Ratios Calculator">
-                    <div class="popular-badge">🔥 Most Popular</div>
-                    <div class="card-icon"><i class="fas fa-calculator"></i></div>
-                    <h3>Financial Ratios Calculator</h3>
-                </a>
-            
-                <a href="business model canvas" target="_blank" class="tool-card" rel="noopener" data-tool-name="Business Model Canvas">
-                    <div class="popular-badge">🔥 Most Popular</div>
-                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
-                    <h3>Business Model Canvas</h3>
-                </a>
-            
-                <a href="SWOT Analysis Generator( new )" target="_blank" class="tool-card" rel="noopener" data-tool-name="SWOT Analysis">
-                    <div class="popular-badge">🔥 Most Popular</div>
-                    <div class="card-icon"><i class="fas fa-th-list"></i></div>
-                    <h3>SWOT Analysis</h3>
-                </a>
+                <!-- Popular tools will be auto-generated -->
             </div>
         </div>
 
         <h2><i class="fas fa-plus-circle"></i> Recently Added Tools</h2>
         <div class="recently-added">
             <div class="tool-container" id="new-tools-container">
-                <a href="prepectual map creator NEED REPAIRMENT" target="_blank" class="tool-card" rel="noopener" data-tool-name="Perceptual Map Creator">
-                    <div class="new-badge">NEW</div>
-                    <div class="card-icon"><i class="fas fa-map"></i></div>
-                    <h3>Perceptual Map Creator</h3>
-                </a>
-            
-                <a href="Product Life Cycle (PLC) Visual Tool" target="_blank" class="tool-card" rel="noopener" data-tool-name="Product Life Cycle (PLC) Visual Tool">
-                    <div class="new-badge">NEW</div>
-                    <div class="card-icon"><i class="fas fa-life-ring"></i></div>
-                    <h3>Product Life Cycle (PLC) Visual Tool</h3>
-                </a>
-            
-                <a href="Advanced Transportation Cost Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Advanced Transportation Cost Calculator">
-                    <div class="new-badge">NEW</div>
-                    <div class="card-icon"><i class="fas fa-truck"></i></div>
-                    <h3>Advanced Transportation Cost Calculator</h3>
-                </a>
-            
-                <a href="Time Value of Money Calculator0.3" target="_blank" class="tool-card" rel="noopener" data-tool-name="Time Value of Money Calculator 0.3">
-                    <div class="new-badge">UPDATED</div>
-                    <div class="card-icon"><i class="fas fa-clock"></i></div>
-                    <h3>Time Value of Money Calculator 0.3</h3>
-                </a>
-            
-                <a href="Weekly Internship Report0.3" target="_blank" class="tool-card" rel="noopener" data-tool-name="Weekly Internship Report 0.3">
-                    <div class="new-badge">UPDATED</div>
-                    <div class="card-icon"><i class="fas fa-calendar-week"></i></div>
-                    <h3>Weekly Internship Report 0.3</h3>
-                </a>
+                <!-- New tools will be auto-generated -->
             </div>
         </div>
 
@@ -1126,26 +1060,31 @@
         <div class="analytics-section">
             <div class="analytics-grid">
                 <div class="analytics-card">
-                    <h3><i class="fas fa-user"></i> Your Usage Stats</h3>
+                    <h3><i class="fas fa-user"></i> Your Personal Usage Stats</h3>
                     <div class="user-stat-item">
                         <div class="user-stat-label">Most Used Tool</div>
-                        <div class="user-stat-value" id="most-used-tool">Business Model Canvas (5x)</div>
+                        <div class="user-stat-value" id="most-used-tool">No tools used yet</div>
                     </div>
                     <div class="user-stat-item">
                         <div class="user-stat-label">Recently Used Tool</div>
-                        <div class="user-stat-value" id="recently-used-tool">Business Model Canvas (5m ago)</div>
+                        <div class="user-stat-value" id="recently-used-tool">No tools used yet</div>
                     </div>
                     <div class="user-stat-item">
                         <div class="user-stat-label">Time Spent (This Device)</div>
-                        <div class="user-stat-value" id="time-spent-user">30m 0s</div>
+                        <div class="user-stat-value" id="time-spent-user">0s</div>
                     </div>
                     <div class="user-stat-item">
                         <div class="user-stat-label">Total Tool Clicks</div>
-                        <div class="user-stat-value" id="total-clicks-user">14</div>
+                        <div class="user-stat-value" id="total-clicks-user">0</div>
                     </div>
                     <div class="user-stat-item">
                         <div class="user-stat-label">Active Hours Today</div>
-                        <div class="user-stat-value" id="active-hours">15m 0s</div>
+                        <div class="user-stat-value" id="active-hours">0s</div>
+                    </div>
+                    <div class="user-stat-item">
+                        <button onclick="resetUserStats()" class="reset-stats-btn">
+                            Reset My Stats
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1154,294 +1093,13 @@
 
     <!-- Dynamic sections will be auto-generated -->
     <div id="dynamic-sections-container">
-                        <section class="category-section" id="marketing" data-category-name="Marketing &amp; Strategy">
-                            <h2><i class="fas fa-chart-line"></i> Marketing &amp; Strategy <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(12 tools)</span></h2>
-                            <div class="tool-container">
-                                
-                                    <a href="7ps of marketing" target="_blank" class="tool-card" rel="noopener" data-tool-name="7Ps of Marketing">
-                                        <div class="card-icon"><i class="fas fa-shopping-bag"></i></div>
-                                        <h3>7Ps of Marketing</h3>
-                                    </a>
-                                
-                                    <a href="Brand Positioning Map Tool" target="_blank" class="tool-card" rel="noopener" data-tool-name="Brand Positioning Map Tool">
-                                        <div class="card-icon"><i class="fas fa-crosshairs"></i></div>
-                                        <h3>Brand Positioning Map Tool</h3>
-                                    </a>
-                                
-                                    <a href="Interactive GTM Strategy Planner0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Go-to-Market Strategy">
-                                        <div class="card-icon"><i class="fas fa-rocket"></i></div>
-                                        <h3>Go-to-Market Strategy</h3>
-                                    </a>
-                                
-                                    <a href="Competitor Analysis( new)" target="_blank" class="tool-card" rel="noopener" data-tool-name="Competitor Analysis">
-                                        <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
-                                        <h3>Competitor Analysis</h3>
-                                    </a>
-                                
-                                    <a href="customer profile canvas" target="_blank" class="tool-card" rel="noopener" data-tool-name="Customer Profile Canvas">
-                                        <div class="card-icon"><i class="fas fa-id-card"></i></div>
-                                        <h3>Customer Profile Canvas</h3>
-                                    </a>
-                                
-                                    <a href="user persona builder" target="_blank" class="tool-card" rel="noopener" data-tool-name="User Persona Builder">
-                                        <div class="card-icon"><i class="fas fa-user-friends"></i></div>
-                                        <h3>User Persona Builder</h3>
-                                    </a>
-                                
-                                    <a href="prepectual map creator NEED REPAIRMENT" target="_blank" class="tool-card" rel="noopener" data-tool-name="Perceptual Map Creator">
-                                        <div class="card-icon"><i class="fas fa-map"></i></div>
-                                        <h3>Perceptual Map Creator</h3>
-                                    </a>
-                                
-                                    <a href="MVP Strategy Planner0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="MVP Strategy Planner">
-                                        <div class="card-icon"><i class="fas fa-cube"></i></div>
-                                        <h3>MVP Strategy Planner</h3>
-                                    </a>
-                                
-                                    <a href="NABC Framework Template0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="NABC Framework Template">
-                                        <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
-                                        <h3>NABC Framework Template</h3>
-                                    </a>
-                                
-                                    <a href="Elevator Pitch Builder" target="_blank" class="tool-card" rel="noopener" data-tool-name="Elevator Pitch Builder">
-                                        <div class="card-icon"><i class="fas fa-elevator"></i></div>
-                                        <h3>Elevator Pitch Builder</h3>
-                                    </a>
-                                
-                                    <a href="Product Life Cycle (PLC) Visual Tool" target="_blank" class="tool-card" rel="noopener" data-tool-name="Product Life Cycle (PLC) Visual Tool">
-                                        <div class="card-icon"><i class="fas fa-life-ring"></i></div>
-                                        <h3>Product Life Cycle (PLC) Visual Tool</h3>
-                                    </a>
-                                
-                            </div>
-                        </section>
-                    
-                        <section class="category-section" id="operations" data-category-name="Operations &amp; Analytics">
-                            <h2><i class="fas fa-cogs"></i> Operations &amp; Analytics <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(15 tools)</span></h2>
-                            <div class="tool-container">
-                                
-                                    <a href="DMAIC Framework Planner0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="DMAIC Framework Planner">
-                                        <div class="card-icon"><i class="fas fa-cogs"></i></div>
-                                        <h3>DMAIC Framework Planner</h3>
-                                    </a>
-                                
-                                    <a href="EOQ Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="EOQ Calculator">
-                                        <div class="card-icon"><i class="fas fa-calculator"></i></div>
-                                        <h3>EOQ Calculator</h3>
-                                    </a>
-                                
-                                    <a href="Advanced Capacity Planning Tool" target="_blank" class="tool-card" rel="noopener" data-tool-name="Advanced Capacity Planning Tool">
-                                        <div class="card-icon"><i class="fas fa-industry"></i></div>
-                                        <h3>Advanced Capacity Planning Tool</h3>
-                                    </a>
-                                
-                                    <a href="Advanced Demand Forecasting Model" target="_blank" class="tool-card" rel="noopener" data-tool-name="Advanced Demand Forecasting Model">
-                                        <div class="card-icon"><i class="fas fa-chart-area"></i></div>
-                                        <h3>Advanced Demand Forecasting Model</h3>
-                                    </a>
-                                
-                                    <a href="Gantt Chart Generator0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Gantt Chart Generator">
-                                        <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
-                                        <h3>Gantt Chart Generator</h3>
-                                    </a>
-                                
-                                    <a href="Advanced Waiting Line (Queuing) Calculator0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Advanced Waiting Line (Queuing) Calculator">
-                                        <div class="card-icon"><i class="fas fa-queue"></i></div>
-                                        <h3>Advanced Waiting Line (Queuing) Calculator</h3>
-                                    </a>
-                                
-                                    <a href="SIPOC Diagram Maker( new )" target="_blank" class="tool-card" rel="noopener" data-tool-name="SIPOC Diagram">
-                                        <div class="card-icon"><i class="fas fa-sitemap"></i></div>
-                                        <h3>SIPOC Diagram</h3>
-                                    </a>
-                                
-                                    <a href="Service Blueprint Maker0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Service Blueprint Maker">
-                                        <div class="card-icon"><i class="fas fa-drafting-compass"></i></div>
-                                        <h3>Service Blueprint Maker</h3>
-                                    </a>
-                                
-                                    <a href="Advanced Transportation Cost Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Advanced Transportation Cost Calculator">
-                                        <div class="card-icon"><i class="fas fa-truck"></i></div>
-                                        <h3>Advanced Transportation Cost Calculator</h3>
-                                    </a>
-                                
-                                    <a href="Event Organizer" target="_blank" class="tool-card" rel="noopener" data-tool-name="Event Organizer">
-                                        <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
-                                        <h3>Event Organizer</h3>
-                                    </a>
-                                
-                                    <a href="Meeting Minutes Maker0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Meeting Minutes Maker">
-                                        <div class="card-icon"><i class="fas fa-file-alt"></i></div>
-                                        <h3>Meeting Minutes Maker</h3>
-                                    </a>
-                                
-                                    <a href="Time matrix " target="_blank" class="tool-card" rel="noopener" data-tool-name="Time Matrix">
-                                        <div class="card-icon"><i class="fas fa-th"></i></div>
-                                        <h3>Time Matrix</h3>
-                                    </a>
-                                
-                                    <a href="importance vs efforts " target="_blank" class="tool-card" rel="noopener" data-tool-name="Importance vs Efforts">
-                                        <div class="card-icon"><i class="fas fa-balance-scale"></i></div>
-                                        <h3>Importance vs Efforts</h3>
-                                    </a>
-                                
-                                    <a href="SMART Goal Planner0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="SMART Goal Planner">
-                                        <div class="card-icon"><i class="fas fa-bullseye"></i></div>
-                                        <h3>SMART Goal Planner</h3>
-                                    </a>
-                                
-                                    <a href="Problem Statement Generator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Problem Statement Generator">
-                                        <div class="card-icon"><i class="fas fa-question-circle"></i></div>
-                                        <h3>Problem Statement Generator</h3>
-                                    </a>
-                                
-                            </div>
-                        </section>
-                    
-                        <section class="category-section" id="finance" data-category-name="Finance &amp; Valuation">
-                            <h2><i class="fas fa-dollar-sign"></i> Finance &amp; Valuation <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(7 tools)</span></h2>
-                            <div class="tool-container">
-                                
-                                    <a href="Bond Valuation Tool" target="_blank" class="tool-card" rel="noopener" data-tool-name="Bond Valuation Tool">
-                                        <div class="card-icon"><i class="fas fa-certificate"></i></div>
-                                        <h3>Bond Valuation Tool</h3>
-                                    </a>
-                                
-                                    <a href="Break-Even Point Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Break-Even Point Calculator">
-                                        <div class="card-icon"><i class="fas fa-balance-scale"></i></div>
-                                        <h3>Break-Even Point Calculator</h3>
-                                    </a>
-                                
-                                    <a href="Financial Ratios Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Financial Ratios Calculator">
-                                        <div class="card-icon"><i class="fas fa-calculator"></i></div>
-                                        <h3>Financial Ratios Calculator</h3>
-                                    </a>
-                                
-                                    <a href="Time Value of Money Calculator0.3" target="_blank" class="tool-card" rel="noopener" data-tool-name="Time Value of Money Calculator 0.3">
-                                        <div class="card-icon"><i class="fas fa-clock"></i></div>
-                                        <h3>Time Value of Money Calculator 0.3</h3>
-                                    </a>
-                                
-                                    <a href="Startup Cost Estimator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Startup Cost Estimator">
-                                        <div class="card-icon"><i class="fas fa-rocket"></i></div>
-                                        <h3>Startup Cost Estimator</h3>
-                                    </a>
-                                
-                                    <a href="ROI Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="ROI Calculator">
-                                        <div class="card-icon"><i class="fas fa-percentage"></i></div>
-                                        <h3>ROI Calculator</h3>
-                                    </a>
-                                
-                                    <a href="College Event Budget Planner" target="_blank" class="tool-card" rel="noopener" data-tool-name="College Event Budget Planner">
-                                        <div class="card-icon"><i class="fas fa-money-bill-wave"></i></div>
-                                        <h3>College Event Budget Planner</h3>
-                                    </a>
-                                
-                            </div>
-                        </section>
-                    
-                        <section class="category-section" id="business" data-category-name="Business Frameworks">
-                            <h2><i class="fas fa-chart-line"></i> Business Frameworks <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(6 tools)</span></h2>
-                            <div class="tool-container">
-                                
-                                    <a href="business model canvas" target="_blank" class="tool-card" rel="noopener" data-tool-name="Business Model Canvas">
-                                        <div class="card-icon"><i class="fas fa-chart-line"></i></div>
-                                        <h3>Business Model Canvas</h3>
-                                    </a>
-                                
-                                    <a href="SWOT Analysis Generator( new )" target="_blank" class="tool-card" rel="noopener" data-tool-name="SWOT Analysis">
-                                        <div class="card-icon"><i class="fas fa-th-list"></i></div>
-                                        <h3>SWOT Analysis</h3>
-                                    </a>
-                                
-                                    <a href="PESTEL analysis" target="_blank" class="tool-card" rel="noopener" data-tool-name="PESTEL Analysis">
-                                        <div class="card-icon"><i class="fas fa-globe-americas"></i></div>
-                                        <h3>PESTEL Analysis</h3>
-                                    </a>
-                                
-                                    <a href="Porter's Five Forces Analyzer0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Porter's Five Forces Analyzer">
-                                        <div class="card-icon"><i class="fas fa-fist-raised"></i></div>
-                                        <h3>Porter's Five Forces Analyzer</h3>
-                                    </a>
-                                
-                                    <a href="RICE priotrization model " target="_blank" class="tool-card" rel="noopener" data-tool-name="RICE Prioritization Model">
-                                        <div class="card-icon"><i class="fas fa-list-ol"></i></div>
-                                        <h3>RICE Prioritization Model</h3>
-                                    </a>
-                                
-                                    <a href="Assumption Mapping 4.0" target="_blank" class="tool-card" rel="noopener" data-tool-name="Assumption Mapping">
-                                        <div class="card-icon"><i class="fas fa-question-circle"></i></div>
-                                        <h3>Assumption Mapping</h3>
-                                    </a>
-                                
-                            </div>
-                        </section>
-                    
-                        <section class="category-section" id="academic" data-category-name="Academic &amp; Professional Tools">
-                            <h2><i class="fas fa-graduation-cap"></i> Academic &amp; Professional Tools <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(9 tools)</span></h2>
-                            <div class="tool-container">
-
-                                
-                                    <a href="Research Paper Outline Generator0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Research Paper Outline Generator 0.2">
-                                        <div class="card-icon"><i class="fas fa-file-alt"></i></div>
-                                        <h3>Research Paper Outline Generator 0.2</h3>
-                                    </a>
-                                
-                                    <a href="Final Internship Report Maker" target="_blank" class="tool-card" rel="noopener" data-tool-name="Final Internship Report Maker">
-                                        <div class="card-icon"><i class="fas fa-file-invoice"></i></div>
-                                        <h3>Final Internship Report Maker</h3>
-                                    </a>
-                                
-                                    <a href="Weekly Internship Report0.3" target="_blank" class="tool-card" rel="noopener" data-tool-name="Weekly Internship Report 0.3">
-                                        <div class="card-icon"><i class="fas fa-calendar-week"></i></div>
-                                        <h3>Weekly Internship Report 0.3</h3>
-                                    </a>
-                                
-                                    <a href="Resume Score Analyzer" target="_blank" class="tool-card" rel="noopener" data-tool-name="Resume Score Analyzer">
-                                        <div class="card-icon"><i class="fas fa-file-contract"></i></div>
-                                        <h3>Resume Score Analyzer</h3>
-                                    </a>
-                                
-                                    <a href="Lecture Notes Organizer" target="_blank" class="tool-card" rel="noopener" data-tool-name="Lecture Notes Organizer">
-                                        <div class="card-icon"><i class="fas fa-sticky-note"></i></div>
-                                        <h3>Lecture Notes Organizer</h3>
-                                    </a>
-                                
-                                    <a href="Case Study Template" target="_blank" class="tool-card" rel="noopener" data-tool-name="Case Study Template">
-                                        <div class="card-icon"><i class="fas fa-file-powerpoint"></i></div>
-                                        <h3>Case Study Template</h3>
-                                    </a>
-                                
-                                    <a href="year calender maker" target="_blank" class="tool-card" rel="noopener" data-tool-name="Year Calendar Maker">
-                                        <div class="card-icon"><i class="fas fa-calendar"></i></div>
-                                        <h3>Year Calendar Maker</h3>
-                                    </a>
-                                
-                            </div>
-                        </section>
-                    
-                        <section class="category-section" id="productivity" data-category-name="Productivity &amp; Other Tools">
-                            <h2><i class="fas fa-tasks"></i> Productivity &amp; Other Tools <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(2 tools)</span></h2>
-                            <div class="tool-container">
-                                
-                                    <a href="qr code generator" target="_blank" class="tool-card" rel="noopener" data-tool-name="QR Code Generator">
-                                        <div class="card-icon"><i class="fas fa-qrcode"></i></div>
-                                        <h3>QR Code Generator</h3>
-                                    </a>
-                                
-                                    <a href="Advanced Mind Map Maker( testing )" target="_blank" class="tool-card" rel="noopener" data-tool-name="Mind Map Pro (NEED REPAIR)">
-                                        <div class="card-icon"><i class="fas fa-project-diagram"></i></div>
-                                        <h3>Mind Map Pro (NEED REPAIR)</h3>
-                                    </a>
-                                
-                            </div>
-                        </section>
-                    </div>
+        <!-- Category sections will be auto-generated -->
+    </div>
 
     <footer>
         Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
         Connect with me: 
-        <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener">
+        <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener">
             @ashish_singh_rajput_3
         </a> | Ashi Tools
     </footer>
@@ -1541,6 +1199,24 @@
                 isPopular: false,
                 isNew: true,
                 link: "Product Life Cycle (PLC) Visual Tool"
+            },
+            {
+                name: "BCG Matrix Analyzer",
+                category: "marketing",
+                icon: "fas fa-chart-pie",
+                isPopular: false,
+                isNew: true,
+                badgeText: "NEW",
+                link: "BCG Matrix Analyzer"
+            },
+            {
+                name: "Blue Ocean Strategy Maker",
+                category: "marketing",
+                icon: "fas fa-water",
+                isPopular: false,
+                isNew: true,
+                badgeText: "NEW",
+                link: "Blue Ocean Strategy Maker"
             },
 
             // Operations & Analytics Tools
@@ -1805,7 +1481,7 @@
                 name: "Resume Score Analyzer",
                 category: "academic",
                 icon: "fas fa-file-contract",
-                isPopular: true,
+                isPopular: false,
                 isNew: false,
                 link: "Resume Score Analyzer"
             },
@@ -1850,38 +1526,7 @@
                 isPopular: false,
                 isNew: false,
                 link: "Advanced Mind Map Maker( testing )"
-            },
-            {
-                name: "BCG Matrix Analyzer",
-                category: "marketing", // Choose: marketing, operations, finance, business, academic, productivity
-                icon: "fas fa-rocket", // Any FontAwesome icon class
-                isPopular: false, // Set to true for popular tools
-                isNew: true, // Set to true for new tools (will show in "Recently Added")
-                badgeText: "NEW", // Optional: custom badge text (NEW, UPDATED, BETA, etc.)
-                link: "BCG Matrix Analyzer"
-            },
-            {
-                name: "Blue Ocean Strategy Maker",
-                category: "marketing", // Choose: marketing, operations, finance, business, academic, productivity
-                icon: "fas fa-rocket", // Any FontAwesome icon class
-                isPopular: false, // Set to true for popular tools
-                isNew: true, // Set to true for new tools (will show in "Recently Added")
-                badgeText: "NEW", // Optional: custom badge text (NEW, UPDATED, BETA, etc.)
-                link: "Blue Ocean Strategy Maker"
-            },
-            // 🔥 TO ADD NEW TOOLS:
-            // Just copy this template and paste it here:
-            /*
-            {
-                name: "Your New Tool Name",
-                category: "marketing", // Choose: marketing, operations, finance, business, academic, productivity
-                icon: "fas fa-rocket", // Any FontAwesome icon class
-                isPopular: false, // Set to true for popular tools
-                isNew: true, // Set to true for new tools (will show in "Recently Added")
-                badgeText: "NEW", // Optional: custom badge text (NEW, UPDATED, BETA, etc.)
-                link: "https://your-tool-link.com"
-            },
-            */
+            }
         ];
 
         // Category configuration
@@ -1965,21 +1610,17 @@
             const tabsContainer = document.getElementById('category-tabs-container');
             const categoryCounts = {};
             
-            // Clear existing tabs first
-            tabsContainer.innerHTML = '';
+            // Clear existing tabs first (keep "All Tools" tab)
+            tabsContainer.innerHTML = `
+                <button class="category-tab active" data-category="all">
+                    All Tools
+                </button>
+            `;
             
             // Count tools per category
             TOOLS_DATABASE.forEach(tool => {
                 categoryCounts[tool.category] = (categoryCounts[tool.category] || 0) + 1;
             });
-
-            // Add "All Tools" tab first
-            const allTabHtml = `
-                <button class="category-tab active" data-category="all">
-                    All Tools
-                </button>
-            `;
-            tabsContainer.insertAdjacentHTML('beforeend', allTabHtml);
 
             // Generate tabs for each category
             Object.keys(CATEGORIES).forEach(categoryId => {
@@ -2056,8 +1697,38 @@
             generateNewTools();
         }
 
-        // Usage Analytics System (same as before)
+        // PERSONALIZED USAGE ANALYTICS SYSTEM
+        // ====================================
+
+        // Replace demo data with personalized initialization
+        function initializePersonalizedData() {
+            const hasData = localStorage.getItem('toolUsageData');
+            if (!hasData) {
+                // Start with empty personal stats instead of demo data
+                localStorage.setItem('toolUsageData', '{}');
+                localStorage.setItem('totalClicks', '0');
+                localStorage.setItem('timeSpent', '0');
+                
+                const today = new Date().toDateString();
+                localStorage.setItem('activeHoursDate', today);
+                localStorage.setItem('activeHoursToday', '0');
+            }
+        }
+
+        // Generate unique user identifier
+        function getUserId() {
+            let userId = localStorage.getItem('userId');
+            if (!userId) {
+                userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('userId', userId);
+            }
+            return userId;
+        }
+
+        // Enhanced tracking with user identification
         function updateToolUsage(toolName) {
+            const userId = getUserId();
+            
             const usageData = JSON.parse(localStorage.getItem('toolUsageData') || '{}');
             usageData[toolName] = (usageData[toolName] || 0) + 1;
             localStorage.setItem('toolUsageData', JSON.stringify(usageData));
@@ -2067,18 +1738,27 @@
             const totalClicks = Number(localStorage.getItem('totalClicks') || 0) + 1;
             localStorage.setItem('totalClicks', totalClicks);
             
+            // Optional: Log usage for analytics
+            console.log(`User ${userId} used tool: ${toolName}`);
+            
             updateAnalyticsDisplay();
         }
 
+        // Enhanced analytics display with better handling for new users
         function updateAnalyticsDisplay() {
             const usageData = JSON.parse(localStorage.getItem('toolUsageData') || '{}');
             let mostUsed = null, mostCount = 0;
+            
             Object.entries(usageData).forEach(([name, count]) => {
-                if (count > mostCount) { mostUsed = name; mostCount = count; }
+                if (count > mostCount) { 
+                    mostUsed = name; 
+                    mostCount = count; 
+                }
             });
 
+            // Show actual usage or indicate no usage yet
             document.getElementById('most-used-tool').textContent = 
-                mostUsed ? `${mostUsed} (${mostCount}x)` : '—';
+                mostUsed ? `${mostUsed} (${mostCount}x)` : 'No tools used yet';
 
             const lastUsed = localStorage.getItem('lastUsedTool');
             const lastTime = localStorage.getItem('lastUsedTime');
@@ -2086,7 +1766,7 @@
                 const timeAgo = formatTimeAgo(Number(lastTime));
                 document.getElementById('recently-used-tool').textContent = `${lastUsed} (${timeAgo})`;
             } else {
-                document.getElementById('recently-used-tool').textContent = '—';
+                document.getElementById('recently-used-tool').textContent = 'No tools used yet';
             }
 
             const prevTimeSpent = Number(localStorage.getItem('timeSpent') || 0);
@@ -2146,6 +1826,25 @@
             return 'just now';
         }
 
+        // Reset stats function
+        function resetUserStats() {
+            if (confirm('Are you sure you want to reset all your usage statistics?')) {
+                localStorage.removeItem('toolUsageData');
+                localStorage.removeItem('lastUsedTool');
+                localStorage.removeItem('lastUsedTime');
+                localStorage.removeItem('totalClicks');
+                localStorage.removeItem('timeSpent');
+                localStorage.removeItem('activeHoursToday');
+                localStorage.removeItem('activeHoursDate');
+                
+                // Reinitialize with fresh data
+                initializePersonalizedData();
+                updateAnalyticsDisplay();
+                
+                alert('Statistics have been reset!');
+            }
+        }
+
         // Track tool clicks
         document.body.addEventListener('click', function(e) {
             const card = e.target.closest('.tool-card, .framework-card');
@@ -2184,28 +1883,6 @@
             }
         });
 
-        // Initialize demo data for new users
-        function initializeDemoData() {
-            const hasData = localStorage.getItem('toolUsageData');
-            if (!hasData) {
-                const demoData = {
-                    'Business Model Canvas': 5,
-                    'SWOT Analysis': 3,
-                    'Financial Ratios Calculator': 4,
-                    '7Ps of Marketing': 2
-                };
-                localStorage.setItem('toolUsageData', JSON.stringify(demoData));
-                localStorage.setItem('lastUsedTool', 'Business Model Canvas');
-                localStorage.setItem('lastUsedTime', Date.now() - 300000);
-                localStorage.setItem('totalClicks', '14');
-                localStorage.setItem('timeSpent', '1800000');
-                
-                const today = new Date().toDateString();
-                localStorage.setItem('activeHoursDate', today);
-                localStorage.setItem('activeHoursToday', '900000');
-            }
-        }
-
         function rotateQuote() {
             const sanskritElement = document.getElementById('sanskritQuote');
             const englishElement = document.getElementById('englishQuote');
@@ -2232,9 +1909,9 @@
         window.addEventListener('load', function() {
             setTimeout(() => {
                 document.getElementById('loading').classList.add('hide');
-                initializeAutoSystem(); // Initialize the auto system
+                initializeAutoSystem();
                 animateCounters();
-                initializeDemoData();
+                initializePersonalizedData(); // Changed from initializeDemoData()
                 updateAnalyticsDisplay();
                 
                 setInterval(updateAnalyticsDisplay, 30000);
@@ -2502,8 +2179,6 @@
         document.getElementById('englishQuote').style.transition = 'opacity 0.3s ease';
     </script>
 
-
-            <script></script>
-        
-    
-</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>
+</body>
+<grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>
+</html>
