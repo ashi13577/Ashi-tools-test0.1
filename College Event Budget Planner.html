@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+<meta charset="UTF-8">
+<title>College Event Budget Planner | Ashi Tools</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>/* ---------- FIX: readable <select> options ---------- */
+select.form-control {           /* closed “combo box” */
+    background: var(--input-bg);
+    color: var(--text-light);
+}
+
+/* actual drop-down options when it opens */
+select.form-control option {
+    background: var(--card-bg); /* dark background that matches cards */
+    color: var(--text-light);   /* light text */
+}
+
+/*   ── OR ──
+   If you’d rather keep the default white list, switch to dark text:
+
+select.form-control option {
+    background:#fff;
+    color:#000;
+}
+*/
+/* ------------- common Ashi Tools theme ------------- */
+:root{--primary:#9c27b0;--primary-dark:#7b1fa2;--primary-light:rgba(156,39,176,.15);--secondary:#e91e63;--success:#4caf50;--danger:#dc3545;--info:#007bff;--dark-bg:#1c1e22;--card-bg:#282c34;--text-light:#f0f2f5;--text-muted:#90939a;--border-light:rgba(240,242,245,.15);--input-bg:rgba(255,255,255,.05);--transition:.3s ease}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+body{background:var(--dark-bg);color:var(--text-light);min-height:100vh;display:flex;flex-direction:column}
+header,footer{background:var(--dark-bg);border-color:var(--border-light);text-align:center;padding:25px 20px;flex-shrink:0}
+h1{font-size:2.2rem;color:var(--primary)}
+header .logo-icon{background:var(--primary);color:#fff;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 8px}
+.header-sub{color:var(--text-muted)}
+
+.main{flex:1;padding:35px 20px;max-width:1400px;margin:auto;width:100%}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+.card{background:var(--card-bg);border:1px solid var(--border-light);border-radius:10px;padding:30px}
+.section-title{display:flex;align-items:center;gap:10px;font-size:1.5rem;color:var(--primary);margin-bottom:20px;border-bottom:1px solid var(--border-light);padding-bottom:15px}
+.section-title i{background:var(--primary-light);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--primary)}
+
+label{display:block;margin-bottom:6px;font-weight:600}
+.form-control{width:100%;padding:10px 12px;border-radius:6px;border:1px solid var(--border-light);background:var(--input-bg);color:var(--text-light)}
+.form-control:focus{outline:none;border-color:var(--primary)}
+.form-group{margin-bottom:15px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border:none;border-radius:6px;cursor:pointer;font-weight:600;transition:var(--transition);color:#fff}
+.btn-primary{background:var(--primary)}  .btn-primary:hover{background:var(--primary-dark);transform:translateY(-2px)}
+.btn-success{background:var(--success)}  .btn-success:hover{background:#3a8b3d}
+.btn-danger{background:var(--danger)}    .btn-danger:hover{background:#b21f2d}
+.btn-info{background:var(--info)}        .btn-info:hover{background:#0056b3}
+.btn-secondary{background:var(--secondary)} .btn-secondary:hover{background:#c2185b}
+
+/* budget items list (inside form) */
+#itemsContainer .item-row{display:flex;gap:10px;margin-bottom:10px}
+#itemsContainer .item-row input[type=text]{flex:2 1 180px}
+#itemsContainer .item-row input[type=number]{flex:1 1 120px}
+#itemsContainer .item-row .btn{padding:8px 12px}
+
+/*  events table  */
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{padding:12px 14px;border-bottom:1px solid var(--border-light)}
+th{background:var(--primary-light);color:var(--primary);font-size:.9rem;text-transform:uppercase}
+td:nth-child(3){text-align:right}
+.itemised{font-size:.85rem;color:var(--text-muted);line-height:1.4}
+.itemised span{display:block}
+.total-row td{font-weight:700;color:var(--success)}
+.actions .btn{padding:6px 10px;font-size:.8rem}
+
+/* total boxes */
+#eventTotal,#grandTotal{font-size:1.8rem;font-weight:700;color:var(--success);text-align:center;margin-top:10px}
+
+footer a{color:var(--primary);text-decoration:none;font-weight:700}
+footer a:hover{text-decoration:underline}
+</style>
+
+
+
+<header>
+  <div class="logo-icon"><i class="fas fa-coins"></i></div>
+  <h1>College Event Budget Planner</h1>
+  <p class="header-sub">Allocate, track and export budgets for every college event.</p>
+</header>
+
+<main class="main">
+  <div class="grid">
+    <!-- ============ FORM SIDE ============ -->
+    <div class="card">
+      <h2 class="section-title"><i class="fas fa-plus-circle"></i>Add / Edit Event</h2>
+
+      <!-- EVENT SELECT -->
+      <div class="form-group">
+        <label for="eventSelect">Event</label>
+        <select id="eventSelect" class="form-control"><option value="">Select an event...</option><option value="janmashtami">Janmashtami</option><option value="teachers_day">Teachers’ Day</option><option value="convocation">Convocation</option><option value="youth_fest">Youth Fest</option><option value="dandia_night">Dandia Night</option><option value="farewell">Farewell Party</option><option value="custom">Custom Event</option></select>
+      </div>
+      <!-- custom event name -->
+      <div id="customEventGroup" class="form-group" style="display: none;">
+        <label for="customEventName">Custom Event Name</label>
+        <input type="text" id="customEventName" class="form-control" placeholder="Enter event name">
+      </div>
+
+      <!-- ITEMS CONTAINER -->
+      <div class="form-group">
+        <label>Budget Items</label>
+        <div id="itemsContainer"></div>
+        <button id="addItemBtn" class="btn btn-info" type="button"><i class="fas fa-plus"></i>Add Item</button>
+      </div>
+
+      <div>
+        Event Total: <span id="eventTotal">₹0</span>
+      </div>
+
+      <!-- buttons -->
+      <div style="margin-top:20px;display:flex;gap:15px;flex-wrap:wrap">
+        <button id="saveEventBtn" class="btn btn-success">Save Event</button>
+        <button id="cancelEditBtn" class="btn btn-secondary" style="display:none"><i class="fas fa-times"></i>Cancel</button>
+      </div>
+    </div>
+
+    <!-- ============ LIST SIDE ============ -->
+    <div class="card">
+      <h2 class="section-title"><i class="fas fa-list"></i>Events &amp; Budgets</h2>
+
+      <table>
+        <thead>
+          <tr><th>Event</th><th>Items (&nbsp;₹&nbsp;)</th><th>Total</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="eventsTableBody"></tbody>
+        <tfoot>
+          <tr class="total-row"><td colspan="2">Grand Total</td><td id="grandTotalCell">₹0</td><td></td></tr>
+        </tfoot>
+      </table>
+
+      <button id="exportCsvBtn" class="btn btn-primary" style="margin-top:20px" disabled=""><i class="fas fa-file-csv"></i>Download CSV</button>
+    </div>
+  </div>
+</main>
+
+<footer>
+  College Event Budget Planner – Ashi Tools | Connect
+  <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank">@ashish_singh_rajput_3</a>
+</footer>
+
+<script>
+/* ---------- PREDEFINED DATA ---------- */
+const predefinedEvents = [
+  {value:'', label:'Select an event...'},
+  {value:'janmashtami',  label:'Janmashtami',  items:['Decoration','Refreshments','Sound & IT','Transport','Necessary Items']},
+  {value:'teachers_day', label:'Teachers’ Day',items:['Gifts','Decoration','Snacks','Anchoring']},
+  {value:'convocation',  label:'Convocation',  items:['Stage Setup','Certificates','Gowns','Photography','Refreshments']},
+  {value:'youth_fest',   label:'Youth Fest',   items:['Stage Setup','Celebrity/Guest Fee','Logistics','Promotions','Volunteer Kits']},
+  {value:'dandia_night', label:'Dandia Night', items:['Decoration','Artist/DJ','Lighting & Sound','Security','Snacks']},
+  {value:'farewell',     label:'Farewell Party',items:['Venue','Food & Beverages','Gifts','Photography','Games']},
+  {value:'custom',       label:'Custom Event', items:[]}
+];
+
+/* ---------- STATE ---------- */
+let events = [];               // {id,name,items:[{name,cost}]}
+let editingId = null;          // currently editing event id
+
+/* ---------- ELEMENTS ---------- */
+const eventSelect      = document.getElementById('eventSelect');
+const customEventGroup = document.getElementById('customEventGroup');
+const customEventName  = document.getElementById('customEventName');
+const itemsContainer   = document.getElementById('itemsContainer');
+const addItemBtn       = document.getElementById('addItemBtn');
+const eventTotalSpan   = document.getElementById('eventTotal');
+const saveEventBtn     = document.getElementById('saveEventBtn');
+const cancelEditBtn    = document.getElementById('cancelEditBtn');
+const tableBody        = document.getElementById('eventsTableBody');
+const grandTotalCell   = document.getElementById('grandTotalCell');
+const exportCsvBtn     = document.getElementById('exportCsvBtn');
+
+/* ---------- INIT DROPDOWN ---------- */
+predefinedEvents.forEach(opt=>{
+  const option=document.createElement('option');
+  option.value=opt.value; option.textContent=opt.label;
+  eventSelect.appendChild(option);
+});
+
+/* ---------- UTILITIES ---------- */
+const rup = v=>'₹'+Number(v||0).toLocaleString('en-IN');
+const uid = ()=>(Date.now().toString(36)+Math.random().toString(36).slice(2,6));
+
+/* ---------- ITEM ROW HANDLERS ---------- */
+function addItemRow(name='',cost=''){
+  const row=document.createElement('div');
+  row.className='item-row';
+  row.innerHTML=`
+    <input type="text" class="form-control item-name" placeholder="Item name" value="${name}">
+    <input type="number" class="form-control item-cost" placeholder="₹" min="0" step="100" value="${cost}">
+    <button type="button" class="btn btn-danger del"><i class="fas fa-trash"></i></button>`;
+  row.querySelector('.del').onclick=()=>{row.remove(); calcEventTotal();};
+  row.querySelector('.item-cost').oninput=calcEventTotal;
+  itemsContainer.appendChild(row);
+}
+
+function loadDefaultItems(arr){
+  itemsContainer.innerHTML='';
+  arr.forEach(n=>addItemRow(n,''));
+  calcEventTotal();
+}
+
+/* ---------- FORM BEHAVIOUR ---------- */
+eventSelect.onchange=()=>{
+  if(eventSelect.value==='custom'){
+    customEventGroup.style.display='block';
+    loadDefaultItems([]);
+    customEventName.focus();
+  }else{
+    customEventGroup.style.display='none';
+    customEventName.value='';
+    const def = predefinedEvents.find(p=>p.value===eventSelect.value);
+    loadDefaultItems(def?def.items:[]);
+  }
+};
+
+addItemBtn.onclick=()=>addItemRow();
+
+function calcEventTotal(){
+  const costs=[...itemsContainer.querySelectorAll('.item-cost')].map(i=>Number(i.value||0));
+  const sum=costs.reduce((a,b)=>a+b,0);
+  eventTotalSpan.textContent=rup(sum);
+}
+
+/* ---------- SAVE / UPDATE EVENT ---------- */
+saveEventBtn.onclick=()=>{
+  // gather data
+  let name='';
+  if(eventSelect.value==='custom') name=customEventName.value.trim();
+  else{
+    const opt=predefinedEvents.find(p=>p.value===eventSelect.value);
+    name=opt?opt.label:'';
+  }
+  if(!name){alert('Please select / enter event name');return;}
+
+  const itemRows=[...itemsContainer.querySelectorAll('.item-row')];
+  if(itemRows.length===0){alert('Add at least one budget item');return;}
+
+  const items=itemRows.map(r=>{
+    const n=r.querySelector('.item-name').value.trim();
+    const c=Number(r.querySelector('.item-cost').value||0);
+    return {name:n||'Unnamed',cost:c};
+  });
+
+  const total=items.reduce((s,i)=>s+i.cost,0);
+  if(total===0){if(!confirm('Total budget is 0. Save anyway?'))return;}
+
+  if(editingId){
+    const ev=events.find(e=>e.id===editingId);
+    ev.name=name; ev.items=items;
+  }else{
+    events.push({id:uid(),name,items});
+  }
+  resetForm(); renderTable();
+};
+
+/* ---------- EDIT / DELETE ---------- */
+function editEvent(id){
+  const ev=events.find(e=>e.id===id);
+  if(!ev)return;
+  editingId=id;
+  // set select
+  const pre=predefinedEvents.find(p=>p.label===ev.name);
+  if(pre){eventSelect.value=pre.value; customEventGroup.style.display='none';}
+  else {eventSelect.value='custom'; customEventGroup.style.display='block'; customEventName.value=ev.name;}
+  // items
+  itemsContainer.innerHTML='';
+  ev.items.forEach(it=>addItemRow(it.name,it.cost));
+  calcEventTotal();
+  saveEventBtn.textContent='Update Event';
+  cancelEditBtn.style.display='inline-flex';
+}
+cancelEditBtn.onclick=resetForm;
+
+function deleteEvent(id){
+  if(!confirm('Delete this event?'))return;
+  events=events.filter(e=>e.id!==id);
+  if(editingId===id)resetForm();
+  renderTable();
+}
+
+/* ---------- RESET FORM ---------- */
+function resetForm(){
+  editingId=null;
+  eventSelect.value='';
+  customEventGroup.style.display='none';
+  customEventName.value='';
+  itemsContainer.innerHTML='';
+  eventTotalSpan.textContent='₹0';
+  saveEventBtn.textContent='Save Event';
+  cancelEditBtn.style.display='none';
+}
+
+/* ---------- RENDER EVENTS TABLE ---------- */
+function renderTable(){
+  tableBody.innerHTML='';
+  events.forEach(ev=>{
+    const tr=document.createElement('tr');
+    /* Event name */
+    const tdName=document.createElement('td');
+    tdName.textContent=ev.name;
+    tr.appendChild(tdName);
+    /* Items */
+    const tdItems=document.createElement('td');
+    tdItems.className='itemised';
+    ev.items.forEach(it=>{
+      const span=document.createElement('span');
+      span.textContent=`${it.name}: ${rup(it.cost)}`;
+      tdItems.appendChild(span);
+    });
+    tr.appendChild(tdItems);
+    /* Total */
+    const total=ev.items.reduce((s,i)=>s+i.cost,0);
+    const tdTotal=document.createElement('td');
+    tdTotal.textContent=rup(total);
+    tr.appendChild(tdTotal);
+    /* Actions */
+    const tdAct=document.createElement('td');
+    tdAct.className='actions';
+    tdAct.innerHTML=`
+      <button class="btn btn-info"><i class="fas fa-edit"></i></button>
+      <button class="btn btn-danger"><i class="fas fa-trash"></i></button>`;
+    tdAct.children[0].onclick=()=>editEvent(ev.id);
+    tdAct.children[1].onclick=()=>deleteEvent(ev.id);
+    tr.appendChild(tdAct);
+    tableBody.appendChild(tr);
+  });
+
+  /* Grand total */
+  const grand=events.reduce((sum,e)=>sum+e.items.reduce((s,i)=>s+i.cost,0),0);
+  grandTotalCell.textContent=rup(grand);
+  exportCsvBtn.disabled=events.length===0;
+}
+
+/* ---------- CSV EXPORT ---------- */
+exportCsvBtn.onclick=()=>{
+  if(events.length===0)return;
+  let csv='Event,Item,Budget(INR)\n';
+  events.forEach(ev=>{
+    ev.items.forEach(it=>{
+      csv+=`"${ev.name.replace(/"/g,'""')}","${it.name.replace(/"/g,'""')}",${it.cost}\n`;
+    });
+  });
+  const grand=events.reduce((s,e)=>s+e.items.reduce((a,b)=>a+b.cost,0),0);
+  csv+=`\n"Grand Total",,${grand}\n`;
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const link=document.createElement('a');
+  link.href=URL.createObjectURL(blob);
+  link.download='college_event_budget.csv';
+  link.click();
+};
+
+/* ---------- INITIAL ---------- */
+resetForm(); renderTable();
+</script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

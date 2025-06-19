@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1238.0" data-gr-ext-installed="">
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RICE Prioritization Model - Ashi Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root {
+            --primary: #4CAF50; /* Green for RICE model */
+            --primary-dark: #388E3C;
+            --primary-light: rgba(76, 175, 80, 0.1);
+            --secondary: #FF5722; /* Orange accent */
+            --dark-bg: #1c1e22;
+            --card-bg: #282c34;
+            --text-light: #f0f2f5;
+            --border-light: rgba(240, 242, 245, 0.2);
+            --input-bg: rgba(240, 242, 245, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            background: var(--dark-bg);
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+        .logo-container {
+            display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px;
+        }
+        .logo-icon {
+            background: var(--primary); color: white; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem;
+        }
+        h1 { font-size: 2.2rem; color: var(--primary); }
+        .header-sub { font-size: 1rem; color: #bdc3c7; max-width: 700px; margin: 10px auto 0; }
+
+        .main-content {
+            display: flex;
+            flex-grow: 1;
+            padding: 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+            overflow-y: auto;
+        }
+
+        .column {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-light);
+            background-color: var(--input-bg);
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: none;
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-light);
+        }
+
+        /* Table Styling */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        tbody tr {
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .item-name {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .delete-btn {
+            color: #ff5252;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .rice-score {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .info-tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .info-tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            z-index: 100;
+        }
+
+        .export-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* RICE Score Legend */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+        }
+
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+
+        .no-items-message {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--dark-bg);
+            border-top: 1px solid var(--border-light);
+            font-size: 0.9em;
+        }
+
+        .insta-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .insta-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .column {
+                min-width: 100%;
+            }
+            .form-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="logo-text">
+                <h1>RICE Prioritization Model</h1>
+            </div>
+        </div>
+        <p class="header-sub">Prioritize features and initiatives based on Reach, Impact, Confidence, and Effort.</p>
+    </header>
+
+    <div class="main-content">
+        <div class="column">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-plus-circle"></i> Add New Item</h2>
+                <form id="rice-form">
+                    <div class="form-group">
+                        <label for="item-name">Item Name</label>
+                        <input type="text" id="item-name" placeholder="e.g., Add Search Functionality" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="item-description">Description (Optional)</label>
+                        <textarea id="item-description" rows="2" placeholder="Brief description of the feature or initiative"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reach">Reach <span class="info-tooltip" data-tooltip="Number of people affected per time period"><i class="fas fa-info-circle"></i></span></label>
+                            <input type="number" id="reach" min="0" step="1" placeholder="e.g., 1000" required="">
+                        </div>
+                        <div class="form-group">
+                            <label for="impact">Impact <span class="info-tooltip" data-tooltip="How much will it impact each person (0.25, 0.5, 1, 2, 3)"><i class="fas fa-info-circle"></i></span></label>
+                            <select id="impact" required="">
+                                <option value="0.25">0.25 - Minimal</option>
+                                <option value="0.5">0.5 - Low</option>
+                                <option value="1">1 - Medium</option>
+                                <option value="2">2 - High</option>
+                                <option value="3">3 - Massive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="confidence">Confidence <span class="info-tooltip" data-tooltip="Confidence in estimates (100%, 80%, 50%)"><i class="fas fa-info-circle"></i></span></label>
+                            <select id="confidence" required="">
+                                <option value="1">100% - High confidence</option>
+                                <option value="0.8">80% - Medium confidence</option>
+                                <option value="0.5">50% - Low confidence</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="effort">Effort <span class="info-tooltip" data-tooltip="Estimated person-months or relative effort"><i class="fas fa-info-circle"></i></span></label>
+                            <input type="number" id="effort" min="0.1" step="0.1" placeholder="e.g., 2" required="">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-block">Add to Prioritization</button>
+                </form>
+            </div>
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-info-circle"></i> About RICE Model</h2>
+                <p>The RICE prioritization model helps teams make product decisions based on four factors:</p>
+                <ul style="padding-left: 20px; margin: 10px 0;">
+                    <li><strong>Reach:</strong> Number of people/customers affected</li>
+                    <li><strong>Impact:</strong> How much it will help those people</li>
+                    <li><strong>Confidence:</strong> How confident you are in your estimates</li>
+                    <li><strong>Effort:</strong> The time or resources required</li>
+                </ul>
+                <p>The RICE score is calculated as: <strong>(Reach × Impact × Confidence) ÷ Effort</strong></p>
+                <p>Higher scores indicate items that should be prioritized.</p>
+            </div>
+        </div>
+        <div class="column">
+            <div class="card">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 class="card-title"><i class="fas fa-list-ol"></i> Prioritized Items</h2>
+                    <div>
+                        <button id="export-pdf" class="btn"><i class="fas fa-file-pdf"></i> Export PDF</button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table id="rice-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Reach</th>
+                                <th>Impact</th>
+                                <th>Confidence</th>
+                                <th>Effort</th>
+                                <th>RICE Score</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rice-items"></tbody>
+                    </table>
+                    <div id="no-items-message" class="no-items-message" style="display: block;">
+                        No items added yet. Add your first item using the form.
+                    </div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #4CAF50;"></div>
+                        <span>High Priority</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #FFC107;"></div>
+                        <span>Medium Priority</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #F44336;"></div>
+                        <span>Low Priority</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>RICE Prioritization Model - Ashi Tools | Connect <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="insta-link">@ashish_singh_rajput_3</a></p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const riceForm = document.getElementById('rice-form');
+            const riceItems = document.getElementById('rice-items');
+            const noItemsMessage = document.getElementById('no-items-message');
+            const exportPdfBtn = document.getElementById('export-pdf');
+            
+            let items = [];
+            
+            function calculateRICE(reach, impact, confidence, effort) {
+                return (reach * impact * confidence) / effort;
+            }
+            
+            function formatRICE(score) {
+                return score.toFixed(2);
+            }
+
+            function displayImpactText(impact) {
+                const impactMap = {
+                    '0.25': 'Minimal',
+                    '0.5': 'Low',
+                    '1': 'Medium',
+                    '2': 'High',
+                    '3': 'Massive'
+                };
+                return impactMap[impact] || impact;
+            }
+
+            function displayConfidenceText(confidence) {
+                const confidenceMap = {
+                    '1': '100%',
+                    '0.8': '80%',
+                    '0.5': '50%'
+                };
+                return confidenceMap[confidence] || (confidence * 100 + '%');
+            }
+            
+            function addRICEItem(item) {
+                items.push(item);
+                updateTable();
+            }
+            
+            function deleteRICEItem(index) {
+                items.splice(index, 1);
+                updateTable();
+            }
+            
+            function updateTable() {
+                // Sort items by RICE score in descending order
+                items.sort((a, b) => b.score - a.score);
+                
+                if (items.length === 0) {
+                    noItemsMessage.style.display = 'block';
+                    riceItems.innerHTML = '';
+                    return;
+                }
+                
+                noItemsMessage.style.display = 'none';
+                riceItems.innerHTML = '';
+                
+                items.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // Determine row color based on priority
+                    let priorityColor = '';
+                    if (index < items.length * 0.3) {
+                        priorityColor = 'rgba(76, 175, 80, 0.1)'; // High (green)
+                    } else if (index < items.length * 0.7) {
+                        priorityColor = 'rgba(255, 193, 7, 0.1)'; // Medium (yellow)
+                    } else {
+                        priorityColor = 'rgba(244, 67, 54, 0.1)'; // Low (red)
+                    }
+                    
+                    row.style.backgroundColor = priorityColor;
+                    
+                    row.innerHTML = `
+                        <td class="item-name" title="${item.name}">${item.name}</td>
+                        <td>${item.reach}</td>
+                        <td>${displayImpactText(item.impact)}</td>
+                        <td>${displayConfidenceText(item.confidence)}</td>
+                        <td>${item.effort}</td>
+                        <td class="rice-score">${formatRICE(item.score)}</td>
+                        <td>
+                            <button class="delete-btn" data-index="${index}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    riceItems.appendChild(row);
+                });
+                
+                // Add event listeners for delete buttons
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        deleteRICEItem(index);
+                    });
+                });
+            }
+            
+            riceForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('item-name').value;
+                const description = document.getElementById('item-description').value;
+                const reach = parseFloat(document.getElementById('reach').value);
+                const impact = parseFloat(document.getElementById('impact').value);
+                const confidence = parseFloat(document.getElementById('confidence').value);
+                const effort = parseFloat(document.getElementById('effort').value);
+                
+                const score = calculateRICE(reach, impact, confidence, effort);
+                
+                const newItem = {
+                    name,
+                    description,
+                    reach,
+                    impact,
+                    confidence,
+                    effort,
+                    score
+                };
+                
+                addRICEItem(newItem);
+                
+                // Reset form
+                riceForm.reset();
+                document.getElementById('item-name').focus();
+            });
+            
+            exportPdfBtn.addEventListener('click', function() {
+                if (items.length === 0) {
+                    alert('Add at least one item before exporting.');
+                    return;
+                }
+                
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Set white background
+                doc.setFillColor(255, 255, 255);
+                doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), 'F');
+                
+                // Add title
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(20);
+                doc.text('RICE Prioritization Model', 14, 20);
+                
+                // Add date
+                const date = new Date().toLocaleDateString();
+                doc.setFontSize(10);
+                doc.text(`Generated on: ${date}`, 14, 28);
+                
+                // Prepare table data
+                const tableData = items.map(item => [
+                    item.name,
+                    item.reach.toString(),
+                    displayImpactText(item.impact),
+                    displayConfidenceText(item.confidence),
+                    item.effort.toString(),
+                    formatRICE(item.score)
+                ]);
+                
+                // Define columns
+                const columns = [
+                    { header: 'Name', dataKey: 0 },
+                    { header: 'Reach', dataKey: 1 },
+                    { header: 'Impact', dataKey: 2 },
+                    { header: 'Confidence', dataKey: 3 },
+                    { header: 'Effort', dataKey: 4 },
+                    { header: 'RICE Score', dataKey: 5 }
+                ];
+                
+                // Add table
+                doc.autoTable({
+                    startY: 35,
+                    head: [columns.map(col => col.header)],
+                    body: tableData,
+                    theme: 'grid',
+                    headStyles: {
+                        fillColor: [76, 175, 80],
+                        textColor: [255, 255, 255],
+                        fontStyle: 'bold'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [240, 240, 240]
+                    },
+                    styles: {
+                        textColor: [50, 50, 50],
+                        fontSize: 10
+                    },
+                    columnStyles: {
+                        5: { fontStyle: 'bold' }
+                    }
+                });
+                
+                // Add RICE formula explanation
+                const tableEndY = doc.autoTable.previous.finalY + 10;
+                
+                doc.setFontSize(12);
+                doc.text('RICE Formula:', 14, tableEndY);
+                
+                doc.setFontSize(10);
+                doc.text('RICE Score = (Reach × Impact × Confidence) ÷ Effort', 14, tableEndY + 8);
+                
+                // Add footer
+                doc.setFontSize(8);
+                doc.setTextColor(100, 100, 100);
+                doc.text('Generated using Ashi Tools RICE Prioritization Model | @ashish_singh_rajput_3', 
+                    doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+                
+                // Save PDF
+                doc.save('RICE-Prioritization.pdf');
+            });
+            
+            // Initialize
+            updateTable();
+        });
+    </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

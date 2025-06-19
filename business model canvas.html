@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        <style type="text/css">.lf-progress {
+  -webkit-appearance: none;
+  -moz-apperance: none;
+  width: 100%;
+  /* margin: 0 10px; */
+  height: 4px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.lf-progress:focus {
+  outline: none;
+  border: none;
+}
+.lf-progress::-moz-range-track {
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+}
+.lf-progress::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress::-moz-range-thumb {
+  -moz-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress::-ms-track {
+  width: 100%;
+  height: 3px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.lf-progress::-ms-fill-lower {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lf-progress::-ms-fill-upper {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lf-progress::-ms-thumb {
+  border: 0;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress:focus::-ms-fill-lower {
+  background: #ccc;
+}
+.lf-progress:focus::-ms-fill-upper {
+  background: #ccc;
+}
+.lf-player-container :focus {
+  outline: 0;
+}
+.lf-popover {
+  position: relative;
+}
+
+.lf-popover-content {
+  display: inline-block;
+  position: absolute;
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+}
+
+.lf-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lf-player-btn-container {
+  display: flex;
+  align-items: center;
+}
+.lf-player-btn {
+  cursor: pointer;
+  fill: #999;
+  width: 14px;
+}
+
+.lf-player-btn.active {
+  fill: #555;
+}
+
+.lf-popover {
+  position: relative;
+}
+
+.lf-popover-content {
+  display: inline-block;
+  position: absolute;
+  background-color: #ffffff;
+  opacity: 1;
+
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+  padding: 10px;
+}
+
+.lf-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lf-arrow {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  bottom: -9px;
+  border-style: solid;
+  border-width: 10px 10px 0px 10px;
+}
+
+.lf-left-align,
+.lf-left-align .lfarrow {
+  left: 0;
+  right: unset;
+}
+
+.lf-right-align,
+.lf-right-align .lf-arrow {
+  right: 0;
+  left: unset;
+}
+
+.lf-text-input {
+  border: 1px #ccc solid;
+  border-radius: 5px;
+  padding: 3px;
+  width: 60px;
+  margin: 0;
+}
+
+.lf-color-picker {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 90px;
+}
+
+.lf-color-selectors {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lf-color-component {
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.lf-color-component strong {
+  width: 40px;
+}
+
+.lf-color-component input[type='range'] {
+  margin: 0 0 0 10px;
+}
+
+.lf-color-component input[type='number'] {
+  width: 50px;
+  margin: 0 0 0 10px;
+}
+
+.lf-color-preview {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 5px;
+}
+
+.lf-preview {
+  height: 60px;
+  width: 60px;
+}
+
+.lf-popover-snapshot {
+  width: 150px;
+}
+.lf-popover-snapshot h5 {
+  margin: 5px 0 10px 0;
+  font-size: 0.75rem;
+}
+.lf-popover-snapshot a {
+  display: block;
+  text-decoration: none;
+}
+.lf-popover-snapshot a:before {
+  content: '⥼';
+  margin-right: 5px;
+}
+.lf-popover-snapshot .lf-note {
+  display: block;
+  margin-top: 10px;
+  color: #999;
+}
+.lf-player-controls > div {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.lf-player-controls > div:first-child {
+  margin-left: 0px;
+}
+.lf-player-controls > div:last-child {
+  margin-right: 0px;
+}
+</style></head>
+        <body data-new-gr-c-s-check-loaded="14.1238.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1238.0">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Business Model Canvas - Ashi Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #27ae60;
+      --primary-dark: #229954;
+      --secondary: #2980b9;
+      --dark-bg: #1e272e;
+      --card-bg: #2c3e50;
+      --text-light: #ecf0f1;
+      --border-light: rgba(236,240,241,0.2);
+      --input-bg: rgba(236,240,241,0.05);
+      --transition: all 0.3s ease;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
+    body {
+      background: var(--dark-bg);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+    header {
+      text-align: center;
+      padding: 30px 20px;
+      background: var(--dark-bg);
+      border-bottom: 1px solid var(--border-light);
+      flex-shrink: 0;
+    }
+    .logo-container {
+      display: flex; align-items: center; justify-content: center; gap:15px; margin-bottom:10px;
+    }
+    .logo-icon {
+      background: var(--primary); color:#fff; width:60px; height:60px;
+      border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem;
+    }
+    h1 { font-size:2.2rem; color:var(--primary); }
+    .header-sub { font-size:1rem; color:#bdc3c7; max-width:700px; margin:10px auto 0; }
+    .controls-panel {
+      padding:15px 20px; background:var(--dark-bg);
+      display:flex; justify-content:center; gap:15px;
+      border-bottom:1px solid var(--card-bg);
+    }
+    .btn {
+      padding:10px 25px; border:none; border-radius:6px; font-size:1rem;
+      font-weight:600; cursor:pointer; transition:var(--transition);
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--primary); color:#fff;
+    }
+    .btn:hover { background:var(--primary-dark); }
+    .btn i { margin-right:5px; }
+    .bmc-canvas-wrapper {
+      flex-grow:1; padding:20px; overflow:auto;
+    }
+    #bmc-canvas {
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      grid-template-rows:auto auto auto;
+      gap:10px;
+      width:100%; max-width:1400px; min-height:70vh;
+      margin:0 auto; background:var(--dark-bg);
+      border:2px solid var(--primary);
+      border-radius:8px; padding:10px;
+    }
+    .bmc-block {
+      background:var(--card-bg);
+      border:1px solid var(--border-light);
+      border-radius:6px; padding:15px;
+      display:flex; flex-direction:column; min-height:150px;
+    }
+    .bmc-block h3 {
+      font-size:1.1rem; color:var(--primary);
+      margin-bottom:10px; padding-bottom:8px;
+      border-bottom:1px solid var(--border-light);
+      display:flex; align-items:center; gap:8px;
+    }
+    .bmc-block h3 i { font-size:0.9em; }
+    .bmc-block-content {
+      flex-grow:1; background:var(--input-bg);
+      color:var(--text-light); border:1px solid rgba(255,255,255,0.1);
+      border-radius:4px; padding:10px; font-size:.95rem;
+      overflow-y:auto; min-height:100px;
+    }
+    .bmc-block-content:focus {
+      outline:none; border-color:var(--primary);
+      box-shadow:0 0 0 2px rgba(39,174,96,0.3);
+    }
+
+    /* Grid areas */
+    #key-partnerships    { grid-area:1/1/2/2; }
+    #key-activities      { grid-area:1/2/2/3; }
+    #key-resources       { grid-area:2/2/3/3; }
+    #value-propositions  { grid-area:1/3/3/4; background:rgba(39,174,96,0.1); }
+    #customer-relationships { grid-area:1/4/2/5; }
+    #channels            { grid-area:2/4/3/5; }
+    #customer-segments   { grid-area:1/5/3/6; }
+    #cost-structure      { grid-area:3/1/4/3; }
+    #revenue-streams     { grid-area:3/4/4/6; }
+
+    footer {
+      text-align:center; padding:20px; background:var(--dark-bg);
+      border-top:1px solid var(--card-bg); font-size:.9rem; flex-shrink:0;
+    }
+    .insta-link { color:var(--primary); text-decoration:none; font-weight:bold;}
+    .insta-link:hover { text-decoration:underline;}
+
+    @media(max-width:1200px){
+      #bmc-canvas {
+        grid-template-columns:repeat(3,1fr);
+        grid-template-rows:auto auto auto auto auto;
+      }
+      #key-partnerships{grid-area:1/1/2/2;}
+      #key-activities{grid-area:1/2/2/3;}
+      #key-resources{grid-area:1/3/2/4;}
+      #value-propositions{grid-area:2/1/3/4;}
+      #customer-relationships{grid-area:3/1/4/2;}
+      #channels{grid-area:3/2/4/3;}
+      #customer-segments{grid-area:3/3/4/4;}
+      #cost-structure{grid-area:4/1/5/4;}
+      #revenue-streams{grid-area:5/1/6/4;}
+    }
+    @media(max-width:768px){
+      h1{font-size:1.8rem;} .header-sub{font-size:.9rem;}
+      .bmc-block h3{font-size:1rem;} .bmc-block-content{font-size:.9rem;}
+      #bmc-canvas {
+        grid-template-columns:1fr;
+        grid-template-rows:repeat(9,auto);
+      }
+      #bmc-canvas > .bmc-block{grid-area:auto;}
+    }
+  </style>
+
+
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon"><i class="fas fa-lightbulb"></i></div>
+      <div class="logo-text"><h1>Business Model Canvas</h1></div>
+    </div>
+    <p class="header-sub">
+      Visualize your business model in nine building blocks. Click each box to type.
+    </p>
+  </header>
+
+  <div class="controls-panel">
+    <input type="text" id="canvasTitle" placeholder="Canvas Title (e.g. My Startup)" style="padding:10px;border-radius:6px;border:1px solid var(--border-light);
+             background:var(--input-bg);color:var(--text-light);flex-grow:1;
+             max-width:400px;">
+    <button class="btn" id="exportPdfBtn">
+      <i class="fas fa-file-pdf"></i> Export as PDF
+    </button>
+  </div>
+
+  <div class="bmc-canvas-wrapper">
+    <div id="bmc-canvas">
+      <div class="bmc-block" id="key-partnerships">
+        <h3><i class="fas fa-handshake"></i> Key Partnerships</h3>
+        <div class="bmc-block-content" contenteditable="true" placeholder="Who are your partners?" data-placeholder="Who are your partners?">dgerghad</div>
+      </div>
+      <div class="bmc-block" id="key-activities">
+        <h3><i class="fas fa-tasks"></i> Key Activities</h3>
+        <div class="bmc-block-content" contenteditable="true" placeholder="What activities matter?" data-placeholder="What activities matter?" data-qb-tmp-id="lt-71540" spellcheck="false" data-gramm="false">ghahaehd</div>
+      </div>
+      <div class="bmc-block" id="value-propositions">
+        <h3><i class="fas fa-gift"></i> Value Propositions</h3>
+        <div class="bmc-block-content" contenteditable="true" placeholder="What value do you deliver?" data-placeholder="What value do you deliver?" data-qb-tmp-id="lt-226225" spellcheck="false" data-gramm="false">hdhfhdfh</div>
+      </div>
+      <div class="bmc-block" id="customer-relationships">
+        <h3><i class="fas fa-heart"></i> Customer Relationships</h3>
+        <div class="bmc-block-content" contenteditable="true" placeholder="How do you connect with customers?" data-placeholder="How do you connect with customers?" data-qb-tmp-id="lt-76281" spellcheck="false" data-gramm="false">dfhdfhdf</div>
+      </div>
+      <div class="bmc-block" id="customer-segments">
+        <h3><i class="fas fa-users"></i> Customer Segments</h3>
+        <div class="bmc-block-content" contenteditable="true" placeholder="Who are your customers?" data-placeholder="Who are your customers?" data-qb-tmp-id="lt-103269" spellcheck="false" data-gramm="false">hdfhdfhdf</div>
+      </div>
+      <div class="bmc-block" id="key-resources">
+        <h3><i class="fas fa-key"></i> Key Resources</h3>
+        <div class="bmc-block-content" contenteditable="true" placeholder="What resources do you need?" data-placeholder="What resources do you need?" data-qb-tmp-id="lt-709396" spellcheck="false" data-gramm="false">dfhdfhdfh</div>
+      </div>
+      <div class="bmc-block" id="channels">
+        <h3><i class="fas fa-truck"></i> Channels</h3>
+        <div class="bmc-block-content" contenteditable="true" placeholder="How do you deliver value?" data-placeholder="How do you deliver value?" data-qb-tmp-id="lt-981069" spellcheck="false" data-gramm="false">hdfhdfhdfh</div>
+      </div>
+      <div class="bmc-block" id="cost-structure">
+        <h3><i class="fas fa-file-invoice-dollar"></i> Cost Structure</h3>
+        <div class="bmc-block-content" contenteditable="true" placeholder="What are your main costs?" data-placeholder="What are your main costs?">dfhdfhdfh</div>
+      </div>
+      <div class="bmc-block" id="revenue-streams">
+        <h3><i class="fas fa-coins"></i> Revenue Streams</h3>
+        <div class="bmc-block-content" contenteditable="true" placeholder="How do you earn revenue?" data-placeholder="How do you earn revenue?">dfhdfhdfhdf</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>
+      Business Model Canvas – Ashi Tools | Connect 
+      <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="insta-link">@ashish_singh_rajput_3</a>
+    </p>
+    <p style="color:rgba(236,240,241,.6);font-size:0.85rem;">
+      © 2025 Ashi Tools. Strategize and Innovate.
+    </p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Placeholder logic for contenteditable divs
+      document.querySelectorAll('.bmc-block-content').forEach(div => {
+        if (!div.textContent.trim() && div.hasAttribute('placeholder')) {
+          div.dataset.placeholder = div.getAttribute('placeholder');
+          div.classList.add('is-placeholder');
+          div.textContent = div.dataset.placeholder;
+        }
+        div.addEventListener('focus', () => {
+          if (div.classList.contains('is-placeholder')) {
+            div.textContent = '';
+            div.classList.remove('is-placeholder');
+          }
+        });
+        div.addEventListener('blur', () => {
+          if (!div.textContent.trim() && div.dataset.placeholder) {
+            div.classList.add('is-placeholder');
+            div.textContent = div.dataset.placeholder;
+          }
+        });
+      });
+
+      // PDF Export
+      document.getElementById('exportPdfBtn').addEventListener('click', () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l', 'pt', 'a4');
+        const margin = 20;
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        const contentW = pageW - margin*2;
+        const contentH = pageH - margin*2 - 30;
+
+        // White background
+        doc.setFillColor(255,255,255);
+        doc.rect(0,0,pageW,pageH,'F');
+
+        // Header Title
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(18);
+        doc.setTextColor(0,0,0);
+        const title = document.getElementById('canvasTitle').value.trim() || 'Business Model Canvas';
+        doc.text(title, pageW/2, margin+5, {align:'center'});
+        doc.setFont('helvetica','normal');
+        doc.setFontSize(10);
+        doc.setTextColor(80,80,80);
+        doc.text('Generated by Ashi Tools', pageW/2, margin+18, {align:'center'});
+
+        // Define block positions & sizes
+        const colW = contentW/5;
+        const rowH12 = contentH*0.35;
+        const rowH3  = contentH*0.30;
+        const blocks = [
+          {id:'key-partnerships',    title:'Key Partnerships',       x:margin,            y:margin+30, w:colW,               h:rowH12},
+          {id:'key-activities',      title:'Key Activities',         x:margin+colW,       y:margin+30, w:colW,               h:rowH12/2},
+          {id:'key-resources',       title:'Key Resources',          x:margin+colW,       y:margin+30+rowH12/2, w:colW,        h:rowH12/2},
+          {id:'value-propositions',  title:'Value Propositions',     x:margin+2*colW,     y:margin+30, w:colW,               h:rowH12},
+          {id:'customer-relationships',title:'Customer Relationships',x:margin+3*colW,    y:margin+30, w:colW,               h:rowH12/2},
+          {id:'channels',            title:'Channels',               x:margin+3*colW,     y:margin+30+rowH12/2, w:colW,        h:rowH12/2},
+          {id:'customer-segments',   title:'Customer Segments',      x:margin+4*colW,     y:margin+30, w:colW,               h:rowH12},
+          {id:'cost-structure',      title:'Cost Structure',         x:margin,            y:margin+30+rowH12+5, w:colW*2.5-2.5, h:rowH3},
+          {id:'revenue-streams',     title:'Revenue Streams',        x:margin+colW*2.5+2.5,y:margin+30+rowH12+5, w:colW*2.5-2.5, h:rowH3}
+        ];
+
+        doc.setLineWidth(0.5);
+        doc.setDrawColor(150,150,150);
+        blocks.forEach(b => {
+          doc.rect(b.x,b.y,b.w,b.h);
+          // Title
+          doc.setFont('helvetica','bold');
+          doc.setFontSize(10);
+          doc.setTextColor(0,0,0);
+          const tw = doc.getTextWidth(b.title);
+          doc.text(b.title, b.x + (b.w-tw)/2, b.y+8);
+          // Content
+          const div = document.getElementById(b.id).querySelector('.bmc-block-content');
+          let txt = div.textContent.trim();
+          if(div.classList.contains('is-placeholder') && txt===div.dataset.placeholder) txt='';
+          if(txt){
+            doc.setFont('helvetica','normal');
+            doc.setFontSize(8);
+            doc.setTextColor(30,30,30);
+            const lines = doc.splitTextToSize(txt, b.w-8);
+            let ty = b.y+18;
+            lines.forEach(line=>{
+              if(ty+4<b.y+b.h-4){
+                doc.text(line, b.x+4, ty);
+                ty+=4;
+              }
+            });
+          }
+        });
+
+        // Footer
+        doc.setFontSize(8);
+        doc.setTextColor(120,120,120);
+        doc.text(
+          'Exported from Ashi Tools Business Model Canvas | @ashish_singh_rajput_3',
+          pageW/2, pageH-10, { align:'center' }
+        );
+
+        doc.save(`BMC-${title.replace(/\s+/g,'_')||'AshiTools'}.pdf`);
+      });
+    });
+  </script>
+
+
+            <script></script>
+        
+    
+<qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 504px; position: absolute !important; top: 483px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 781px; position: absolute !important; top: 761px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 1058px; position: absolute !important; top: 483px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 1335px; position: absolute !important; top: 761px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 1058px; position: absolute !important; top: 761px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 504px; position: absolute !important; top: 761px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 504px; position: absolute !important; top: 1039px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 1335px; position: absolute !important; top: 1039px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

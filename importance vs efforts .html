@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1238.0" data-gr-ext-installed="">
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importance vs. Effort Matrix - Ashi Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #8e44ad; /* Purple for this tool */
+            --primary-dark: #732d91;
+            --secondary: #2980b9; /* Blue accents */
+            --dark-bg: #1c1e22; 
+            --card-bg: #282c34; 
+            --text-light: #f0f2f5;
+            --border-light: rgba(240, 242, 245, 0.2);
+            --input-bg: rgba(240, 242, 245, 0.05);
+            --heading-color: var(--primary);
+            --transition: all 0.3s ease;
+
+            /* Quadrant specific accents (subtle) */
+            --q1-do: rgba(46, 204, 113, 0.15); /* Green light */
+            --q2-plan: rgba(52, 152, 219, 0.15); /* Blue light */
+            --q3-delegate: rgba(243, 156, 18, 0.15); /* Orange light */
+            --q4-eliminate: rgba(231, 76, 60, 0.15); /* Red light */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--dark-bg);
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+        .logo-container {
+            display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px;
+        }
+        .logo-icon {
+            background: var(--primary); color: white; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem;
+        }
+        h1 { font-size: 2.2rem; color: var(--primary); }
+        .header-sub { font-size: 1rem; color: #bdc3c7; max-width: 700px; margin: 10px auto 0; }
+
+        .controls-panel {
+            padding: 15px 20px;
+            background: var(--dark-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--card-bg);
+            position: sticky; 
+            top: 0;
+            z-index: 100;
+        }
+        #matrixTitleInput {
+            flex-grow: 1;
+            max-width: 500px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-light);
+            background: var(--input-bg);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        #matrixTitleInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(142, 68, 173, 0.3);
+        }
+
+        .btn {
+            padding: 10px 25px; border:none; border-radius: 6px; font-size: 1rem;
+            font-weight: 600; cursor: pointer; transition: var(--transition);
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--primary); color: white;
+        }
+        .btn:hover { background: var(--primary-dark); }
+        .btn i { margin-right: 5px; }
+
+        .matrix-area-wrapper {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center the matrix */
+        }
+
+        .matrix-labels {
+            width: 100%;
+            max-width: 900px; /* Match matrix width */
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px; /* Align with matrix gap */
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .effort-label { margin-left: auto; } /* Pushes Effort label to the right effectively */
+        .y-axis-label-container {
+            display: flex;
+            align-items: center;
+            margin-right: 20px; /* Space between label and matrix */
+        }
+        .importance-label {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            white-space: nowrap;
+            font-weight: bold;
+            color: var(--primary);
+            text-align: center;
+        }
+
+
+        #matrix-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            max-width: 900px; 
+            height: 70vh; /* Adjust as needed */
+            min-height: 600px;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 10px;
+            position: relative; /* For axis labels */
+        }
+        
+        .axis-label{
+            position: absolute;
+            font-weight:bold;
+            color: var(--primary);
+            font-size: 0.9em;
+        }
+        .axis-label.importance-up{ top: -25px; left: 5px;}
+        .axis-label.importance-down{ bottom: -25px; left: 5px;}
+        .axis-label.effort-left{ top: 50%; left: -30px; transform: translateY(-50%) rotate(-90deg);}
+        .axis-label.effort-right{top: 50%; right: -30px; transform: translateY(-50%) rotate(-90deg);}
+
+
+        .quadrant {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Applying subtle background hints */
+        #quadrant-do-first { background-color: var(--q1-do); }
+        #quadrant-plan     { background-color: var(--q2-plan); }
+        #quadrant-delegate { background-color: var(--q3-delegate); }
+        #quadrant-eliminate{ background-color: var(--q4-eliminate); }
+
+
+        .quadrant h2 {
+            font-size: 1.2rem; /* Slightly smaller for quadrant titles */
+            color: var(--text-light);
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom:  1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .quadrant h2 i { font-size: 0.9em; color: var(--heading-color); }
+        .quadrant h2 .sub-title { font-size: 0.8em; color: #bdc3c7; display: block; font-weight: normal;}
+
+        .task-list {
+            list-style: none;
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 5px; /* For scrollbar */
+        }
+
+        .task-item {
+            background: var(--input-bg);
+            color: var(--text-light);
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid transparent; /* For color coding */
+            transition: background-color 0.2s ease;
+        }
+        .task-item:hover { background-color: rgba(255,255,255,0.1); }
+
+        .task-item.q1-border { border-left-color: #2ecc71; }
+        .task-item.q2-border { border-left-color: #3498db; }
+        .task-item.q3-border { border-left-color: #f39c12; }
+        .task-item.q4-border { border-left-color: #e74c3c; }
+
+        .task-text { flex-grow: 1; cursor: text; }
+        .task-actions button {
+            background: none;
+            border: none;
+            color: #95a5a6;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 8px;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .task-actions button:hover { color: var(--text-light); background-color: rgba(255,255,255,0.15); }
+
+        .add-task-row {
+            display: flex;
+            margin-top: 10px;
+        }
+        .add-task-row input {
+            flex-grow: 1;
+            padding: 8px 10px;
+            border-radius: 4px 0 0 4px;
+            border: 1px solid var(--border-light);
+            background: var(--input-bg);
+            color: var(--text-light);
+            font-size: 0.95rem;
+            border-right: none;
+        }
+        .add-task-row input:focus { outline: none; border-color: var(--primary); }
+        .add-task-row button {
+            padding: 8px 15px;
+            border-radius: 0 4px 4px 0;
+            background: var(--primary);
+            color: white;
+            border: 1px solid var(--primary);
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        .add-task-row button:hover { background: var(--primary-dark); }
+
+
+        footer {
+            text-align: center; padding: 20px; background: var(--dark-bg);
+            border-top: 1px solid var(--card-bg); font-size: 0.9em; flex-shrink: 0;
+        }
+        .insta-link { color: var(--primary); text-decoration: none; font-weight: bold; }
+        .insta-link:hover { text-decoration: underline; }
+        
+        /* PDF Preview / Hidden structure for PDF generation */
+        #pdf-content-wrapper {
+            display: none; /* Hidden on screen */
+            font-family: Arial, sans-serif; /* Common font for PDF */
+            color: #333; /* Dark text for PDF */
+        }
+        #pdf-content-wrapper h1, #pdf-content-wrapper h2, #pdf-content-wrapper p, #pdf-content-wrapper li {
+            color: #333 !important;
+        }
+
+    </style>
+
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon"><i class="fas fa-table-cells"></i></div>
+            <div class="logo-text">
+                <h1>Importance vs. Effort Matrix</h1>
+            </div>
+        </div>
+        <p class="header-sub">Prioritize tasks effectively by categorizing them based on their importance and the effort required.</p>
+    </header>
+
+    <div class="controls-panel">
+        <input type="text" id="matrixTitleInput" placeholder="Enter Matrix Title (e.g., Q3 Project Priorities)" value="My Prioritization Matrix">
+        <button class="btn" id="exportPdfBtn"><i class="fas fa-file-pdf"></i> Export as PDF</button>
+    </div>
+    
+    <div class="matrix-area-wrapper">
+        <div id="matrix-grid">
+            <div class="axis-label importance-up" style="left: 25%; transform: translateX(-50%); top: -25px;">High Importance</div>
+            <div class="axis-label importance-down" style="left: 25%; transform: translateX(-50%); bottom: -25px;">Low Importance</div>
+             <div class="axis-label importance-up" style="left: 75%; transform: translateX(-50%); top: -25px;">High Importance</div>
+            <div class="axis-label importance-down" style="left: 75%; transform: translateX(-50%); bottom: -25px;">Low Importance</div>
+
+            <div class="axis-label effort-left" style="top: 25%; transform: translateY(-50%) rotate(-90deg); left: -35px;">Low Effort</div>
+            <div class="axis-label effort-right" style="top: 25%; transform: translateY(-50%) rotate(-90deg); right: -35px;">High Effort</div>
+             <div class="axis-label effort-left" style="top: 75%; transform: translateY(-50%) rotate(-90deg); left: -35px;">Low Effort</div>
+            <div class="axis-label effort-right" style="top: 75%; transform: translateY(-50%) rotate(-90deg); right: -35px;">High Effort</div>
+
+
+            <!-- Quadrant 1: Do First -->
+            <div class="quadrant" id="quadrant-do-first" data-quadrant-id="q1">
+                <h2><i class="fas fa-rocket"></i> Do First <span class="sub-title">(High Importance, Low Effort)</span></h2>
+                <ul class="task-list" id="q1-tasks"> <!-- Tasks for Q1 --> </ul>
+                <div class="add-task-row">
+                    <input type="text" placeholder="Add task to 'Do First'...">
+                    <button class="add-task-btn"><i class="fas fa-plus"></i> Add</button>
+                </div>
+            </div>
+
+            <!-- Quadrant 2: Plan -->
+            <div class="quadrant" id="quadrant-plan" data-quadrant-id="q2">
+                <h2><i class="fas fa-calendar-alt"></i> Plan <span class="sub-title">(High Importance, High Effort)</span></h2>
+                <ul class="task-list" id="q2-tasks"> <!-- Tasks for Q2 --> </ul>
+                <div class="add-task-row">
+                    <input type="text" placeholder="Add task to 'Plan'...">
+                    <button class="add-task-btn"><i class="fas fa-plus"></i> Add</button>
+                </div>
+            </div>
+
+            <!-- Quadrant 3: Delegate -->
+            <div class="quadrant" id="quadrant-delegate" data-quadrant-id="q3">
+                <h2><i class="fas fa-users-cog"></i> Delegate <span class="sub-title">(Low Importance, Low Effort)</span></h2>
+                <ul class="task-list" id="q3-tasks"> <!-- Tasks for Q3 --> </ul>
+                <div class="add-task-row">
+                    <input type="text" placeholder="Add task to 'Delegate'...">
+                    <button class="add-task-btn"><i class="fas fa-plus"></i> Add</button>
+                </div>
+            </div>
+
+            <!-- Quadrant 4: Eliminate -->
+            <div class="quadrant" id="quadrant-eliminate" data-quadrant-id="q4">
+                <h2><i class="fas fa-trash-alt"></i> Reconsider / Avoid <span class="sub-title">(Low Importance, High Effort)</span></h2>
+                <ul class="task-list" id="q4-tasks"> <!-- Tasks for Q4 --> </ul>
+                <div class="add-task-row">
+                    <input type="text" placeholder="Add task to 'Reconsider'...">
+                    <button class="add-task-btn"><i class="fas fa-plus"></i> Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden structure for PDF generation content, if needed for complex formatting -->
+    <div id="pdf-content-wrapper"></div>
+
+
+    <footer>
+        <p>Importance vs. Effort Matrix - Part of Ashi Tools | Connect <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="insta-link">@ashish_singh_rajput_3</a></p>
+        <p class="copyright">© 2025 Ashi Tools. Prioritize for Impact.</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const exportPdfBtn = document.getElementById('exportPdfBtn');
+        const matrixTitleInput = document.getElementById('matrixTitleInput');
+        const quadrants = document.querySelectorAll('.quadrant');
+
+        quadrants.forEach(quadrant => {
+            const addTaskBtn = quadrant.querySelector('.add-task-btn');
+            const taskInput = quadrant.querySelector('.add-task-row input');
+            const taskList = quadrant.querySelector('.task-list');
+            const quadrantId = quadrant.dataset.quadrantId;
+
+            addTaskBtn.addEventListener('click', () => {
+                const taskText = taskInput.value.trim();
+                if (taskText) {
+                    addTaskToQuadrant(taskList, taskText, quadrantId);
+                    taskInput.value = '';
+                }
+            });
+            taskInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addTaskBtn.click();
+                }
+            });
+        });
+
+        function addTaskToQuadrant(listElement, text, quadrantId) {
+            const listItem = document.createElement('li');
+            listItem.className = 'task-item';
+            listItem.classList.add(`${quadrantId}-border`); // For color coding if needed
+
+            const textSpan = document.createElement('span');
+            textSpan.className = 'task-text';
+            textSpan.textContent = text;
+            textSpan.addEventListener('dblclick', () => editTask(textSpan));
+
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'task-actions';
+
+            const editBtn = document.createElement('button');
+            editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+            editBtn.title = "Edit task";
+            editBtn.addEventListener('click', () => editTask(textSpan));
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+            deleteBtn.title = "Delete task";
+            deleteBtn.addEventListener('click', () => listItem.remove());
+
+            actionsDiv.appendChild(editBtn);
+            actionsDiv.appendChild(deleteBtn);
+            listItem.appendChild(textSpan);
+            listItem.appendChild(actionsDiv);
+            listElement.appendChild(listItem);
+        }
+
+        function editTask(textSpanElement) {
+            const currentText = textSpanElement.textContent;
+            const newText = prompt("Edit task:", currentText);
+            if (newText !== null && newText.trim() !== "") {
+                textSpanElement.textContent = newText.trim();
+            }
+        }
+
+        exportPdfBtn.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'pt', 'a4'); // Landscape, points, A4
+
+            const pageMargin = 40;
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const contentWidth = pageWidth - 2 * pageMargin;
+            const contentHeight = pageHeight - 2 * pageMargin - 50; // Space for title and footer further down
+
+            // PDF Styling
+            doc.setFillColor(255, 255, 255); // White background
+            doc.rect(0, 0, pageWidth, pageHeight, 'F');
+            doc.setTextColor(30, 30, 30); // Dark text
+
+            // PDF Header / Matrix Title
+            doc.setFontSize(20);
+            doc.setFont("helvetica", "bold");
+            const matrixUserTitle = matrixTitleInput.value.trim() || "Importance vs. Effort Matrix";
+            doc.text(matrixUserTitle, pageWidth / 2, pageMargin, { align: 'center' });
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(100,100,100);
+            doc.text("Generated by Ashi Tools", pageWidth / 2, pageMargin + 10, { align: 'center' });
+
+            // Axis labels and general structure
+            let currentY = pageMargin + 30;
+            const quadrantWidth = (contentWidth - 10) / 2; // 10 for gap between quadrants
+            const quadrantHeight = (contentHeight - 10) / 2;
+
+            doc.setLineWidth(0.5);
+            doc.setDrawColor(180, 180, 180); // Light grey for grid lines
+
+            // Importance Axis Label (Vertical)
+            doc.setFontSize(10);
+            doc.setTextColor(80, 80, 80);
+            doc.setFont("helvetica", "bold");
+            doc.text("Importance", pageMargin - 25, currentY + contentHeight / 2, { angle: -90, align: 'center' });
+            doc.text("Low", pageMargin - 15, currentY + quadrantHeight * 1.5 + 5, { angle: -90, align: 'center' });
+            doc.text("High", pageMargin - 15, currentY + quadrantHeight * 0.5 - 5, { angle: -90, align: 'center' });
+            
+            // Effort Axis Label (Horizontal)
+            doc.text("Effort", pageMargin + contentWidth / 2, currentY + contentHeight + 15, { align: 'center' });
+            doc.text("Low", pageMargin + quadrantWidth * 0.5, currentY + contentHeight + 5, { align: 'center' });
+            doc.text("High", pageMargin + quadrantWidth * 1.5 + 10, currentY + contentHeight + 5, { align: 'center' });
+
+
+
+            const quadrantData = [
+                { id: 'quadrant-do-first', title: 'Do First (High Importance, Low Effort)', color: [46, 204, 113] },
+                { id: 'quadrant-plan',     title: 'Plan (High Importance, High Effort)',   color: [52, 152, 219] },
+                { id: 'quadrant-delegate', title: 'Delegate (Low Importance, Low Effort)', color: [243, 156, 18] },
+                { id: 'quadrant-eliminate',title: 'Reconsider/Avoid (Low Importance, High Effort)', color: [231, 76, 60]}
+            ];
+
+            quadrantData.forEach((qData, index) => {
+                const col = index % 2;
+                const row = Math.floor(index / 2);
+
+                const x = pageMargin + col * (quadrantWidth + 10);
+                const y = currentY + row * (quadrantHeight + 10);
+
+                // Draw quadrant box
+                doc.setDrawColor(qData.color[0],qData.color[1],qData.color[2]);
+                doc.setLineWidth(1);
+                doc.rect(x, y, quadrantWidth, quadrantHeight);
+                doc.setDrawColor(180,180,180); // reset draw color for potential inner lines
+                doc.setLineWidth(0.5);
+
+                // Quadrant Title
+                doc.setFontSize(11);
+                doc.setFont("helvetica", "bold");
+                doc.setTextColor(qData.color[0],qData.color[1],qData.color[2]);
+                // Splitting title for better fit if needed
+                const titleLines = doc.splitTextToSize(qData.title, quadrantWidth - 16); // 8pt padding
+                let titleY = y + 10;
+                for (let i = 0; i < titleLines.length; i++) {
+                    if (i < 2) { // Limit title lines to 2
+                         doc.text(titleLines[i], x + 8, titleY);
+                         titleY += 10; // Approx line height for 11pt
+                    }
+                }
+
+
+                // Quadrant Tasks
+                const taskListElement = document.getElementById(qData.id).querySelector('.task-list');
+                const tasks = Array.from(taskListElement.querySelectorAll('.task-item .task-text')).map(span => span.textContent);
+                
+                doc.setFontSize(9);
+                doc.setFont("helvetica", "normal");
+                doc.setTextColor(50, 50, 50);
+                let taskTextY = y + 10 + (Math.min(2, titleLines.length) * 10) + 5; // Start tasks below title
+
+                tasks.forEach(taskText => {
+                    if (taskTextY > y + quadrantHeight - 15) return; // Stop if overflowing quadrant badly
+                    
+                    const lines = doc.splitTextToSize(`• ${taskText}`, quadrantWidth - 16); // 8pt padding
+                    lines.forEach(line => {
+                         if (taskTextY > y + quadrantHeight - 15) return;
+                         doc.text(line, x + 8, taskTextY);
+                         taskTextY += 9; // Approx line height for 9pt
+                    });
+                });
+            });
+            
+            // PDF Footer
+            const footerY = pageHeight - 15;
+            doc.setFontSize(8);
+            doc.setTextColor(150, 150, 150);
+            doc.text(`Exported from Ashi Tools Importance vs. Effort Matrix | @ashish_singh_rajput_3`,
+                         pageWidth / 2, footerY, { align: 'center' });
+
+            doc.save(`Importance_Effort_Matrix-${matrixUserTitle.replace(/\s+/g, '_') || 'AshiTools'}.pdf`);
+        });
+    });
+    </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

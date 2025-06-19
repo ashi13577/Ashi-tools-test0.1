@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+<meta charset="UTF-8">
+<title>Startup Cost Estimator | Ashi Tools</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+/* ===== THEME & LAYOUT (unchanged) ===== */
+:root{--primary:#9c27b0;--primary-dark:#7b1fa2;--primary-light:rgba(156,39,176,.15);--secondary:#e91e63;--accent:#00bcd4;--success:#4caf50;--dark-bg:#1c1e22;--card-bg:#282c34;--text-light:#f0f2f5;--text-muted:#93979c;--border-light:rgba(240,242,245,.15);--input-bg:rgba(240,242,245,.05);--transition:.3s ease}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+body{background:var(--dark-bg);color:var(--text-light);min-height:100vh;display:flex;flex-direction:column}
+header,footer{background:var(--dark-bg);border-color:var(--border-light);text-align:center;padding:25px 20px;flex-shrink:0}
+h1{font-size:2.2rem;color:var(--primary)}
+header .logo-icon{background:var(--primary);color:#fff;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 8px}
+.header-sub{color:var(--text-muted)}
+.main{flex:1;padding:35px 20px;max-width:1200px;margin:auto;width:100%}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card-bg);border:1px solid var(--border-light);border-radius:10px;padding:30px}
+.section-title{display:flex;align-items:center;gap:10px;font-size:1.5rem;color:var(--primary);margin-bottom:20px;border-bottom:1px solid var(--border-light);padding-bottom:15px}
+.section-title i{background:var(--primary-light);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--primary)}
+/* ===== CHECKLIST ===== */
+.checklist-item{display:flex;align-items:center;gap:15px;margin-bottom:18px}
+.checklist-item input[type="number"]{flex:1;min-width:110px;padding:10px 12px;border-radius:6px;border:1px solid var(--border-light);background:var(--input-bg);color:var(--text-light)}
+.checklist-item input[type="number"]:focus{outline:none;border-color:var(--primary)}
+.cost-label{flex:1}
+input[type="checkbox"]{transform:scale(1.2);accent-color:var(--primary)}
+/* ===== NEW ITEM MINI-FORM ===== */
+#new-item-form{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+#newLabel{flex:2 1 180px} #newCost{flex:1 1 110px}
+#new-item-form input{padding:10px 12px;border-radius:6px;border:1px solid var(--border-light);background:var(--input-bg);color:var(--text-light)}
+#new-item-form input:focus{outline:none;border-color:var(--primary)}
+/* ===== BUTTONS ===== */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 25px;border:none;border-radius:6px;cursor:pointer;font-weight:600;background:var(--primary);color:#fff;transition:var(--transition)}
+.btn:hover{background:var(--primary-dark);transform:translateY(-2px)}
+.btn-secondary{background:var(--secondary)} .btn-secondary:hover{background:#c2185b}
+.btn-reset{background:var(--text-muted)} .btn-reset:hover{background:#61666b}
+#addBtn{background:var(--success)} #addBtn:hover{background:#3a8b3d}
+.btn-group{margin-top:15px;display:flex;gap:15px;flex-wrap:wrap}
+/* New style for excel button */
+#exportExcelBtn {
+    background-color: #28a745; /* Green */
+}
+#exportExcelBtn:hover {
+    background-color: #218838;
+}
+/* ===== PROGRESS ===== */
+.progress-box{margin-bottom:30px}
+.progress-bar{height:10px;background:var(--border-light);border-radius:5px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:var(--success);width:0%;transition:width .3s}
+/* ===== SUMMARY ===== */
+.summary{background:rgba(0,0,0,.25);padding:25px;border-radius:8px;border:1px solid var(--border-light);min-height:220px;font-size:1.1rem}
+.summary h3{font-size:2rem;margin-bottom:15px;color:var(--accent)}
+.summary ul{list-style:none}
+.summary li{display:flex;justify-content:space-between;margin-bottom:8px}
+.total{margin-top:20px;font-size:1.6rem;font-weight:700;color:var(--success)}
+footer a{color:var(--primary);text-decoration:none;font-weight:700}
+footer a:hover{text-decoration:underline}
+</style>
+
+
+
+<header>
+  <div class="logo-icon"><i class="fas fa-coins"></i></div>
+  <h1>Startup Cost Estimator</h1>
+  <p class="header-sub">Plan your launch budget with our interactive checklist</p>
+</header>
+
+<main class="main">
+  <!-- ========= PROGRESS ========= -->
+  <div class="progress-box card">
+    <div class="progress-text">Checklist Completion: <span id="percent">0%</span></div>
+    <div class="progress-bar"><div id="fill" class="progress-fill" style="width: 0%;"></div></div>
+  </div>
+
+  <div class="grid">
+    <!-- ========= FORM SIDE ========= -->
+    <div class="card">
+      <h2 class="section-title"><i class="fas fa-list-check"></i> Cost Items</h2>
+
+      <div id="checklist">
+      <div class="checklist-item">
+        <input type="checkbox" id="cb-legal" data-idx="0">
+        <label for="cb-legal" class="cost-label">Legal &amp; Incorporation</label>
+        <input type="number" id="cost-legal" data-idx="0" placeholder="₹" min="0" step="100" value="" disabled="">
+      </div>
+    
+      <div class="checklist-item">
+        <input type="checkbox" id="cb-equipment" data-idx="1">
+        <label for="cb-equipment" class="cost-label">Equipment &amp; Hardware</label>
+        <input type="number" id="cost-equipment" data-idx="1" placeholder="₹" min="0" step="100" value="" disabled="">
+      </div>
+    
+      <div class="checklist-item">
+        <input type="checkbox" id="cb-office" data-idx="2">
+        <label for="cb-office" class="cost-label">Office / Co-working</label>
+        <input type="number" id="cost-office" data-idx="2" placeholder="₹" min="0" step="100" value="" disabled="">
+      </div>
+    
+      <div class="checklist-item">
+        <input type="checkbox" id="cb-website" data-idx="3">
+        <label for="cb-website" class="cost-label">Website &amp; Hosting</label>
+        <input type="number" id="cost-website" data-idx="3" placeholder="₹" min="0" step="100" value="" disabled="">
+      </div>
+    
+      <div class="checklist-item">
+        <input type="checkbox" id="cb-marketing" data-idx="4">
+        <label for="cb-marketing" class="cost-label">Marketing &amp; Advertising</label>
+        <input type="number" id="cost-marketing" data-idx="4" placeholder="₹" min="0" step="100" value="" disabled="">
+      </div>
+    
+      <div class="checklist-item">
+        <input type="checkbox" id="cb-staff" data-idx="5">
+        <label for="cb-staff" class="cost-label">Staff &amp; Salaries</label>
+        <input type="number" id="cost-staff" data-idx="5" placeholder="₹" min="0" step="100" value="" disabled="">
+      </div>
+    
+      <div class="checklist-item">
+        <input type="checkbox" id="cb-licenses" data-idx="6">
+        <label for="cb-licenses" class="cost-label">Licenses &amp; Permits</label>
+        <input type="number" id="cost-licenses" data-idx="6" placeholder="₹" min="0" step="100" value="" disabled="">
+      </div>
+    
+      <div class="checklist-item">
+        <input type="checkbox" id="cb-misc" data-idx="7">
+        <label for="cb-misc" class="cost-label">Miscellaneous</label>
+        <input type="number" id="cost-misc" data-idx="7" placeholder="₹" min="0" step="100" value="" disabled="">
+      </div>
+    </div>
+
+      <!-- ---- Add New Expense Row ---- -->
+      <div id="new-item-form">
+        <input type="text" id="newLabel" placeholder="Other expense (e.g. Insurance)">
+        <input type="number" id="newCost" placeholder="₹" min="0" step="100">
+        <button id="addBtn" class="btn"><i class="fas fa-plus-circle"></i>Add</button>
+      </div>
+
+      <div class="btn-group">
+        <button id="reset" class="btn btn-reset"><i class="fas fa-redo"></i>Reset</button>
+        <button id="exportPdfBtn" class="btn btn-secondary"><i class="fas fa-file-pdf"></i>Export PDF</button>
+        <button id="exportExcelBtn" class="btn"><i class="fas fa-file-excel"></i>Export Excel</button>
+      </div>
+    </div>
+
+    <!-- ========= SUMMARY ========= -->
+    <div class="card">
+      <h2 class="section-title"><i class="fas fa-file-invoice-dollar"></i> Summary</h2>
+      <div class="summary" id="summary"><h3>No items selected</h3></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  Startup Cost Estimator – Ashi Tools | Connect
+  <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank">@ashish_singh_rajput_3</a>
+</footer>
+
+<script>
+/* ========== DATA & STATE ========== */
+let items = [
+  {id:'legal', label:'Legal & Incorporation', checked:false, value:''},
+  {id:'equipment', label:'Equipment & Hardware', checked:false, value:''},
+  {id:'office', label:'Office / Co-working', checked:false, value:''},
+  {id:'website', label:'Website & Hosting', checked:false, value:''},
+  {id:'marketing', label:'Marketing & Advertising', checked:false, value:''},
+  {id:'staff', label:'Staff & Salaries', checked:false, value:''},
+  {id:'licenses', label:'Licenses & Permits', checked:false, value:''},
+  {id:'misc', label:'Miscellaneous', checked:false, value:''}
+];
+
+/* ========== ELEMENTS ========== */
+const checklist = document.getElementById('checklist');
+const percentTxt = document.getElementById('percent');
+const fillBar    = document.getElementById('fill');
+const summary    = document.getElementById('summary');
+const resetBtn   = document.getElementById('reset');
+const exportPdfBtn  = document.getElementById('exportPdfBtn'); // Renamed PDF button
+const exportExcelBtn = document.getElementById('exportExcelBtn'); // New Excel button
+const addBtn     = document.getElementById('addBtn');
+const newLabel   = document.getElementById('newLabel');
+const newCost    = document.getElementById('newCost');
+
+/* ========== RENDER ==========
+   Creates checklist rows based on current items array */
+function renderList(){
+  checklist.innerHTML='';
+  items.forEach((item,idx)=>{
+    checklist.insertAdjacentHTML('beforeend',`
+      <div class="checklist-item">
+        <input type="checkbox" id="cb-${item.id}" data-idx="${idx}" ${item.checked?'checked':''}>
+        <label for="cb-${item.id}" class="cost-label">${item.label}</label>
+        <input type="number" id="cost-${item.id}" data-idx="${idx}" placeholder="₹" min="0" step="100"
+               value="${item.value}" ${item.checked?'':'disabled'}>
+      </div>
+    `)
+  });
+}
+
+/* ========== HELPERS ========== */
+const rup = v => '₹'+Number(v||0).toLocaleString('en-IN');
+
+function updateProgress(){
+  const total=items.length;
+  const done=items.filter(i=>i.checked).length;
+  const pct=Math.round(done/total*100);
+  fillBar.style.width=pct+'%'; percentTxt.textContent=pct+'%';
+}
+
+function rebuildSummary(){
+  const sel=items.filter(i=>i.checked);
+  if(!sel.length){summary.innerHTML='<h3>No items selected</h3>';return;}
+  let total=0;
+  let html='<h3>Selected Costs</h3><ul>';
+  sel.forEach(i=>{total+=Number(i.value||0); html+=`<li><span>${i.label}</span><span>${rup(i.value)}</span></li>`});
+  html+='</ul><div class="total">Total: '+rup(total)+'</div>';
+  summary.innerHTML=html;
+}
+
+/* ========== EVENT HANDLERS ========== */
+checklist.addEventListener('change',e=>{
+  const idx=e.target.dataset.idx;
+  if(idx===undefined) return;
+
+  if(e.target.type==='checkbox'){
+    items[idx].checked=e.target.checked;
+    const costInput=document.getElementById(`cost-${items[idx].id}`);
+    costInput.disabled=!e.target.checked;
+    if(!e.target.checked){items[idx].value='';costInput.value='';}
+  }
+  updateProgress(); rebuildSummary();
+});
+
+checklist.addEventListener('input',e=>{
+  const idx=e.target.dataset.idx;
+  if(idx!==undefined && e.target.type==='number'){
+    items[idx].value=e.target.value;
+    rebuildSummary();
+  }
+});
+
+/* ----- Add new expense ----- */
+addBtn.addEventListener('click',()=>{
+  const label=newLabel.value.trim();
+  const cost =newCost.value.trim();
+  if(!label){alert('Please enter a label');return;}
+  const id   ='custom_'+Date.now();
+  items.push({id,label,checked:true,value:cost});
+  newLabel.value=''; newCost.value='';
+  renderList(); updateProgress(); rebuildSummary();
+});
+
+/* ----- Reset ----- */
+resetBtn.addEventListener('click',()=>{
+  if(!confirm('Are you sure you want to reset? All custom expenses will be removed and default ones reset.'))return;
+  // Reset built-in items to their default state (unchecked, empty value)
+  items = [
+    {id:'legal', label:'Legal & Incorporation', checked:false, value:''},
+    {id:'equipment', label:'Equipment & Hardware', checked:false, value:''},
+    {id:'office', label:'Office / Co-working', checked:false, value:''},
+    {id:'website', label:'Website & Hosting', checked:false, value:''},
+    {id:'marketing', label:'Marketing & Advertising', checked:false, value:''},
+    {id:'staff', label:'Staff & Salaries', checked:false, value:''},
+    {id:'licenses', label:'Licenses & Permits', checked:false, value:''},
+    {id:'misc', label:'Miscellaneous', checked:false, value:''}
+  ];
+  renderList(); updateProgress(); rebuildSummary();
+});
+
+/* ----- Export PDF ----- */
+exportPdfBtn.addEventListener('click',()=>{
+  const selectedItems = items.filter(i => i.checked);
+  if (selectedItems.length === 0) {
+    alert('Please select at least one cost item to export to PDF.');
+    return;
+  }
+  
+  exportPdfBtn.disabled=true;
+  exportPdfBtn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Preparing PDF...';
+
+  setTimeout(()=>{
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Set document title and font sizes
+    doc.setFontSize(16);
+    doc.text('Startup Cost Estimate', 15, 20);
+
+    doc.setFontSize(12);
+    let currentY = 35; // Starting Y position for the list items
+    const leftMargin = 15;
+    const rightMargin = doc.internal.pageSize.getWidth() - 15; // Right edge of the page minus margin
+    const lineHeight = 8; // Vertical space between items
+
+    // Print individual items
+    selectedItems.forEach(item => {
+      const itemLabel = item.label;
+      const itemValue = rup(item.value); // Use rup function for formatting
+
+      // Print label on the left
+      doc.text(itemLabel, leftMargin, currentY);
+
+      // Print value on the right, adjusting for text width
+      const valueWidth = doc.getStringWidth(itemValue);
+      // Use { align: 'right' } for robust right-alignment within a given coordinate
+      doc.text(itemValue, rightMargin - valueWidth, currentY); // x, y, options for alignment, etc.
+
+      currentY += lineHeight; // Move to the next line
+    });
+
+    // Calculate and print total cost
+    let totalCost = 0;
+    selectedItems.forEach(i => {
+        totalCost += Number(i.value || 0);
+    });
+
+    currentY += 5; // Add a little extra space before the total line
+    doc.setLineWidth(0.5); // Draw a line before total
+    doc.line(leftMargin, currentY, rightMargin, currentY);
+    currentY += lineHeight;
+
+    doc.setFontSize(14); // Make total slightly larger
+    doc.text('Total:', leftMargin, currentY);
+    const totalValueFormatted = rup(totalCost);
+    const totalWidth = doc.getStringWidth(totalValueFormatted);
+    doc.text(totalValueFormatted, rightMargin - totalWidth, currentY); // x, y, options
+
+    // Footer text fixed at the bottom
+    doc.setFontSize(10);
+    // Position footer relative to the bottom of the page (internal.pageSize.getHeight())
+    doc.text('Generated with Ashi Tools – Startup Cost Estimator', 15, doc.internal.pageSize.getHeight() - 15); 
+
+    doc.save('startup_cost_estimate.pdf');
+    exportPdfBtn.disabled=false;
+    exportPdfBtn.innerHTML='<i class="fas fa-file-pdf"></i> Export PDF';
+  },400);
+});
+
+/* ----- Export Excel (CSV) ----- */
+exportExcelBtn.addEventListener('click', () => {
+    const selectedItems = items.filter(i => i.checked);
+    if (selectedItems.length === 0) {
+        alert('Please select at least one cost item to export to Excel.');
+        return;
+    }
+
+    exportExcelBtn.disabled = true;
+    exportExcelBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing Excel...';
+
+    setTimeout(() => {
+        // Build CSV content
+        let csvContent = "data:text/csv;charset=utf-8,";
+        // Header row
+        csvContent += "Expense Name,Cost (INR)\n";
+
+        // Data rows
+        let totalCost = 0;
+        selectedItems.forEach(item => {
+            // Escape double quotes by doubling them for CSV format, and wrap in quotes
+            const label = `"${item.label.replace(/"/g, '""')}"`; 
+            const value = item.value || 0; // Get raw number for excel to interpret correctly
+            csvContent += `${label},${value}\n`;
+            totalCost += Number(value);
+        });
+
+        // Total row
+        csvContent += `\n"Total",${totalCost}\n`; // Newline for separation, then "Total" in quotes
+
+        // Create a hidden link and trigger download
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "startup_cost_estimate.csv");
+        document.body.appendChild(link); // Required for Firefox to click programmatically
+        link.click();
+        document.body.removeChild(link); // Clean up the link element
+
+        exportExcelBtn.disabled = false;
+        exportExcelBtn.innerHTML = '<i class="fas fa-file-excel"></i> Export Excel';
+    }, 400);
+});
+
+/* ========== INITIALISE ========== */
+renderList(); updateProgress(); rebuildSummary();
+</script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

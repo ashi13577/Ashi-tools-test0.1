@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        <style type="text/css">.lf-progress {
+  -webkit-appearance: none;
+  -moz-apperance: none;
+  width: 100%;
+  /* margin: 0 10px; */
+  height: 4px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.lf-progress:focus {
+  outline: none;
+  border: none;
+}
+.lf-progress::-moz-range-track {
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+}
+.lf-progress::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress::-moz-range-thumb {
+  -moz-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress::-ms-track {
+  width: 100%;
+  height: 3px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.lf-progress::-ms-fill-lower {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lf-progress::-ms-fill-upper {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lf-progress::-ms-thumb {
+  border: 0;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress:focus::-ms-fill-lower {
+  background: #ccc;
+}
+.lf-progress:focus::-ms-fill-upper {
+  background: #ccc;
+}
+.lf-player-container :focus {
+  outline: 0;
+}
+.lf-popover {
+  position: relative;
+}
+
+.lf-popover-content {
+  display: inline-block;
+  position: absolute;
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+}
+
+.lf-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lf-player-btn-container {
+  display: flex;
+  align-items: center;
+}
+.lf-player-btn {
+  cursor: pointer;
+  fill: #999;
+  width: 14px;
+}
+
+.lf-player-btn.active {
+  fill: #555;
+}
+
+.lf-popover {
+  position: relative;
+}
+
+.lf-popover-content {
+  display: inline-block;
+  position: absolute;
+  background-color: #ffffff;
+  opacity: 1;
+
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+  padding: 10px;
+}
+
+.lf-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lf-arrow {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  bottom: -9px;
+  border-style: solid;
+  border-width: 10px 10px 0px 10px;
+}
+
+.lf-left-align,
+.lf-left-align .lfarrow {
+  left: 0;
+  right: unset;
+}
+
+.lf-right-align,
+.lf-right-align .lf-arrow {
+  right: 0;
+  left: unset;
+}
+
+.lf-text-input {
+  border: 1px #ccc solid;
+  border-radius: 5px;
+  padding: 3px;
+  width: 60px;
+  margin: 0;
+}
+
+.lf-color-picker {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 90px;
+}
+
+.lf-color-selectors {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lf-color-component {
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.lf-color-component strong {
+  width: 40px;
+}
+
+.lf-color-component input[type='range'] {
+  margin: 0 0 0 10px;
+}
+
+.lf-color-component input[type='number'] {
+  width: 50px;
+  margin: 0 0 0 10px;
+}
+
+.lf-color-preview {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 5px;
+}
+
+.lf-preview {
+  height: 60px;
+  width: 60px;
+}
+
+.lf-popover-snapshot {
+  width: 150px;
+}
+.lf-popover-snapshot h5 {
+  margin: 5px 0 10px 0;
+  font-size: 0.75rem;
+}
+.lf-popover-snapshot a {
+  display: block;
+  text-decoration: none;
+}
+.lf-popover-snapshot a:before {
+  content: '⥼';
+  margin-right: 5px;
+}
+.lf-popover-snapshot .lf-note {
+  display: block;
+  margin-top: 10px;
+  color: #999;
+}
+.lf-player-controls > div {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.lf-player-controls > div:first-child {
+  margin-left: 0px;
+}
+.lf-player-controls > div:last-child {
+  margin-right: 0px;
+}
+</style></head>
+        <body data-new-gr-c-s-check-loaded="14.1238.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1238.0">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Profile Canvas | Ashi Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --primary: #3498db;     /* Blue for accents */
+      --primary-dark: #2980b9;
+      --secondary: #e67e22;   /* Orange for accents */
+      --dark-bg: #1e272e; 
+      --card-bg: #2c3e50; 
+      --text-light: #ecf0f1;
+      --text-secondary: #bdc3c7;
+      --border-light: rgba(236, 240, 241, 0.2);
+      --input-bg: rgba(236, 240, 241, 0.05);
+      
+      /* Section Colors */
+      --jobs-color: #9b59b6;     /* Purple */
+      --pains-color: #e74c3c;    /* Red */
+      --gains-color: #2ecc71;    /* Green */
+      --product-color: #f1c40f;  /* Yellow */
+      --relievers-color: #3498db; /* Blue */
+      --creators-color: #1abc9c; /* Teal */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--dark-bg);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 30px 20px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border-light);
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+    .logo-icon {
+      background: var(--primary);
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+    h1 {
+      font-size: 2.2rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .header-sub {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 15px auto 0;
+    }
+
+    /* Controls Panel */
+    .controls-panel {
+      padding: 15px 20px;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 1px solid var(--border-light);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    #canvasTitleInput {
+      flex-grow: 1;
+      max-width: 600px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+      background: var(--input-bg);
+      color: var(--text-light);
+      font-size: 1.05rem;
+    }
+    #canvasTitleInput:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+    }
+    .btn {
+      padding: 12px 22px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--primary);
+      color: white;
+    }
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    .btn i {
+      margin-right: 8px;
+    }
+
+    /* Main Container */
+    .container {
+      flex: 1;
+      padding: 30px 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Canvas Layout */
+    .canvas-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .section-title {
+      text-align: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-light);
+      font-weight: 600;
+      font-size: 1.4rem;
+    }
+    .canvas-row {
+      display: flex;
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .canvas-row {
+        flex-direction: column;
+      }
+    }
+    .canvas-half {
+      flex: 1;
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid var(--border-light);
+    }
+    .canvas-half h2 {
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 1.6rem;
+    }
+    .canvas-boxes {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .canvas-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 20px;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    .canvas-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .box-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .box-icon {
+      font-size: 1.4rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .box-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .box-content {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .editable-area {
+      min-height: 150px;
+      padding: 10px;
+      border-radius: 6px;
+      background: var(--input-bg);
+      border: 1px solid var(--border-light);
+      color: var(--text-light);
+      outline: none;
+      resize: none;
+      width: 100%;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .editable-area:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+    .suggestion-pill {
+      display: inline-block;
+      background: var(--input-bg);
+      color: var(--text-secondary);
+      padding: 3px 10px;
+      margin: 5px;
+      border-radius: 15px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid var(--border-light);
+    }
+    .suggestion-pill:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .suggestions {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .hints {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    /* Box Colors */
+    .jobs-box .box-icon {
+      background: var(--jobs-color);
+      color: white;
+    }
+    .jobs-box .box-title {
+      color: var(--jobs-color);
+    }
+    
+    .pains-box .box-icon {
+      background: var(--pains-color);
+      color: white;
+    }
+    .pains-box .box-title {
+      color: var(--pains-color);
+    }
+    
+    .gains-box .box-icon {
+      background: var(--gains-color);
+      color: white;
+    }
+    .gains-box .box-title {
+      color: var(--gains-color);
+    }
+    
+    .products-box .box-icon {
+      background: var(--product-color);
+      color: white;
+    }
+    .products-box .box-title {
+      color: var(--product-color);
+    }
+    
+    .relievers-box .box-icon {
+      background: var(--relievers-color);
+      color: white;
+    }
+    .relievers-box .box-title {
+      color: var(--relievers-color);
+    }
+    
+    .creators-box .box-icon {
+      background: var(--creators-color);
+      color: white;
+    }
+    .creators-box .box-title {
+      color: var(--creators-color);
+    }
+
+    /* PDF Export Overlay */
+    .pdf-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .pdf-loading {
+      color: white;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    .pdf-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-light);
+      font-size: 0.95em;
+      color: var(--text-secondary);
+    }
+    .insta-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .insta-link:hover {
+      text-decoration: underline;
+      color: var(--secondary);
+    }
+  </style>
+
+
+  <!-- Header -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon"><i class="fas fa-bullseye"></i></div>
+      <div class="logo-text">
+        <h1>Customer Profile Canvas</h1>
+      </div>
+    </div>
+    <p class="header-sub">Create a comprehensive value proposition canvas to understand your customers and align your product/service with their needs</p>
+  </header>
+
+  <!-- Controls Panel -->
+  <div class="controls-panel">
+    <input type="text" id="canvasTitleInput" placeholder="Enter Canvas Title" value="Product-Market Fit Analysis">
+    <button class="btn" id="exportPdfBtn"><i class="fas fa-file-export"></i> Export as PDF</button>
+  </div>
+
+  <!-- PDF Export Overlay -->
+  <div class="pdf-overlay" id="pdfOverlay" style="display: none;">
+    <div class="pdf-loading">
+      <div class="pdf-spinner"></div>
+      <p>Generating PDF...</p>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <div class="canvas-wrapper" id="canvasWrapper">
+      <div class="canvas-row">
+        <!-- Left Side: Value Proposition (SWITCHED) -->
+        <div class="canvas-half">
+          <h2>Value Proposition</h2>
+          <div class="canvas-boxes">
+            <!-- Products & Services -->
+            <div class="canvas-box products-box">
+              <div class="box-header">
+                <div class="box-icon"><i class="fas fa-box"></i></div>
+                <div class="box-title">Products &amp; Services</div>
+              </div>
+              <div class="box-content">
+                <textarea class="editable-area" id="productsServices" placeholder="Enter your products &amp; services here..."></textarea>
+                <div class="suggestions">
+                  <span class="suggestion-pill" onclick="addToTextarea('productsServices', 'Cloud-based software platform')">Cloud-based software platform</span>
+                  <span class="suggestion-pill" onclick="addToTextarea('productsServices', 'Professional consulting services')">Professional consulting services</span>
+                  <span class="suggestion-pill" onclick="addToTextarea('productsServices', 'Mobile application with premium features')">Mobile application with premium features</span>
+                </div>
+                <p class="hints">What are you offering to your customers? What products or services help them get their jobs done?</p>
+              </div>
+            </div>
+            
+            <!-- Pain Relievers -->
+            <div class="canvas-box relievers-box">
+              <div class="box-header">
+                <div class="box-icon"><i class="fas fa-band-aid"></i></div>
+                <div class="box-title">Pain Relievers</div>
+              </div>
+              <div class="box-content">
+                <textarea class="editable-area" id="painRelievers" placeholder="Enter your pain relievers here..." data-qb-tmp-id="lt-981849" spellcheck="false" data-gramm="false"></textarea>
+                <div class="suggestions">
+                  <span class="suggestion-pill" onclick="addToTextarea('painRelievers', 'Automates manual tasks')">Automates manual tasks</span>
+                  <span class="suggestion-pill" onclick="addToTextarea('painRelievers', 'Reduces costs by 30%')">Reduces costs by 30%</span>
+                  <span class="suggestion-pill" onclick="addToTextarea('painRelievers', '24/7 customer support')">24/7 customer support</span>
+                </div>
+                <p class="hints">How do your products/services alleviate specific customer pains? What problems do they solve?</p>
+              </div>
+            </div>
+            
+            <!-- Gain Creators -->
+            <div class="canvas-box creators-box">
+              <div class="box-header">
+                <div class="box-icon"><i class="fas fa-star"></i></div>
+                <div class="box-title">Gain Creators</div>
+              </div>
+              <div class="box-content">
+                <textarea class="editable-area" id="gainCreators" placeholder="Enter your gain creators here..." data-qb-tmp-id="lt-126208" spellcheck="false" data-gramm="false"></textarea>
+                <div class="suggestions">
+                  <span class="suggestion-pill" onclick="addToTextarea('gainCreators', 'Improves efficiency by 40%')">Improves efficiency by 40%</span>
+                  <span class="suggestion-pill" onclick="addToTextarea('gainCreators', 'Seamless integration with existing tools')">Seamless integration with existing tools</span>
+                  <span class="suggestion-pill" onclick="addToTextarea('gainCreators', 'Customizable dashboards and reporting')">Customizable dashboards and reporting</span>
+                </div>
+                <p class="hints">How do your products/services create customer gains? What benefits do they provide? What positive outcomes do they enable?</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right Side: Customer Segment (SWITCHED) -->
+        <div class="canvas-half">
+          <h2>Customer Segment</h2>
+          <div class="canvas-boxes">
+            <!-- Customer Jobs -->
+            <div class="canvas-box jobs-box">
+              <div class="box-header">
+                <div class="box-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="box-title">Customer Jobs</div>
+              </div>
+              <div class="box-content">
+                <textarea class="editable-area" id="customerJobs" placeholder="Enter customer jobs here..." data-qb-tmp-id="lt-845576" spellcheck="false" data-gramm="false"></textarea>
+                <div class="suggestions">
+                  <span class="suggestion-pill" onclick="addToTextarea('customerJobs', 'Complete tasks efficiently')">Complete tasks efficiently</span>
+                  <span class="suggestion-pill" onclick="addToTextarea('customerJobs', 'Save time on routine work')">Save time on routine work</span>
+                  <span class="suggestion-pill" onclick="addToTextarea('customerJobs', 'Make informed decisions')">Make informed decisions</span>
+                </div>
+                <p class="hints">What tasks are your customers trying to complete? What problems are they trying to solve?</p>
+              </div>
+            </div>
+            
+            <!-- Customer Pains -->
+            <div class="canvas-box pains-box">
+              <div class="box-header">
+                <div class="box-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="box-title">Pains</div>
+              </div>
+              <div class="box-content">
+                <textarea class="editable-area" id="customerPains" placeholder="Enter customer pains here..." data-qb-tmp-id="lt-122237" spellcheck="false" data-gramm="false"></textarea>
+                <div class="suggestions">
+                  <span class="suggestion-pill" onclick="addToTextarea('customerPains', 'Wasting time on manual processes')">Wasting time on manual processes</span>
+                  <span class="suggestion-pill" onclick="addToTextarea('customerPains', 'High costs of current solutions')">High costs of current solutions</span>
+                  <span class="suggestion-pill" onclick="addToTextarea('customerPains', 'Lack of reliable data')">Lack of reliable data</span>
+                </div>
+                <p class="hints">What frustrates your customers? What risks do they face? What negative outcomes do they fear?</p>
+              </div>
+            </div>
+            
+            <!-- Customer Gains -->
+            <div class="canvas-box gains-box">
+              <div class="box-header">
+                <div class="box-icon"><i class="fas fa-smile"></i></div>
+                <div class="box-title">Gains</div>
+              </div>
+              <div class="box-content">
+                <textarea class="editable-area" id="customerGains" placeholder="Enter customer gains here..." data-qb-tmp-id="lt-751555" spellcheck="false" data-gramm="false"></textarea>
+                <div class="suggestions">
+                  <span class="suggestion-pill" onclick="addToTextarea('customerGains', 'Save 25% on operational costs')">Save 25% on operational costs</span>
+                  <span class="suggestion-pill" onclick="addToTextarea('customerGains', 'Increase productivity')">Increase productivity</span>
+                  <span class="suggestion-pill" onclick="addToTextarea('customerGains', 'Easy to implement solution')">Easy to implement solution</span>
+                </div>
+                <p class="hints">What benefits do your customers want? What would make them happy? What outcomes do they expect?</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Customer Profile Canvas - Part of Ashi Tools | Connect <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="insta-link">@ashish_singh_rajput_3</a></p>
+    <p>© 2025 Ashi Tools. Plan Your Success.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const exportPdfBtn = document.getElementById('exportPdfBtn');
+      const pdfOverlay = document.getElementById('pdfOverlay');
+      const canvasTitleInput = document.getElementById('canvasTitleInput');
+      
+      // Export to PDF with light background
+      exportPdfBtn.addEventListener('click', async function() {
+        pdfOverlay.style.display = 'flex';
+        
+        try {
+          const canvasTitle = canvasTitleInput.value.trim() || "Customer Profile Canvas";
+          
+          // Create a light-themed clone for PDF export
+          const canvasWrapper = document.getElementById('canvasWrapper');
+          const lightClone = createLightThemeClone(canvasWrapper, canvasTitle);
+          document.body.appendChild(lightClone);
+          
+          // Generate PDF
+          await generatePDF(lightClone, canvasTitle);
+          
+          // Clean up
+          document.body.removeChild(lightClone);
+          
+        } catch (error) {
+          console.error('PDF Export Error:', error);
+          alert('Error generating PDF. Please try again.');
+        } finally {
+          pdfOverlay.style.display = 'none';
+        }
+      });
+      
+      // Create light theme clone for PDF export
+      function createLightThemeClone(element, title) {
+        const clone = element.cloneNode(true);
+        
+        clone.id = 'lightThemeClone';
+        clone.style.position = 'absolute';
+        clone.style.left = '-9999px';
+        clone.style.width = '1200px';
+        clone.style.backgroundColor = '#ffffff';
+        clone.style.padding = '40px';
+        clone.style.borderRadius = '10px';
+        
+        // Add title
+        const titleEl = document.createElement('h1');
+        titleEl.textContent = title;
+        titleEl.style.textAlign = 'center';
+        titleEl.style.marginBottom = '30px';
+        titleEl.style.color = '#2c3e50';
+        titleEl.style.fontSize = '28px';
+        titleEl.style.fontWeight = 'bold';
+        
+        clone.insertBefore(titleEl, clone.firstChild);
+        
+        // Style all elements for light theme
+        const boxes = clone.querySelectorAll('.canvas-box');
+        boxes.forEach(box => {
+          box.style.backgroundColor = '#ffffff';
+          box.style.border = '1px solid #e0e0e0';
+          box.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+          box.style.borderRadius = '8px';
+        });
+        
+        // Style half sections
+        const halves = clone.querySelectorAll('.canvas-half');
+        halves.forEach(half => {
+          half.style.backgroundColor = '#f8f9fa';
+          half.style.border = '1px solid #e0e0e0';
+          half.style.padding = '25px';
+          half.style.borderRadius = '10px';
+        });
+        
+        // Style headings
+        const headings = clone.querySelectorAll('.canvas-half h2');
+        headings.forEach(heading => {
+          heading.style.color = '#2c3e50';
+          heading.style.borderBottom = '2px solid #3498db';
+        });
+        
+        // Style box headers
+        const boxHeaders = clone.querySelectorAll('.box-header');
+        boxHeaders.forEach(header => {
+          header.style.borderBottom = '1px solid #e0e0e0';
+        });
+        
+        // Style icons
+        const jobsIcon = clone.querySelector('.jobs-box .box-icon');
+        if (jobsIcon) {
+          jobsIcon.style.backgroundColor = '#9b59b6';
+          jobsIcon.style.color = 'white';
+        }
+        
+        const painsIcon = clone.querySelector('.pains-box .box-icon');
+        if (painsIcon) {
+          painsIcon.style.backgroundColor = '#e74c3c';
+          painsIcon.style.color = 'white';
+        }
+        
+        const gainsIcon = clone.querySelector('.gains-box .box-icon');
+        if (gainsIcon) {
+          gainsIcon.style.backgroundColor = '#2ecc71';
+          gainsIcon.style.color = 'white';
+        }
+        
+        const productsIcon = clone.querySelector('.products-box .box-icon');
+        if (productsIcon) {
+          productsIcon.style.backgroundColor = '#f1c40f';
+          productsIcon.style.color = 'white';
+        }
+        
+        const relieversIcon = clone.querySelector('.relievers-box .box-icon');
+        if (relieversIcon) {
+          relieversIcon.style.backgroundColor = '#3498db';
+          relieversIcon.style.color = 'white';
+        }
+        
+        const creatorsIcon = clone.querySelector('.creators-box .box-icon');
+        if (creatorsIcon) {
+          creatorsIcon.style.backgroundColor = '#1abc9c';
+          creatorsIcon.style.color = 'white';
+        }
+        
+        // Style titles
+        const boxTitles = clone.querySelectorAll('.box-title');
+        boxTitles.forEach(title => {
+          title.style.fontWeight = 'bold';
+        });
+        
+        // Convert textareas to divs with content
+        const textareas = clone.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+          const content = document.getElementById(textarea.id).value || 'Not specified';
+          
+          const contentDiv = document.createElement('div');
+          contentDiv.textContent = content;
+          contentDiv.style.minHeight = '150px';
+          contentDiv.style.padding = '15px';
+          contentDiv.style.backgroundColor = '#f9f9f9';
+          contentDiv.style.border = '1px solid #e0e0e0';
+          contentDiv.style.borderRadius = '6px';
+          contentDiv.style.color = '#333';
+          contentDiv.style.fontSize = '14px';
+          contentDiv.style.lineHeight = '1.6';
+          
+          textarea.parentNode.replaceChild(contentDiv, textarea);
+        });
+        
+        // Remove suggestions and hints
+        const suggestions = clone.querySelectorAll('.suggestions');
+        suggestions.forEach(suggestion => suggestion.remove());
+        
+        const hints = clone.querySelectorAll('.hints');
+        hints.forEach(hint => hint.remove());
+        
+        return clone;
+      }
+      
+      // Generate PDF
+      async function generatePDF(element, title) {
+        try {
+          const canvas = await html2canvas(element, {
+            scale: 2,
+            useCORS: true,
+            logging: false
+          });
+          
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF('p', 'pt', 'a4');
+          
+          const imgData = canvas.toDataURL('image/png');
+          const pageWidth = doc.internal.pageSize.getWidth();
+          const pageHeight = doc.internal.pageSize.getHeight();
+          
+          const imgWidth = pageWidth - 40;
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+          
+          let heightLeft = imgHeight;
+          let position = 20;
+          
+          // First page
+          doc.addImage(imgData, 'PNG', 20, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+          
+          // Additional pages if needed
+          while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', 20, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+          
+          // Add footer
+          const totalPages = doc.internal.getNumberOfPages();
+          for (let i = 1; i <= totalPages; i++) {
+            doc.setPage(i);
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Page ${i} of ${totalPages}`, pageWidth - 100, pageHeight - 20);
+            doc.text(`Generated by Ashi Tools - ${new Date().toLocaleDateString()}`, 20, pageHeight - 20);
+          }
+          
+          // Save PDF
+          doc.save(`${title.replace(/\s+/g, '_')}_customer_profile_canvas.pdf`);
+          
+        } catch (error) {
+          console.error('PDF Generation Error:', error);
+          throw error;
+        }
+      }
+    });
+    
+    // Function to add suggestions to textarea
+    function addToTextarea(textareaId, text) {
+      const textarea = document.getElementById(textareaId);
+      const currentValue = textarea.value;
+      
+      if (currentValue.trim() === '') {
+        textarea.value = text;
+      } else {
+        textarea.value = currentValue + '\n• ' + text;
+      }
+      
+      textarea.focus();
+    }
+  </script>
+
+
+            <script></script>
+        
+    
+<qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 1290px; position: absolute !important; top: 602px !important; bottom: auto !important; opacity: 1 !important; pointer-events: all !important; z-index: auto;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 600px; position: absolute !important; top: 1040px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 1290px; position: absolute !important; top: 971px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 600px; position: absolute !important; top: 1432px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 1290px; position: absolute !important; top: 1409px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

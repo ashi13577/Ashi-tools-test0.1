@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        <style type="text/css">.lf-progress {
+  -webkit-appearance: none;
+  -moz-apperance: none;
+  width: 100%;
+  /* margin: 0 10px; */
+  height: 4px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.lf-progress:focus {
+  outline: none;
+  border: none;
+}
+.lf-progress::-moz-range-track {
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+}
+.lf-progress::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress::-moz-range-thumb {
+  -moz-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress::-ms-track {
+  width: 100%;
+  height: 3px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.lf-progress::-ms-fill-lower {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lf-progress::-ms-fill-upper {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lf-progress::-ms-thumb {
+  border: 0;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress:focus::-ms-fill-lower {
+  background: #ccc;
+}
+.lf-progress:focus::-ms-fill-upper {
+  background: #ccc;
+}
+.lf-player-container :focus {
+  outline: 0;
+}
+.lf-popover {
+  position: relative;
+}
+
+.lf-popover-content {
+  display: inline-block;
+  position: absolute;
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+}
+
+.lf-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lf-player-btn-container {
+  display: flex;
+  align-items: center;
+}
+.lf-player-btn {
+  cursor: pointer;
+  fill: #999;
+  width: 14px;
+}
+
+.lf-player-btn.active {
+  fill: #555;
+}
+
+.lf-popover {
+  position: relative;
+}
+
+.lf-popover-content {
+  display: inline-block;
+  position: absolute;
+  background-color: #ffffff;
+  opacity: 1;
+
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+  padding: 10px;
+}
+
+.lf-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lf-arrow {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  bottom: -9px;
+  border-style: solid;
+  border-width: 10px 10px 0px 10px;
+}
+
+.lf-left-align,
+.lf-left-align .lfarrow {
+  left: 0;
+  right: unset;
+}
+
+.lf-right-align,
+.lf-right-align .lf-arrow {
+  right: 0;
+  left: unset;
+}
+
+.lf-text-input {
+  border: 1px #ccc solid;
+  border-radius: 5px;
+  padding: 3px;
+  width: 60px;
+  margin: 0;
+}
+
+.lf-color-picker {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 90px;
+}
+
+.lf-color-selectors {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lf-color-component {
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.lf-color-component strong {
+  width: 40px;
+}
+
+.lf-color-component input[type='range'] {
+  margin: 0 0 0 10px;
+}
+
+.lf-color-component input[type='number'] {
+  width: 50px;
+  margin: 0 0 0 10px;
+}
+
+.lf-color-preview {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 5px;
+}
+
+.lf-preview {
+  height: 60px;
+  width: 60px;
+}
+
+.lf-popover-snapshot {
+  width: 150px;
+}
+.lf-popover-snapshot h5 {
+  margin: 5px 0 10px 0;
+  font-size: 0.75rem;
+}
+.lf-popover-snapshot a {
+  display: block;
+  text-decoration: none;
+}
+.lf-popover-snapshot a:before {
+  content: '⥼';
+  margin-right: 5px;
+}
+.lf-popover-snapshot .lf-note {
+  display: block;
+  margin-top: 10px;
+  color: #999;
+}
+.lf-player-controls > div {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.lf-player-controls > div:first-child {
+  margin-left: 0px;
+}
+.lf-player-controls > div:last-child {
+  margin-right: 0px;
+}
+</style></head>
+        <body data-new-gr-c-s-check-loaded="14.1240.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1240.0">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Demand Forecasting Model - Ashi Tools</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --secondary: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark-bg: #1e293b;
+      --card-bg: #1f2937;
+      --text-light: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --border-light: rgba(156, 163, 175, 0.2);
+      --success: #22c55e;
+    }
+    body {
+      font-family: Roboto, sans-serif;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: var(--text-light);
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 30px auto 0 auto;
+      background: linear-gradient(145deg, #1f2937, #111827);
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.32);
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+    .header {
+      background: linear-gradient(135deg, #3b82f6, #1e40af);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .header h1 {
+      font-size: 2.2em;
+      margin: 0 0 5px 0;
+      color: #fff;
+    }
+    .header p {
+      margin: 0 auto;
+      font-size: 1.1em;
+      color: #e0e7ef;
+      max-width: 700px;
+    }
+    .main-section {
+      padding: 36px 28px 32px 28px;
+      min-height: 350px;
+    }
+    .forecast-form {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 36px;
+      box-shadow: 0 3px 18px rgba(0,0,0,.21);
+      border: 1px solid var(--border-light);
+    }
+    .forecast-form .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+    .form-group {
+      flex: 1;
+      min-width: 225px;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 8px;
+    }
+    .form-group label {
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--primary);
+      letter-spacing: .01em;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 10px 12px;
+      border-radius: 7px;
+      border: 2px solid var(--border-light);
+      background: rgba(55,65,80,0.30);
+      color: var(--text-light);
+      font-size: 1em;
+      margin-bottom: 2px;
+      font-family: inherit;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .form-actions {
+      display: flex;
+      gap: 18px;
+      margin: 10px 0 0 0;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 11px 24px;
+      border: none;
+      border-radius: 22px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .23s, transform .13s;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn:hover { background: var(--primary-dark); transform: translateY(-2px);}
+    .btn-secondary { background: var(--secondary);}
+    .btn-secondary:hover { background: #047857;}
+    .btn-warning { background: var(--warning);}
+    .btn-warning:hover { background: #ca8a04;}
+    .btn-danger { background: var(--danger);}
+    .btn-danger:hover { background: #dc2626;}
+    .btn i { font-size: 1.09em;}
+    .input-hint { font-size: 12px; color: var(--text-secondary);}
+    .forecast-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 14px;
+      font-size: 15px;
+    }
+    .forecast-table th, .forecast-table td {
+      border-bottom: 1px solid #283447;
+      padding: 11px 10px;
+      text-align: center;
+    }
+    .forecast-table th {
+      background: #232d3b;
+      color: var(--primary);
+      font-weight: 500;
+    }
+    .forecast-table td {
+      color: var(--text-light);
+      background: var(--card-bg);
+    }
+    .table-summary {
+      padding: 9px 12px; 
+      color: var(--text-secondary); 
+      font-size: 14px;
+    }
+    .chart-container {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 22px 16px 20px 16px;
+      margin: 20px 0;
+      border: 1px solid var(--border-light);
+      min-height: 340px;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .metric-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid var(--border-light);
+      text-align: center;
+    }
+    .metric-value {
+      font-size: 2em;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+    .metric-label {
+      color: var(--text-secondary);
+      font-size: 0.9em;
+    }
+    .education-box {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 25px 18px;
+      margin-bottom: 26px;
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+    }
+    .education-box h3, .education-box h4 {
+      color: var(--primary); 
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .formula {
+      padding: 10px 16px;
+      font-family: 'Courier New', monospace;
+      border-radius: 8px; 
+      background: #22304c;
+      margin: 12px 0; 
+      color: #a7d2fe;
+      font-size: 1.1em;
+      display: inline-block;
+    }
+    .feature-tag {
+      background: #22304c;
+      color: #93c5fd;
+      font-size: 11px;
+      border-radius: 11px;
+      padding: 3px 12px;
+      margin-right: 4px;
+      font-weight: 500;
+    }
+    .comparison-section {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+      border: 1px solid var(--border-light);
+    }
+    .model-comparison {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .model-card {
+      background: rgba(55,65,80,0.30);
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid var(--border-light);
+    }
+    .model-card.best {
+      border-color: var(--success);
+      background: rgba(34, 197, 94, 0.1);
+    }
+    .model-title {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .model-card.best .model-title {
+      color: var(--success);
+    }
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--secondary);
+      color: #fff;
+      padding: 16px 30px;
+      border-radius: 10px;
+      display: none;
+      z-index: 1102;
+      font-size: 1em;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.19);
+    }
+    .toast.success { background: var(--secondary);}
+    .toast.error { background: var(--danger);}
+    .advanced-options {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(55,65,80,0.15);
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+    footer {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-top: 40px;
+      padding: 30px;
+      line-height: 1.6;
+      background: linear-gradient(145deg, #1f2937, #111827);
+      border-top: 1px solid var(--border-light);
+    }
+    .insta-link {
+      color: #e1306c;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    @media (max-width:800px) {
+      .main-section { padding:19px 5vw;}
+      .chart-container, .education-box, .forecast-form {padding: 14px 5vw;}
+      .metrics-grid { grid-template-columns: 1fr;}
+    }
+  </style>
+
+
+  <div class="container">
+    <div class="header">
+      <h1><i class="fa-solid fa-magnifying-glass-chart"></i> Advanced Demand Forecasting Model</h1>
+      <p>
+        Comprehensive demand forecasting with multiple models, accuracy metrics, and seasonal analysis.<br>
+        Compare Moving Average, Exponential Smoothing, Linear Trend, and Seasonal models instantly.
+      </p>
+    </div>
+    <div class="main-section">
+
+      <!-- DEMO -->
+      <div class="forecast-form">
+        <div style="display: flex; align-items: center; gap:15px; margin-bottom:12px; flex-wrap: wrap;">
+          <h3 style="color:var(--secondary);margin-bottom:0;"><i class="fa-solid fa-bolt"></i> Demo Data Quick Start</h3>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="loadDemo('toys')">
+              <i class="fa-solid fa-cube"></i> Toys Store
+            </button>
+            <button class="btn btn-secondary" onclick="loadDemo('milk')">
+              <i class="fa-solid fa-mug-hot"></i> Dairy/Milk
+            </button>
+            <button class="btn btn-secondary" onclick="loadDemo('clothes')">
+              <i class="fa-solid fa-shirt"></i> Clothing Shop
+            </button>
+            <button class="btn btn-secondary" onclick="loadDemo('seasonal')">
+              <i class="fa-solid fa-calendar"></i> Seasonal Data
+            </button>
+            <button class="btn btn-secondary" onclick="loadDemo('trend')">
+              <i class="fa-solid fa-arrow-trend-up"></i> Trending Data
+            </button>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="form-group" style="flex:2">
+            <label>Demand Data (comma or space separated, chronological order):</label>
+            <textarea id="demandSeries" rows="2" placeholder="e.g., 254, 269, 233, 290, 281, 310, 340, 325, 355, 380, 365, 390" data-qb-tmp-id="lt-652049" spellcheck="false" data-gramm="false"></textarea>
+            <span class="input-hint">Enter demand for each period (minimum 8 values recommended for better accuracy)</span>
+          </div>
+          <div class="form-group">
+            <label>Forecast Model</label>
+            <select id="forecastModel">
+              <option value="ma">Moving Average</option>
+              <option value="es">Exponential Smoothing</option>
+              <option value="trend">Linear Trend</option>
+              <option value="seasonal">Seasonal (Simple)</option>
+              <option value="compare">Compare All Models</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Forecast Periods</label>
+            <input id="forecastPeriods" type="number" value="3" min="1" max="12" style="width:80px;">
+            <span class="input-hint">Future periods to predict</span>
+          </div>
+        </div>
+
+        <!-- Advanced Options -->
+        <div class="advanced-options">
+          <h4 style="color: var(--primary); margin-bottom: 12px;"><i class="fa-solid fa-cog"></i> Model Parameters</h4>
+          <div class="row">
+            <div class="form-group ma-only" id="ma-len-group" style="">
+              <label>MA Window (n)</label>
+              <input id="maLen" type="number" value="3" min="2" max="12" style="width:70px;">
+              <span class="input-hint">Periods to average</span>
+            </div>
+            <div class="form-group es-only" id="es-alpha-group" style="display:none;">
+              <label>Alpha (α)</label>
+              <input id="esAlpha" type="number" min="0.01" max="0.99" step="0.01" value="0.3" style="width:80px;">
+              <span class="input-hint">Smoothing factor (0 &lt; α &lt; 1)</span>
+            </div>
+            <div class="form-group seasonal-only" id="seasonal-periods-group" style="display:none;">
+              <label>Seasonal Length</label>
+              <input id="seasonalPeriods" type="number" value="4" min="2" max="12" style="width:80px;">
+              <span class="input-hint">Periods per season</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn" onclick="calculateForecast()"><i class="fa-solid fa-chart-line"></i> Generate Forecast</button>
+          <button class="btn btn-secondary" onclick="exportResults()"><i class="fa-solid fa-download"></i> Export Results</button>
+          <button class="btn btn-warning" onclick="resetForm()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+        </div>
+      </div>
+
+      <!-- Output Section -->
+      <div id="outputSection" style="display: none;">
+        
+        <!-- Metrics Grid -->
+        <div class="metrics-grid" id="metricsGrid">
+        <div class="metric-card">
+          <div class="metric-value">10.00</div>
+          <div class="metric-label">MAD</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">21.86%</div>
+          <div class="metric-label">MAPE</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">10.00</div>
+          <div class="metric-label">RMSE</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">10.00</div>
+          <div class="metric-label">Bias</div>
+        </div>
+      </div>
+
+        <!-- Model Comparison -->
+        <div class="comparison-section" id="comparisonSection" style="display:none;">
+          <h3 style="color: var(--primary);"><i class="fa-solid fa-balance-scale"></i> Model Comparison</h3>
+          <div class="model-comparison" id="modelComparison">
+            <!-- Generated comparison cards -->
+          </div>
+        </div>
+
+        <!-- Main Chart -->
+        <div class="chart-container">
+          <canvas id="forecastChart" style="box-sizing: border-box;" width="300"></canvas>
+        </div>
+
+        <!-- Detailed Results -->
+        <div style="margin-bottom: 7px;">
+          <span class="feature-tag" id="outputModel">Moving Average (n=3)</span>
+          <span class="feature-tag" id="outputSummary">MAPE: 21.86% | MAD: 10.00</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="forecast-table" id="forecastTable"><tbody><tr><th>Period</th><th>Actual</th><th>Forecast</th><th>Error</th><th>|Error|</th><th>|%Error|</th></tr><tr>
+          <td>1</td>
+          <td>10</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr><tr>
+          <td>2</td>
+          <td>20</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr><tr>
+          <td>3</td>
+          <td>30</td>
+          <td>20.00</td>
+          <td>10.00</td>
+          <td>10.00</td>
+          <td>33.33</td>
+        </tr><tr>
+          <td>4</td>
+          <td>40</td>
+          <td>30.00</td>
+          <td>10.00</td>
+          <td>10.00</td>
+          <td>25.00</td>
+        </tr><tr>
+          <td>5</td>
+          <td>50</td>
+          <td>40.00</td>
+          <td>10.00</td>
+          <td>10.00</td>
+          <td>20.00</td>
+        </tr><tr>
+          <td>6</td>
+          <td>60</td>
+          <td>50.00</td>
+          <td>10.00</td>
+          <td>10.00</td>
+          <td>16.67</td>
+        </tr><tr>
+          <td>7</td>
+          <td>70</td>
+          <td>60.00</td>
+          <td>10.00</td>
+          <td>10.00</td>
+          <td>14.29</td>
+        </tr><tr style="background: rgba(16, 185, 129, 0.1);">
+          <td>8</td>
+          <td style="color: var(--text-secondary);">-</td>
+          <td><strong>60.00</strong></td>
+          <td style="color: var(--text-secondary);">-</td>
+          <td style="color: var(--text-secondary);">-</td>
+          <td style="color: var(--text-secondary);">-</td>
+        </tr><tr style="background: rgba(16, 185, 129, 0.1);">
+          <td>9</td>
+          <td style="color: var(--text-secondary);">-</td>
+          <td><strong>63.33</strong></td>
+          <td style="color: var(--text-secondary);">-</td>
+          <td style="color: var(--text-secondary);">-</td>
+          <td style="color: var(--text-secondary);">-</td>
+        </tr><tr style="background: rgba(16, 185, 129, 0.1);">
+          <td>10</td>
+          <td style="color: var(--text-secondary);">-</td>
+          <td><strong>64.44</strong></td>
+          <td style="color: var(--text-secondary);">-</td>
+          <td style="color: var(--text-secondary);">-</td>
+          <td style="color: var(--text-secondary);">-</td>
+        </tr></tbody></table>
+        </div>
+        <div class="table-summary" id="accuracyTable"></div>
+      </div>
+
+      <!-- Learning Panel -->
+      <div class="education-box">
+        <h3><i class="fa-solid fa-graduation-cap"></i> Advanced Demand Forecasting - Complete Guide</h3>
+        <div style="margin-bottom:12px;">
+          <b>Master multiple forecasting techniques to predict demand patterns, seasonal variations, and business trends with precision.</b>
+        </div>
+        
+        <h4>1. Moving Average (MA) <span class="feature-tag">Stable</span><span class="feature-tag">Simple</span></h4>
+        <div class="formula">F<sub>t+1</sub> = (D<sub>t</sub> + D<sub>t-1</sub> + ... + D<sub>t-n+1</sub>)/n</div>
+        <div>Smooths short-term fluctuations by averaging recent periods. Best for stable demand with minimal trend.</div>
+        
+        <h4>2. Exponential Smoothing (ES) <span class="feature-tag">Adaptive</span><span class="feature-tag">Weighted</span></h4>
+        <div class="formula">F<sub>t+1</sub> = α·D<sub>t</sub> + (1-α)·F<sub>t</sub></div>
+        <div>Gives exponentially decreasing weights to older data. α controls responsiveness to recent changes.</div>
+        
+        <h4>3. Linear Trend <span class="feature-tag">Growth</span><span class="feature-tag">Regression</span></h4>
+        <div class="formula">F<sub>t</sub> = a + b·t</div>
+        <div>Captures consistent upward or downward trends using linear regression. Ideal for growing/declining markets.</div>
+        
+        <h4>4. Seasonal Forecasting <span class="feature-tag">Cyclical</span><span class="feature-tag">Patterns</span></h4>
+        <div class="formula">F<sub>t</sub> = Base<sub>period</sub> × Seasonal<sub>index</sub></div>
+        <div>Accounts for recurring patterns (quarterly, monthly). Essential for seasonal businesses.</div>
+        
+        <h4>Key Performance Metrics</h4>
+        <ul>
+          <li><b>MAD (Mean Absolute Deviation):</b> Average absolute forecast error</li>
+          <li><b>MAPE (Mean Absolute Percentage Error):</b> Percentage-based accuracy measure</li>
+          <li><b>MSE (Mean Squared Error):</b> Emphasizes larger errors more heavily</li>
+          <li><b>RMSE (Root Mean Square Error):</b> Standard deviation of forecast errors</li>
+          <li><b>Tracking Signal:</b> Detects forecast bias over time</li>
+        </ul>
+        
+        <h4>Business Applications</h4>
+        <ul>
+          <li>Inventory management and stock optimization</li>
+          <li>Production planning and capacity management</li>
+          <li>Sales forecasting and revenue projection</li>
+          <li>Resource allocation and workforce planning</li>
+          <li>Supply chain optimization and vendor management</li>
+        </ul>
+      </div>
+
+    </div><!-- main-section -->
+
+    <!-- Toast -->
+    <div class="toast success" id="toast" style="display: none;">Form reset successfully!</div>
+    <footer>
+      Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+      Connect: 
+      <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank">@ashish_singh_rajput_3</a>
+    </footer>
+  </div>
+
+  <script>
+    // --- DEMO DATA ---
+    const demos = {
+      toys: [254, 269, 233, 290, 281, 310, 280, 278, 260, 272, 298, 305, 320, 340, 355, 330],
+      milk: [1150, 1233, 1070, 1201, 1178, 1280, 1253, 1242, 1301, 1325, 1290, 1340, 1380, 1365, 1420, 1450],
+      clothes: [88, 96, 79, 102, 93, 82, 105, 99, 85, 88, 110, 125, 135, 142, 158, 165],
+      seasonal: [100, 120, 140, 110, 105, 125, 145, 115, 110, 130, 150, 120, 115, 135, 155, 125],
+      trend: [100, 108, 115, 123, 130, 138, 145, 153, 160, 168, 175, 183, 190, 198, 205, 213]
+    };
+
+    function loadDemo(key) {
+      document.getElementById('demandSeries').value = demos[key].join(', ');
+      showToast('Demo data loaded!', 'success');
+    }
+
+    // Show/hide parameters based on model selection
+    document.getElementById('forecastModel').onchange = function() {
+      const model = this.value;
+      document.querySelectorAll('.ma-only, .es-only, .seasonal-only').forEach(el => el.style.display = 'none');
+      
+      if (model === 'ma') {
+        document.querySelectorAll('.ma-only').forEach(el => el.style.display = '');
+      } else if (model === 'es') {
+        document.querySelectorAll('.es-only').forEach(el => el.style.display = '');
+      } else if (model === 'seasonal') {
+        document.querySelectorAll('.seasonal-only').forEach(el => el.style.display = '');
+      }
+    };
+
+    // --- FORECASTING FUNCTIONS ---
+    
+    function movingAverage(data, n) {
+      const forecasts = [];
+      for (let i = 0; i < data.length; i++) {
+        if (i < n - 1) {
+          forecasts.push(null);
+        } else {
+          const sum = data.slice(i - n + 1, i + 1).reduce((a, b) => a + b, 0);
+          forecasts.push(sum / n);
+        }
+      }
+      return forecasts;
+    }
+
+    function exponentialSmoothing(data, alpha) {
+      const forecasts = [data[0]];
+      for (let i = 1; i < data.length; i++) {
+        forecasts.push(alpha * data[i - 1] + (1 - alpha) * forecasts[i - 1]);
+      }
+      return forecasts;
+    }
+
+    function linearTrend(data) {
+      const n = data.length;
+      const sumX = (n * (n + 1)) / 2;
+      const sumX2 = (n * (n + 1) * (2 * n + 1)) / 6;
+      const sumY = data.reduce((a, b) => a + b, 0);
+      const sumXY = data.reduce((sum, y, i) => sum + (i + 1) * y, 0);
+      
+      const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+      const intercept = (sumY - slope * sumX) / n;
+      
+      return data.map((_, i) => intercept + slope * (i + 1));
+    }
+
+    function seasonalForecast(data, seasonLength) {
+      const seasons = Math.floor(data.length / seasonLength);
+      const seasonalIndices = [];
+      
+      // Calculate seasonal indices
+      for (let s = 0; s < seasonLength; s++) {
+        let sum = 0;
+        let count = 0;
+        for (let season = 0; season < seasons; season++) {
+          const index = season * seasonLength + s;
+          if (index < data.length) {
+            sum += data[index];
+            count++;
+          }
+        }
+        seasonalIndices.push(count > 0 ? sum / count : 0);
+      }
+      
+      const avgDemand = data.reduce((a, b) => a + b, 0) / data.length;
+      const normalizedIndices = seasonalIndices.map(idx => idx / avgDemand);
+      
+      // Generate forecasts
+      return data.map((_, i) => {
+        const seasonIndex = i % seasonLength;
+        return avgDemand * normalizedIndices[seasonIndex];
+      });
+    }
+
+    function calculateMetrics(actual, forecast) {
+      const errors = [];
+      const absErrors = [];
+      const sqErrors = [];
+      const apeErrors = [];
+      
+      for (let i = 0; i < actual.length; i++) {
+        if (forecast[i] !== null && forecast[i] !== undefined) {
+          const error = actual[i] - forecast[i];
+          const absError = Math.abs(error);
+          const sqError = error * error;
+          const apeError = Math.abs(error / actual[i]) * 100;
+          
+          errors.push(error);
+          absErrors.push(absError);
+          sqErrors.push(sqError);
+          apeErrors.push(apeError);
+        }
+      }
+      
+      const mad = absErrors.reduce((a, b) => a + b, 0) / absErrors.length;
+      const mape = apeErrors.reduce((a, b) => a + b, 0) / apeErrors.length;
+      const mse = sqErrors.reduce((a, b) => a + b, 0) / sqErrors.length;
+      const rmse = Math.sqrt(mse);
+      const bias = errors.reduce((a, b) => a + b, 0) / errors.length;
+      
+      return { mad, mape, mse, rmse, bias };
+    }
+
+    function generateFutureForecast(data, model, periods, params) {
+      const forecasts = [];
+      
+      switch (model) {
+        case 'ma':
+          const n = params.n;
+          for (let i = 0; i < periods; i++) {
+            const recentData = data.slice(-n);
+            const forecast = recentData.reduce((a, b) => a + b, 0) / n;
+            forecasts.push(forecast);
+            data.push(forecast);
+          }
+          break;
+          
+        case 'es':
+          const alpha = params.alpha;
+          let lastForecast = data[data.length - 1];
+          for (let i = 0; i < periods; i++) {
+            forecasts.push(lastForecast);
+          }
+          break;
+          
+        case 'trend':
+          const n2 = data.length;
+          const sumX = (n2 * (n2 + 1)) / 2;
+          const sumX2 = (n2 * (n2 + 1) * (2 * n2 + 1)) / 6;
+          const sumY = data.reduce((a, b) => a + b, 0);
+          const sumXY = data.reduce((sum, y, i) => sum + (i + 1) * y, 0);
+          
+          const slope = (n2 * sumXY - sumX * sumY) / (n2 * sumX2 - sumX * sumX);
+          const intercept = (sumY - slope * sumX) / n2;
+          
+          for (let i = 1; i <= periods; i++) {
+            forecasts.push(intercept + slope * (n2 + i));
+          }
+          break;
+          
+        case 'seasonal':
+          const seasonLength = params.seasonLength;
+          const avgDemand = data.reduce((a, b) => a + b, 0) / data.length;
+          for (let i = 0; i < periods; i++) {
+            const seasonIndex = (data.length + i) % seasonLength;
+            const historicalSeasonAvg = calculateSeasonalAverage(data, seasonIndex, seasonLength);
+            forecasts.push(historicalSeasonAvg);
+          }
+          break;
+      }
+      
+      return forecasts;
+    }
+
+    function calculateSeasonalAverage(data, seasonIndex, seasonLength) {
+      let sum = 0;
+      let count = 0;
+      for (let i = seasonIndex; i < data.length; i += seasonLength) {
+        sum += data[i];
+        count++;
+      }
+      return count > 0 ? sum / count : data[data.length - 1];
+    }
+
+    // --- MAIN CALCULATION FUNCTION ---
+    function calculateForecast() {
+      const str = document.getElementById('demandSeries').value
+        .replace(/[, ]+/g, ',').replace(/,+/g, ',').replace(/,$/, '');
+      const demand = str.split(',').map(x => parseFloat(x)).filter(x => !isNaN(x));
+      
+      if (demand.length < 6) {
+        showToast('Please enter at least 6 periods of demand data!', 'error');
+        return;
+      }
+
+      const model = document.getElementById('forecastModel').value;
+      const forecastPeriods = parseInt(document.getElementById('forecastPeriods').value) || 3;
+
+      if (model === 'compare') {
+        compareAllModels(demand, forecastPeriods);
+      } else {
+        runSingleModel(demand, model, forecastPeriods);
+      }
+    }
+
+    function runSingleModel(demand, model, forecastPeriods) {
+      let forecasts, futureForecasts, params = {}, modelName = '';
+      
+      switch (model) {
+        case 'ma':
+          params.n = parseInt(document.getElementById('maLen').value) || 3;
+          forecasts = movingAverage(demand, params.n);
+          futureForecasts = generateFutureForecast([...demand], model, forecastPeriods, params);
+          modelName = `Moving Average (n=${params.n})`;
+          break;
+          
+        case 'es':
+          params.alpha = parseFloat(document.getElementById('esAlpha').value) || 0.3;
+          forecasts = exponentialSmoothing(demand, params.alpha);
+          futureForecasts = generateFutureForecast([...demand], model, forecastPeriods, params);
+          modelName = `Exponential Smoothing (α=${params.alpha})`;
+          break;
+          
+        case 'trend':
+          forecasts = linearTrend(demand);
+          futureForecasts = generateFutureForecast([...demand], model, forecastPeriods, params);
+          modelName = 'Linear Trend';
+          break;
+          
+        case 'seasonal':
+          params.seasonLength = parseInt(document.getElementById('seasonalPeriods').value) || 4;
+          forecasts = seasonalForecast(demand, params.seasonLength);
+          futureForecasts = generateFutureForecast([...demand], model, forecastPeriods, params);
+          modelName = `Seasonal (Length=${params.seasonLength})`;
+          break;
+      }
+
+      const metrics = calculateMetrics(demand, forecasts);
+      displayResults(demand, forecasts, futureForecasts, metrics, modelName);
+      document.getElementById('comparisonSection').style.display = 'none';
+    }
+
+    function compareAllModels(demand, forecastPeriods) {
+      const models = [
+        { name: 'Moving Average', type: 'ma', params: { n: 3 } },
+        { name: 'Exponential Smoothing', type: 'es', params: { alpha: 0.3 } },
+        { name: 'Linear Trend', type: 'trend', params: {} },
+        { name: 'Seasonal', type: 'seasonal', params: { seasonLength: 4 } }
+      ];
+
+      const results = models.map(model => {
+        let forecasts;
+        switch (model.type) {
+          case 'ma':
+            forecasts = movingAverage(demand, model.params.n);
+            break;
+          case 'es':
+            forecasts = exponentialSmoothing(demand, model.params.alpha);
+            break;
+          case 'trend':
+            forecasts = linearTrend(demand);
+            break;
+          case 'seasonal':
+            forecasts = seasonalForecast(demand, model.params.seasonLength);
+            break;
+        }
+        
+        const metrics = calculateMetrics(demand, forecasts);
+        const futureForecasts = generateFutureForecast([...demand], model.type, forecastPeriods, model.params);
+        
+        return {
+          name: model.name,
+          forecasts,
+          futureForecasts,
+          metrics,
+          type: model.type
+        };
+      });
+
+      // Find best model (lowest MAPE)
+      const bestModel = results.reduce((best, current) => 
+        current.metrics.mape < best.metrics.mape ? current : best
+      );
+
+      displayComparison(demand, results, bestModel, forecastPeriods);
+    }
+
+    function displayResults(demand, forecasts, futureForecasts, metrics, modelName) {
+      // Show metrics
+      const metricsHtml = `
+        <div class="metric-card">
+          <div class="metric-value">${metrics.mad.toFixed(2)}</div>
+          <div class="metric-label">MAD</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">${metrics.mape.toFixed(2)}%</div>
+          <div class="metric-label">MAPE</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">${metrics.rmse.toFixed(2)}</div>
+          <div class="metric-label">RMSE</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">${metrics.bias.toFixed(2)}</div>
+          <div class="metric-label">Bias</div>
+        </div>
+      `;
+      document.getElementById('metricsGrid').innerHTML = metricsHtml;
+
+      // Generate table
+      generateTable(demand, forecasts, futureForecasts);
+      
+      // Generate chart
+      generateChart(demand, forecasts, futureForecasts, modelName);
+      
+      // Show output section
+      document.getElementById('outputSection').style.display = '';
+      document.getElementById('outputModel').textContent = modelName;
+      document.getElementById('outputSummary').textContent = `MAPE: ${metrics.mape.toFixed(2)}% | MAD: ${metrics.mad.toFixed(2)}`;
+    }
+
+    function displayComparison(demand, results, bestModel, forecastPeriods) {
+      // Show comparison metrics
+      const metricsHtml = results.map(result => `
+        <div class="metric-card ${result === bestModel ? 'best' : ''}">
+          <div class="metric-value">${result.metrics.mape.toFixed(2)}%</div>
+          <div class="metric-label">${result.name} MAPE</div>
+        </div>
+      `).join('');
+      document.getElementById('metricsGrid').innerHTML = metricsHtml;
+
+      // Show model comparison
+      const comparisonHtml = results.map(result => `
+        <div class="model-card ${result === bestModel ? 'best' : ''}">
+          <div class="model-title">${result.name} ${result === bestModel ? '🏆' : ''}</div>
+          <div><strong>MAPE:</strong> ${result.metrics.mape.toFixed(2)}%</div>
+          <div><strong>MAD:</strong> ${result.metrics.mad.toFixed(2)}</div>
+          <div><strong>RMSE:</strong> ${result.metrics.rmse.toFixed(2)}</div>
+          <div><strong>Bias:</strong> ${result.metrics.bias.toFixed(2)}</div>
+        </div>
+      `).join('');
+      document.getElementById('modelComparison').innerHTML = comparisonHtml;
+      document.getElementById('comparisonSection').style.display = '';
+
+      // Use best model for display
+      generateTable(demand, bestModel.forecasts, bestModel.futureForecasts);
+      generateChart(demand, bestModel.forecasts, bestModel.futureForecasts, `${bestModel.name} (Best Model)`);
+      
+      document.getElementById('outputSection').style.display = '';
+      document.getElementById('outputModel').textContent = 'Model Comparison';
+      document.getElementById('outputSummary').textContent = `Best: ${bestModel.name} (MAPE: ${bestModel.metrics.mape.toFixed(2)}%)`;
+    }
+
+    function generateTable(demand, forecasts, futureForecasts) {
+      let tableRows = '<tr><th>Period</th><th>Actual</th><th>Forecast</th><th>Error</th><th>|Error|</th><th>|%Error|</th></tr>';
+      
+      // Historical data
+      for (let i = 0; i < demand.length; i++) {
+        const f = forecasts[i] !== null ? forecasts[i] : '';
+        let error = '', absError = '', ape = '';
+        
+        if (f !== '' && i > 0) {
+          const e = demand[i] - f;
+          error = e.toFixed(2);
+          absError = Math.abs(e).toFixed(2);
+          ape = (Math.abs(e / demand[i]) * 100).toFixed(2);
+        }
+        
+        tableRows += `<tr>
+          <td>${i + 1}</td>
+          <td>${demand[i]}</td>
+          <td>${f !== '' ? f.toFixed(2) : ''}</td>
+          <td>${error}</td>
+          <td>${absError}</td>
+          <td>${ape}</td>
+        </tr>`;
+      }
+      
+      // Future forecasts
+      for (let i = 0; i < futureForecasts.length; i++) {
+        tableRows += `<tr style="background: rgba(16, 185, 129, 0.1);">
+          <td>${demand.length + i + 1}</td>
+          <td style="color: var(--text-secondary);">-</td>
+          <td><strong>${futureForecasts[i].toFixed(2)}</strong></td>
+          <td style="color: var(--text-secondary);">-</td>
+          <td style="color: var(--text-secondary);">-</td>
+          <td style="color: var(--text-secondary);">-</td>
+        </tr>`;
+      }
+      
+      document.getElementById('forecastTable').innerHTML = tableRows;
+    }
+
+    let lastChart = null;
+    function generateChart(demand, forecasts, futureForecasts, modelName) {
+      if (lastChart) lastChart.destroy();
+      
+      const ctx = document.getElementById('forecastChart').getContext('2d');
+      const totalPeriods = demand.length + futureForecasts.length;
+      const labels = Array.from({ length: totalPeriods }, (_, i) => i + 1);
+      
+      // Extend forecasts with future forecasts
+      const allForecasts = [...forecasts, ...futureForecasts];
+      const allActuals = [...demand, ...Array(futureForecasts.length).fill(null)];
+      
+      lastChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Actual Demand',
+              data: allActuals,
+              borderColor: '#3b82f6',
+              backgroundColor: '#93c5fd55',
+              pointRadius: 4,
+              borderWidth: 2,
+              tension: 0.3,
+              spanGaps: false
+            },
+            {
+              label: 'Historical Forecast',
+              data: forecasts,
+              borderColor: '#10b981',
+              backgroundColor: '#18a68f33',
+              pointRadius: 3,
+              borderWidth: 2,
+              borderDash: [5, 3],
+              tension: 0.26
+            },
+            {
+              label: 'Future Forecast',
+              data: [...Array(demand.length).fill(null), ...futureForecasts],
+              borderColor: '#f59e0b',
+              backgroundColor: '#fbbf2455',
+              pointRadius: 4,
+              borderWidth: 3,
+              pointStyle: 'rect',
+              tension: 0.1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { labels: { color: '#c6dbfa' } },
+            title: { 
+              display: true, 
+              text: modelName,
+              color: '#c6dbfa',
+              font: { size: 16 }
+            }
+          },
+          scales: {
+            x: { 
+              title: { display: true, text: 'Period', color: '#9ca3af' },
+              ticks: { color: '#9ca3af' }
+            },
+            y: { 
+              title: { display: true, text: 'Demand Units', color: '#9ca3af' },
+              ticks: { color: '#9ca3af' }
+            }
+          }
+        }
+      });
+    }
+
+    function exportResults() {
+      // Create CSV content
+      const table = document.getElementById('forecastTable');
+      if (!table) {
+        showToast('No results to export!', 'error');
+        return;
+      }
+      
+      let csv = '';
+      const rows = table.querySelectorAll('tr');
+      rows.forEach(row => {
+        const cols = row.querySelectorAll('td, th');
+        const rowData = Array.from(cols).map(col => col.textContent.trim()).join(',');
+        csv += rowData + '\n';
+      });
+      
+      // Download CSV
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'demand_forecast_results.csv';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      
+      showToast('Results exported successfully!', 'success');
+    }
+
+    function resetForm() {
+      document.getElementById('demandSeries').value = '';
+      document.getElementById('outputSection').style.display = 'none';
+      if (lastChart) lastChart.destroy();
+      showToast('Form reset successfully!', 'success');
+    }
+
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = `toast ${type}`;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    // Initialize form
+    document.getElementById('forecastModel').dispatchEvent(new Event('change'));
+  </script>
+
+
+            <script></script>
+        
+    
+<qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 748px; position: absolute !important; top: 456px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

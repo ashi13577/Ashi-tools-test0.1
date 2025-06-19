@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study Template | Ashi Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #00ffd5;
+      --secondary: #00b39e;
+      --dark-bg: #0e0e0e;
+      --card-bg: #1e1e1e;
+      --text-light: #cccccc;
+      --border: #333;
+      --success: #28a745;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background-color: var(--dark-bg);
+      color: #ffffff;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      padding: 40px 20px 20px;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    }
+    header h1 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    header p {
+      color: var(--text-light);
+      font-size: 1.2rem;
+      margin: 0 auto;
+      max-width: 700px;
+    }
+    section {
+      max-width: 1000px;
+      margin: 40px auto;
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 30px;
+      border: 1px solid var(--border);
+    }
+    section > h2 {
+      text-align: center;
+      font-size: 2rem;
+      color: var(--primary);
+      margin: 0 0 30px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .intro-text {
+      text-align: center;
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+    .collapse-container {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .collapse-header {
+      background-color: #2a2a2a;
+      color: var(--primary);
+      padding: 12px 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+    .collapse-header:hover {
+      background-color: #333;
+    }
+    .collapse-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background-color: #222;
+    }
+    .collapse-content.open {
+      max-height: 1000px; /* Adjust as needed */
+    }
+    .collapse-content-inner {
+      padding: 15px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      background: #1e1e1e;
+      border: 1px solid var(--border);
+      color: white;
+      border-radius: 5px;
+    }
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    button {
+      background-color: var(--primary);
+      color: #000;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1em;
+    }
+    button:hover {
+      background-color: var(--secondary);
+    }
+    .toast-message {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--success);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+    .toast-message.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 15px;
+    }
+    table th, table td {
+      border: 1px solid var(--border);
+      padding: 8px;
+    }
+    table th {
+      background-color: #333;
+      color: var(--primary);
+    }
+    .mermaid {
+      background-color: white;
+      padding: 10px;
+      color: black;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+    code {
+      display: block;
+      background: #222;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #666;
+      padding: 20px;
+      border-top: 1px solid #222;
+    }
+    .insta-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+
+
+  <header>
+    <h1>Case Study Template</h1>
+    <p>A structured, interactive case study creator for management students.</p>
+  </header>
+  <section>
+    <h2><i class="fas fa-file-alt"></i> Create Your Case Study</h2>
+    <p class="intro-text">Fill in the sections below to structure your business case study. Your progress can be saved in your browser.</p>
+
+    <div class="collapse-container">
+      <div class="collapse-header" onclick="toggleCollapse(this)">
+        <span><i class="fas fa-lightbulb"></i> Case Study Analysis Master Framework</span>
+        <i class="fas fa-angle-down"></i>
+      </div>
+      <div class="collapse-content open" style="max-height: 1238px;">
+        <div class="collapse-content-inner">
+          <!-- Step 1 -->
+          <div class="guide-section">
+            <div class="collapse-header" onclick="toggleCollapse(this)">
+              <span>1. Comprehensive Case Understanding</span>
+              <i class="fas fa-angle-down"></i>
+            </div>
+            <div class="collapse-content" style="">
+              <div class="collapse-content-inner">
+                <p>Key Actions:</p>
+                <ul>
+                  <li>Read the case 3 times: Skim for overall context, highlight key points, then focus on connections.</li>
+                  <li>Create a fact sheet:</li>
+                </ul>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Key Players</th>
+                      <th>Industry</th>
+                      <th>Timeline</th>
+                      <th>Core Conflict</th>
+                      <th>Available Data</th>
+                      <th>Missing Data</th>
+                    </tr>
+                  </thead>
+                </table>
+                <p>❗ Critical Note: "65% of case failures stem from incomplete comprehension." Ask: What's NOT said but implied? What cultural/economic factors influence this situation?</p>
+              </div>
+            </div>
+          </div>
+          <!-- Step 2 -->
+          <div class="guide-section">
+            <div class="collapse-header" onclick="toggleCollapse(this)">
+              <span>2. Problem Identification &amp; Framing</span>
+              <i class="fas fa-angle-up"></i>
+            </div>
+            <div class="collapse-content open" style="max-height: 304px;">
+              <div class="collapse-content-inner">
+                <p>Techniques:</p>
+                <ul>
+                  <li>Use 5 Whys Analysis to root causes.</li>
+                  <li>Apply Issue Tree to break down complex problems.</li>
+                  <li>Prioritize using MoSCoW Method:</li>
+                </ul>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Must solve</th>
+                      <th>Should solve</th>
+                      <th>Could solve</th>
+                      <th>Won't solve</th>
+                    </tr>
+                  </thead>
+                </table>
+                <p>Common Pitfalls to Avoid:</p>
+                <ul>
+                  <li>❌ Confusing symptoms with root causes.</li>
+                  <li>❌ Overlooking stakeholder perspectives.</li>
+                  <li>❌ Failing to align with business objectives.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Step 3 -->
+          <div class="guide-section">
+            <div class="collapse-header" onclick="toggleCollapse(this)">
+              <span>3. Strategic Analysis</span>
+              <i class="fas fa-angle-down"></i>
+            </div>
+            <div class="collapse-content" style="">
+              <div class="collapse-content-inner">
+                <p>Essential Frameworks Table:</p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Framework</th>
+                      <th>Best For</th>
+                      <th>Key Questions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>SWOT</td>
+                      <td>Internal capability assessment</td>
+                      <td>What unique resources do we have?</td>
+                    </tr>
+                    <tr>
+                      <td>PESTEL</td>
+                      <td>Macro-environment scan</td>
+                      <td>How might new regulations impact this?</td>
+                    </tr>
+                    <tr>
+                      <td>Porter's 5 Forces</td>
+                      <td>Industry competition</td>
+                      <td>Is supplier power increasing?</td>
+                    </tr>
+                    <tr>
+                      <td>VRIO</td>
+                      <td>Resource evaluation</td>
+                      <td>Is this capability rare?</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p>Pro Tip: "Layer frameworks—e.g., SWOT inside PESTEL analysis—for multidimensional insights."</p>
+              </div>
+            </div>
+          </div>
+          <!-- Step 4 -->
+          <div class="guide-section">
+            <div class="collapse-header" onclick="toggleCollapse(this)">
+              <span>4. Solution Generation</span>
+              <i class="fas fa-angle-down"></i>
+            </div>
+            <div class="collapse-content" style="">
+              <div class="collapse-content-inner">
+                <p>Innovation Techniques:</p>
+                <ul>
+                  <li>Brainwriting: Silent idea generation then group discussion.</li>
+                  <li>SCAMPER:</li>
+                </ul>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Substitute</th>
+                      <th>Combine</th>
+                      <th>Adapt</th>
+                      <th>Modify</th>
+                      <th>Put to other uses</th>
+                      <th>Eliminate</th>
+                      <th>Reverse</th>
+                    </tr>
+                  </thead>
+                </table>
+                <ul>
+                  <li>Weighted Scoring Matrix:</li>
+                </ul>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Solution</th>
+                      <th>Cost (30%)</th>
+                      <th>Feasibility (40%)</th>
+                      <th>Impact (30%)</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                </table>
+                <p>❗ Reality Check: Always validate against organizational capabilities, stakeholder acceptance, and implementation timelines.</p>
+              </div>
+            </div>
+          </div>
+          <!-- Step 5 -->
+          <div class="guide-section">
+            <div class="collapse-header" onclick="toggleCollapse(this)">
+              <span>5. Decision Recommendation</span>
+              <i class="fas fa-angle-down"></i>
+            </div>
+            <div class="collapse-content" style="">
+              <div class="collapse-content-inner">
+                <p>Persuasive Structure:</p>
+                <ol>
+                  <li><b>Hook:</b> Start with quantified impact ("This solution increases ROI by 23%")</li>
+                  <li><b>Evidence:</b> 2-3 strong data points from analysis, 1 counterargument rebuttal</li>
+                  <li><b>Roadmap:</b>
+                    <div class="mermaid">
+                      graph LR
+                      A[Month 1: Pilot] --&gt; B[Month 3: Training] --&gt; C[Month 6: Full Rollout]
+                    </div>
+                  </li>
+                </ol>
+                <p>Golden Rule: "Recommendations must answer: Why this? Why now? Why us?"</p>
+              </div>
+            </div>
+          </div>
+          <!-- Step 6 -->
+          <div class="guide-section">
+            <div class="collapse-header" onclick="toggleCollapse(this)">
+              <span>6. Implementation Planning</span>
+              <i class="fas fa-angle-down"></i>
+            </div>
+            <div class="collapse-content" style="">
+              <div class="collapse-content-inner">
+                <p>Essential Components:</p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Component</th>
+                      <th>Details</th>
+                      <th>Owner</th>
+                      <th>Timeline</th>
+                      <th>KPIs</th>
+                      <th>Resource Allocation</th>
+                      <th>Risk Mitigation</th>
+                      <th>Change Management</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Pre-launch</td>
+                      <td>% resources secured</td>
+                      <td>CFO</td>
+                      <td></td>
+                      <td></td>
+                      <td>Budget/Staffing needs</td>
+                      <td>Top 3 risks with contingency plans</td>
+                      <td>Stakeholder communication plan</td>
+                    </tr>
+                    <tr>
+                      <td>Ongoing</td>
+                      <td>Risk events triggered</td>
+                      <td>Risk Officer</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Phase 1</td>
+                      <td>Employee adoption rate</td>
+                      <td>HR</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p>Pro Tip: "Build a premortem analysis—imagine implementation failed, why?"</p>
+              </div>
+            </div>
+          </div>
+          <!-- Step 7 -->
+          <div class="guide-section">
+            <div class="collapse-header" onclick="toggleCollapse(this)">
+              <span>7. Presentation &amp; Defense</span>
+              <i class="fas fa-angle-down"></i>
+            </div>
+            <div class="collapse-content" style="">
+              <div class="collapse-content-inner">
+                <p>Winning Slide Structure:</p>
+                <ol>
+                  <li><b>Title (Conflict → Solution):</b> "From Market Share Loss to 15% Growth: Digital Transformation Strategy"</li>
+                  <li><b>Agenda:</b> Problem → Solution → Impact</li>
+                  <li><b>Key Analysis:</b> 1 framework deep dive</li>
+                  <li><b>Recommendation:</b> Tied to financials</li>
+                  <li><b>Q&amp;A Preparation:</b> Anticipate 3 tough questions, prepare backup data slides</li>
+                </ol>
+                <p>Presentation Checklist:</p>
+                <ul>
+                  <li>✅ 10/20/30 Rule: 10 slides, 20 mins, 30pt font minimum</li>
+                  <li>✅ 3-Tell Method: Tell what you'll say, say it, tell what you said</li>
+                  <li>✅ Data Visualization: Use 2-color scheme for charts</li>
+                </ul>
+                <p>Key Learning Strategies</p>
+                <ol>
+                  <li><b>Pattern Recognition:</b> Maintain a case journal of similar challenges/solutions. Identify 3 recurring business problem archetypes.</li>
+                  <li><b>Cognitive Flexibility Drills:</b> Weekly practice: Solve same case using different frameworks. Role-play as different stakeholders.</li>
+                  <li><b>Feedback Loop:</b>
+                    <code>
+Solve Case → Record Video Review → Compare with Expert Analysis → Revise
+                    </code>
+                  </li>
+                  <li><b>Time Management</b>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Stage</th>
+                          <th>% Time Allocation</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Comprehension</td>
+                          <td>25%</td>
+                        </tr>
+                        <tr>
+                          <td>Analysis</td>
+                          <td>35%</td>
+                        </tr>
+                        <tr>
+                          <td>Solutioning</td>
+                          <td>25%</td>
+                        </tr>
+                        <tr>
+                          <td>Presentation</td>
+                          <td>15%</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </li>
+                </ol>
+                <p>Final Wisdom: "Great case solvers aren't born—they're systematic. Master the process, then develop style."</p>
+                <p>Remember: 73% of case exam scores depend on implementation feasibility, not just ideas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form id="caseStudyForm">
+      <h2>Case Details</h2>
+      <div class="form-group">
+        <label for="caseTitle">Case Study Title</label>
+        <input type="text" id="caseTitle" placeholder="e.g., Tesla's Market Disruption Strategy">
+      </div>
+
+      <h2>Executive Summary / Introduction</h2>
+      <div class="form-group">
+        <label for="executiveSummary">Provide a concise overview of the case, problem, and key findings/recommendations.</label>
+        <textarea id="executiveSummary" placeholder="Summarize the core elements of your case study."></textarea>
+      </div>
+
+      <h2>Background / Problem Statement</h2>
+      <div class="collapse-container">
+        <div class="collapse-header" onclick="toggleCollapse(this)">
+          <span><i class="fas fa-info-circle"></i> Hints (click to expand)</span>
+          <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="collapse-content" style="">
+          <div class="collapse-content-inner">
+            <p>Describe the company, industry, and the specific problem or situation. What is the context? What is the core issue or opportunity?</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <textarea id="backgroundProblem" placeholder="Describe the company, industry, and the specific problem or situation."></textarea>
+      </div>
+
+      <h2>Analysis</h2>
+      <div class="collapse-container">
+        <div class="collapse-header" onclick="toggleCollapse(this)">
+          <span><i class="fas fa-info-circle"></i> Hints (click to expand)</span>
+          <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="collapse-content" style="">
+          <div class="collapse-content-inner">
+            <p>Conduct an in-depth analysis (e.g., SWOT, PESTEL, Porter's Five Forces, Financial Analysis). Discuss key factors and their implications.</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <textarea id="analysis" placeholder="Break down the case using relevant frameworks. What are the key insights?"></textarea>
+      </div>
+
+      <h2>Alternatives</h2>
+      <div class="collapse-container">
+        <div class="collapse-header" onclick="toggleCollapse(this)">
+          <span><i class="fas fa-info-circle"></i> Hints (click to expand)</span>
+          <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="collapse-content">
+          <div class="collapse-content-inner">
+            <p>Outline 2-3 viable alternative solutions or courses of action to address the problem.</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <textarea id="alternatives" placeholder="List and briefly describe realistic options."></textarea>
+      </div>
+
+      <h2>Recommendations</h2>
+      <div class="collapse-container">
+        <div class="collapse-header" onclick="toggleCollapse(this)">
+          <span><i class="fas fa-info-circle"></i> Hints (click to expand)</span>
+          <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="collapse-content">
+          <div class="collapse-content-inner">
+            <p>State your primary recommendation and justify why it's the best option based on your analysis. Include implementation steps.</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <textarea id="recommendations" placeholder="What should be done? Why? How?"></textarea>
+      </div>
+
+      <h2>Conclusion</h2>
+      <div class="collapse-container">
+        <div class="collapse-header" onclick="toggleCollapse(this)">
+          <span><i class="fas fa-info-circle"></i> Hints (click to expand)</span>
+          <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="collapse-content" style="">
+          <div class="collapse-content-inner">
+            <p>Summarize the main takeaways and re-emphasize the importance of your recommendations.</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <textarea id="conclusion" placeholder="Reiterate the significance of the case and its solution."></textarea>
+      </div>
+    </form>
+
+    <div class="action-buttons">
+      <button onclick="exportToPdf()"><i class="fas fa-file-pdf"></i> Export to PDF</button>
+      <button onclick="saveCaseStudy()"><i class="fas fa-save"></i> Save Progress</button>
+      <button onclick="loadCaseStudy()"><i class="fas fa-folder-open"></i> Load Last Saved</button>
+      <button onclick="clearForm()"><i class="fas fa-trash-alt"></i> Clear Form</button>
+    </div>
+
+    <div id="toastMessage" class="toast-message" style="background-color: var(--success);">Case study loaded successfully!</div>
+  </section>
+
+  <footer>
+    Built with ❤️ by Ashi | Connect <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank">@ashish_singh_rajput_3</a>
+  </footer>
+
+  <script>
+    function toggleCollapse(el) {
+      // Toggle icon
+      const icon = el.querySelector('i:last-of-type');
+      if (icon.classList.contains('fa-angle-down')) {
+        icon.classList.replace('fa-angle-down', 'fa-angle-up');
+      } else {
+        icon.classList.replace('fa-angle-up', 'fa-angle-down');
+      }
+      // Toggle collapse content (next sibling)
+      let content = el.nextElementSibling;
+      if (content.style.maxHeight) {
+        content.style.maxHeight = null;
+      } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+      // Add 'open' class for styling if needed
+      content.classList.toggle('open');
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toastMessage');
+      toast.textContent = message;
+      toast.className = 'toast-message show';
+      if (type === 'error') toast.style.backgroundColor = '#dc3545';
+      else toast.style.backgroundColor = 'var(--success)';
+      setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+
+    function saveCaseStudy() {
+      const formData = {
+        caseTitle: document.getElementById('caseTitle').value,
+        executiveSummary: document.getElementById('executiveSummary').value,
+        backgroundProblem: document.getElementById('backgroundProblem').value,
+        analysis: document.getElementById('analysis').value,
+        alternatives: document.getElementById('alternatives').value,
+        recommendations: document.getElementById('recommendations').value,
+        conclusion: document.getElementById('conclusion').value
+      };
+      localStorage.setItem('ashiToolsCaseStudy', JSON.stringify(formData));
+      showToast('Case study progress saved!');
+    }
+
+    function loadCaseStudy(showMsg = true) {
+      const savedData = localStorage.getItem('ashiToolsCaseStudy');
+      if (savedData) {
+        const formData = JSON.parse(savedData);
+        document.getElementById('caseTitle').value = formData.caseTitle || '';
+        document.getElementById('executiveSummary').value = formData.executiveSummary || '';
+        document.getElementById('backgroundProblem').value = formData.backgroundProblem || '';
+        document.getElementById('analysis').value = formData.analysis || '';
+        document.getElementById('alternatives').value = formData.alternatives || '';
+        document.getElementById('recommendations').value = formData.recommendations || '';
+        document.getElementById('conclusion').value = formData.conclusion || '';
+        if (showMsg) showToast('Case study loaded successfully!');
+      } else if (showMsg) showToast('No saved case study found.', 'error');
+    }
+
+    function clearForm() {
+      if (confirm('Are you sure you want to clear the form? This will delete all current content.')) {
+        document.getElementById('caseStudyForm').reset();
+        localStorage.removeItem('ashiToolsCaseStudy');
+        showToast('Form cleared!');
+      }
+    }
+
+    function exportToPdf() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setTextColor(0, 0, 0);
+      let y = 20;
+
+      const title = document.getElementById('caseTitle').value.trim() || 'Untitled Case Study';
+      execSumm = document.getElementById('executiveSummary').value.trim();
+      bgProblem = document.getElementById('backgroundProblem').value.trim();
+      analysis = document.getElementById('analysis').value.trim();
+      alts = document.getElementById('alternatives').value.trim();
+      recs = document.getElementById('recommendations').value.trim();
+      concl = document.getElementById('conclusion').value.trim();
+
+      // Cover page
+      doc.setFontSize(24);
+      doc.text(title, 105, y, { align: 'center' });
+      y += 20;
+      doc.setFontSize(14);
+      doc.text('A Case Study by Ashi Tools', 105, y, { align: 'center' });
+      doc.addPage();
+      y = 20;
+      doc.setFontSize(16);
+
+      // Add sections
+      const sections = [
+        { label: 'Executive Summary / Introduction', content: execSumm },
+        { label: 'Background / Problem Statement', content: bgProblem },
+        { label: 'Analysis', content: analysis },
+        { label: 'Alternatives', content: alts },
+        { label: 'Recommendations', content: recs },
+        { label: 'Conclusion', content: concl }
+      ];
+
+      doc.setFontSize(16);
+      sections.forEach((section, idx) => {
+        doc.text(section.label, 20, y);
+        y += 10;
+        doc.setFontSize(12);
+        const splitText = doc.splitTextToSize(section.content || '(Not provided)', 170);
+        doc.text(splitText, 20, y);
+        y += splitText.length * 7 + 20;
+        if (y > 270 && idx < sections.length - 1) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.setFontSize(16);
+      });
+
+      doc.save(`${title.replace(/\s+/g, '_')}_AshiTools.pdf`);
+      showToast('PDF exported successfully!');
+    }
+  </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

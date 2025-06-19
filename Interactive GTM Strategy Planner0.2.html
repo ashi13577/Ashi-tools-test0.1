@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <title>Interactive GTM Strategy Planner - Ashi Tools</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Roboto, sans-serif;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  color: #f3f4f6;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h1, h2 {
+  color: #3b82f6;
+}
+
+.header-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+input, button, select {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  margin: 5px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+input {
+  width: 90%;
+  max-width: 350px;
+  background: #374151;
+  color: #f3f4f6;
+  border: 2px solid #4b5563;
+}
+
+input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+button {
+  color: #fff;
+  background: #3b82f6;
+  cursor: pointer;
+  font-weight: 500;
+  border: 2px solid transparent;
+}
+
+button:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+}
+
+button:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.secondary-btn {
+  background: #059669;
+}
+
+.secondary-btn:hover {
+  background: #047857;
+}
+
+.danger-btn {
+  background: #dc2626;
+}
+
+.danger-btn:hover {
+  background: #b91c1c;
+}
+
+.card {
+  background: linear-gradient(145deg, #1f2937, #111827);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 15px auto;
+  width: 90%;
+  max-width: 800px;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #374151;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.contenteditable {
+  padding: 15px;
+  border-radius: 8px;
+  background: #374151;
+  min-height: 100px;
+  border: 2px solid #4b5563;
+  transition: all 0.3s ease;
+  line-height: 1.6;
+}
+
+.contenteditable:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.contenteditable[contenteditable]:empty:before {
+  content: attr(placeholder);
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #374151;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #06b6d4);
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  text-align: center;
+  margin: 10px 0;
+  font-weight: 500;
+}
+
+.info-btn, .copy-btn, .clear-btn {
+  color: #60a5fa;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.info-btn:hover, .copy-btn:hover, .clear-btn:hover {
+  background: rgba(96, 165, 250, 0.1);
+  transform: scale(1.1);
+}
+
+.copy-btn {
+  color: #10b981;
+}
+
+.clear-btn {
+  color: #ef4444;
+}
+
+.popup {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  background: #fff;
+  color: #111827;
+  padding: 15px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.popup::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  border-width: 0 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent #fff;
+}
+
+.word-count {
+  font-size: 12px;
+  color: #9ca3af;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.template-selector {
+  background: #374151;
+  color: #f3f4f6;
+  border: 2px solid #4b5563;
+}
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #059669;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+  background: #1f2937;
+  margin: 5% auto;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  color: #f3f4f6;
+  position: relative;
+}
+
+.close {
+  color: #9ca3af;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  top: 15px;
+}
+
+.close:hover {
+  color: #f3f4f6;
+}
+
+.auto-save-indicator {
+  color: #10b981;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.auto-save-indicator.show {
+  opacity: 1;
+}
+
+footer {
+  text-align: center;
+  color: #6b7280;
+  margin-top: 40px;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .header-controls {
+    flex-direction: column;
+  }
+  
+  .card {
+    margin: 10px 5px;
+    padding: 15px;
+  }
+  
+  .popup {
+    width: 250px;
+    right: 5px;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+
+
+<header>
+  <h1><i class="fa-solid fa-rocket"></i> Interactive GTM Strategy Planner</h1>
+  <p>Plan, learn, and execute your go-to-market strategy effectively</p>
+  
+  <div class="header-controls">
+    <input type="text" id="gtmTitle" placeholder="Your GTM Strategy Title" value="My Startup GTM Strategy">
+    <select id="templateSelector" class="template-selector">
+      <option value="">Select Template</option>
+      <option value="saas">SaaS Startup</option>
+      <option value="ecommerce">E-commerce</option>
+      <option value="mobile">Mobile App</option>
+      <option value="b2b">B2B Service</option>
+    </select>
+  </div>
+
+  <div class="progress-text">Completion Progress</div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+  </div>
+  <div class="progress-text" id="progressText">0% Complete (0/9 sections)</div>
+
+  <div class="action-buttons">
+    <button onclick="exportPDF()"><i class="fa-solid fa-file-pdf"></i> Export PDF</button>
+    <button onclick="saveStrategy()" class="secondary-btn"><i class="fa-solid fa-save"></i> Save Strategy</button>
+    <button onclick="loadStrategy()" class="secondary-btn"><i class="fa-solid fa-upload"></i> Load Strategy</button>
+    <button onclick="clearAll()" class="danger-btn"><i class="fa-solid fa-trash"></i> Clear All</button>
+  </div>
+
+  <div class="auto-save-indicator" id="autoSaveIndicator">
+    <i class="fa-solid fa-check-circle"></i> Auto-saved
+  </div>
+</header>
+
+<div id="planner"><div class="card fade-in" style="animation-delay: 0s;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-users"></i>
+          <h2>Target Audience</h2>
+        </div>
+        <div class="card-controls">
+          <i class="fa-solid fa-copy copy-btn" title="Copy content" onclick="copyContent(this)"></i>
+          <i class="fa-solid fa-trash clear-btn" title="Clear content" onclick="clearContent(this)"></i>
+          <i class="fa-solid fa-circle-info info-btn" title="Show guidance"></i>
+        </div>
+      </div>
+      <div class="contenteditable" contenteditable="true" placeholder="Type your target audience details..." oninput="updateProgress(); autoSave()"></div>
+      <div class="word-count">0 words</div>
+      <div class="popup" style="display: none;">Define your ideal customer persona with demographics, psychographics, pain points, and behaviors. Include market size and segmentation.</div>
+    </div><div class="card fade-in" style="animation-delay: 0.1s;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-star"></i>
+          <h2>Value Proposition</h2>
+        </div>
+        <div class="card-controls">
+          <i class="fa-solid fa-copy copy-btn" title="Copy content" onclick="copyContent(this)"></i>
+          <i class="fa-solid fa-trash clear-btn" title="Clear content" onclick="clearContent(this)"></i>
+          <i class="fa-solid fa-circle-info info-btn" title="Show guidance"></i>
+        </div>
+      </div>
+      <div class="contenteditable" contenteditable="true" placeholder="Type your value proposition details..." oninput="updateProgress(); autoSave()"></div>
+      <div class="word-count">0 words</div>
+      <div class="popup" style="display: none;">Clearly articulate your unique value proposition. What problem do you solve? How are you different from competitors? What benefits do customers get?</div>
+    </div><div class="card fade-in" style="animation-delay: 0.2s;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-box-open"></i>
+          <h2>Product Overview</h2>
+        </div>
+        <div class="card-controls">
+          <i class="fa-solid fa-copy copy-btn" title="Copy content" onclick="copyContent(this)"></i>
+          <i class="fa-solid fa-trash clear-btn" title="Clear content" onclick="clearContent(this)"></i>
+          <i class="fa-solid fa-circle-info info-btn" title="Show guidance"></i>
+        </div>
+      </div>
+      <div class="contenteditable" contenteditable="true" placeholder="Type your product overview details..." oninput="updateProgress(); autoSave()"></div>
+      <div class="word-count">0 words</div>
+      <div class="popup" style="display: none;">Describe your product/service features, benefits, and roadmap. Include MVP details and future enhancements.</div>
+    </div><div class="card fade-in" style="animation-delay: 0.3s;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-dollar-sign"></i>
+          <h2>Pricing Strategy</h2>
+        </div>
+        <div class="card-controls">
+          <i class="fa-solid fa-copy copy-btn" title="Copy content" onclick="copyContent(this)"></i>
+          <i class="fa-solid fa-trash clear-btn" title="Clear content" onclick="clearContent(this)"></i>
+          <i class="fa-solid fa-circle-info info-btn" title="Show guidance"></i>
+        </div>
+      </div>
+      <div class="contenteditable" contenteditable="true" placeholder="Type your pricing strategy details..." oninput="updateProgress(); autoSave()"></div>
+      <div class="word-count">0 words</div>
+      <div class="popup" style="display: none;">Detail your pricing model, tiers, and rationale. Consider competitive pricing, value-based pricing, and customer acquisition costs.</div>
+    </div><div class="card fade-in" style="animation-delay: 0.4s;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-bullhorn"></i>
+          <h2>Marketing &amp; Sales</h2>
+        </div>
+        <div class="card-controls">
+          <i class="fa-solid fa-copy copy-btn" title="Copy content" onclick="copyContent(this)"></i>
+          <i class="fa-solid fa-trash clear-btn" title="Clear content" onclick="clearContent(this)"></i>
+          <i class="fa-solid fa-circle-info info-btn" title="Show guidance"></i>
+        </div>
+      </div>
+      <div class="contenteditable" contenteditable="true" placeholder="Type your marketing &amp; sales details..." oninput="updateProgress(); autoSave()"></div>
+      <div class="word-count">0 words</div>
+      <div class="popup" style="display: none;">Outline your marketing channels, sales process, and customer acquisition strategy. Include both digital and traditional approaches.</div>
+    </div><div class="card fade-in" style="animation-delay: 0.5s;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-life-ring"></i>
+          <h2>Customer Success Plan</h2>
+        </div>
+        <div class="card-controls">
+          <i class="fa-solid fa-copy copy-btn" title="Copy content" onclick="copyContent(this)"></i>
+          <i class="fa-solid fa-trash clear-btn" title="Clear content" onclick="clearContent(this)"></i>
+          <i class="fa-solid fa-circle-info info-btn" title="Show guidance"></i>
+        </div>
+      </div>
+      <div class="contenteditable" contenteditable="true" placeholder="Type your customer success plan details..." oninput="updateProgress(); autoSave()"></div>
+      <div class="word-count">0 words</div>
+      <div class="popup" style="display: none;">Detail your customer onboarding, support, and retention strategies. Include success metrics and feedback loops.</div>
+    </div><div class="card fade-in" style="animation-delay: 0.6s;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-chart-line"></i>
+          <h2>KPIs &amp; Metrics</h2>
+        </div>
+        <div class="card-controls">
+          <i class="fa-solid fa-copy copy-btn" title="Copy content" onclick="copyContent(this)"></i>
+          <i class="fa-solid fa-trash clear-btn" title="Clear content" onclick="clearContent(this)"></i>
+          <i class="fa-solid fa-circle-info info-btn" title="Show guidance"></i>
+        </div>
+      </div>
+      <div class="contenteditable" contenteditable="true" placeholder="Type your kpis &amp; metrics details..." oninput="updateProgress(); autoSave()"></div>
+      <div class="word-count">0 words</div>
+      <div class="popup" style="display: none;">Define key performance indicators and success metrics. Include acquisition, activation, retention, and revenue metrics.</div>
+    </div><div class="card fade-in" style="animation-delay: 0.7s;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-wallet"></i>
+          <h2>Budget &amp; Resources</h2>
+        </div>
+        <div class="card-controls">
+          <i class="fa-solid fa-copy copy-btn" title="Copy content" onclick="copyContent(this)"></i>
+          <i class="fa-solid fa-trash clear-btn" title="Clear content" onclick="clearContent(this)"></i>
+          <i class="fa-solid fa-circle-info info-btn" title="Show guidance"></i>
+        </div>
+      </div>
+      <div class="contenteditable" contenteditable="true" placeholder="Type your budget &amp; resources details..." oninput="updateProgress(); autoSave()"></div>
+      <div class="word-count">0 words</div>
+      <div class="popup" style="display: none;">Outline your financial requirements, team needs, and resource allocation. Include both startup costs and ongoing expenses.</div>
+    </div><div class="card fade-in" style="animation-delay: 0.8s;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-calendar-alt"></i>
+          <h2>Launch Timeline</h2>
+        </div>
+        <div class="card-controls">
+          <i class="fa-solid fa-copy copy-btn" title="Copy content" onclick="copyContent(this)"></i>
+          <i class="fa-solid fa-trash clear-btn" title="Clear content" onclick="clearContent(this)"></i>
+          <i class="fa-solid fa-circle-info info-btn" title="Show guidance"></i>
+        </div>
+      </div>
+      <div class="contenteditable" contenteditable="true" placeholder="Type your launch timeline details..." oninput="updateProgress(); autoSave()"></div>
+      <div class="word-count">0 words</div>
+      <div class="popup" style="display: none;">Create a detailed timeline with milestones, dependencies, and key dates. Include pre-launch, launch, and post-launch phases.</div>
+    </div></div>
+
+<!-- Modal for loading strategies -->
+<div id="loadModal" class="modal">
+  <div class="modal-content">
+    <span class="close">×</span>
+    <h2>Load Saved Strategy</h2>
+    <div id="savedStrategies"></div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" class="toast" style="display: none;">All content cleared!</div>
+
+<footer>
+ Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+    Connect with me:  <a style="color:#60a5fa;" href="https://instagram.com/ashish_singh_rajput_3">@ashish_singh_rajput_3</a> | Ashi Tools
+</footer>
+
+<script>
+// Enhanced sections with templates
+const sections = [
+  { 
+    icon: "users", 
+    title: "Target Audience", 
+    guide: "Define your ideal customer persona with demographics, psychographics, pain points, and behaviors. Include market size and segmentation.",
+    templates: {
+      saas: "Tech-savvy professionals aged 25-45, working in startups/SMBs, frustrated with manual processes, value efficiency and automation.",
+      ecommerce: "Online shoppers aged 18-35, mobile-first, price-conscious, value convenience and fast delivery, active on social media.",
+      mobile: "Mobile users aged 16-40, early adopters, spend 3+ hours daily on phones, value seamless UX and social features.",
+      b2b: "Decision-makers in mid-to-large enterprises, budget authority $50K+, focused on ROI and efficiency improvements."
+    }
+  },
+  { 
+    icon: "star", 
+    title: "Value Proposition", 
+    guide: "Clearly articulate your unique value proposition. What problem do you solve? How are you different from competitors? What benefits do customers get?",
+    templates: {
+      saas: "10x faster workflow automation with AI-powered insights, reducing manual work by 80% while increasing accuracy.",
+      ecommerce: "Curated premium products at 30% lower prices with same-day delivery and hassle-free returns.",
+      mobile: "Connect with like-minded people instantly through AI-powered matching and gamified social interactions.",
+      b2b: "End-to-end business process optimization that delivers 25% cost reduction and 40% efficiency improvement in 90 days."
+    }
+  },
+  { 
+    icon: "box-open", 
+    title: "Product Overview", 
+    guide: "Describe your product/service features, benefits, and roadmap. Include MVP details and future enhancements.",
+    templates: {
+      saas: "Cloud-based platform with dashboard analytics, API integrations, automated workflows, and real-time collaboration tools.",
+      ecommerce: "Mobile-optimized marketplace with AR try-on, personalized recommendations, subscription options, and loyalty rewards.",
+      mobile: "Native iOS/Android app with social feeds, messaging, location-based features, and gamification elements.",
+      b2b: "Enterprise software suite with CRM integration, advanced reporting, custom workflows, and dedicated support."
+    }
+  },
+  { 
+    icon: "dollar-sign", 
+    title: "Pricing Strategy", 
+    guide: "Detail your pricing model, tiers, and rationale. Consider competitive pricing, value-based pricing, and customer acquisition costs.",
+    templates: {
+      saas: "Freemium model: Free (basic features), Pro ($29/month), Enterprise ($99/month) with custom pricing for large teams.",
+      ecommerce: "Competitive pricing with 15% markup, free shipping over $50, membership program with 10% ongoing discount.",
+      mobile: "Free download with in-app purchases ($0.99-$9.99), premium subscription ($4.99/month), no ads for subscribers.",
+      b2b: "Tiered pricing: Starter ($500/month), Professional ($1,500/month), Enterprise (custom), implementation fees separate."
+    }
+  },
+  { 
+    icon: "bullhorn", 
+    title: "Marketing & Sales", 
+    guide: "Outline your marketing channels, sales process, and customer acquisition strategy. Include both digital and traditional approaches.",
+    templates: {
+      saas: "Content marketing, SEO, LinkedIn ads, webinars, free trials, inside sales team, partner referrals, and industry conferences.",
+      ecommerce: "Social media ads, influencer partnerships, email marketing, SEO, retargeting campaigns, affiliate program, flash sales.",
+      mobile: "App store optimization, social media marketing, influencer partnerships, referral programs, in-app sharing incentives.",
+      b2b: "Account-based marketing, LinkedIn outreach, industry publications, trade shows, webinars, case studies, sales development reps."
+    }
+  },
+  { 
+    icon: "life-ring", 
+    title: "Customer Success Plan", 
+    guide: "Detail your customer onboarding, support, and retention strategies. Include success metrics and feedback loops.",
+    templates: {
+      saas: "Guided onboarding, 24/7 chat support, video tutorials, customer success manager for enterprise, quarterly business reviews.",
+      ecommerce: "Easy returns, live chat support, order tracking, loyalty program, personalized recommendations, customer feedback system.",
+      mobile: "In-app tutorials, push notifications for engagement, community support, regular feature updates, user feedback integration.",
+      b2b: "Dedicated implementation team, training programs, ongoing support, regular check-ins, success metrics tracking, expansion opportunities."
+    }
+  },
+  { 
+    icon: "chart-line", 
+    title: "KPIs & Metrics", 
+    guide: "Define key performance indicators and success metrics. Include acquisition, activation, retention, and revenue metrics.",
+    templates: {
+      saas: "MRR growth, churn rate, CAC, LTV, trial-to-paid conversion, feature adoption, NPS score, support ticket resolution time.",
+      ecommerce: "GMV, conversion rate, average order value, customer acquisition cost, repeat purchase rate, cart abandonment, inventory turnover.",
+      mobile: "Daily/monthly active users, retention rates, in-app purchase conversion, session length, app store ratings, viral coefficient.",
+      b2b: "Pipeline velocity, deal size, win rate, sales cycle length, customer lifetime value, expansion revenue, reference customer ratio."
+    }
+  },
+  { 
+    icon: "wallet", 
+    title: "Budget & Resources", 
+    guide: "Outline your financial requirements, team needs, and resource allocation. Include both startup costs and ongoing expenses.",
+    templates: {
+      saas: "$500K seed funding: 40% development, 30% marketing, 20% operations, 10% legal/admin. Team: 5 developers, 2 marketers, 1 sales.",
+      ecommerce: "$300K initial: 50% inventory, 25% marketing, 15% platform development, 10% operations. Team: 2 developers, 2 marketing, 1 operations.",
+      mobile: "$200K development budget: 60% development, 25% marketing, 10% design, 5% legal. Team: 3 developers, 1 designer, 1 marketer.",
+      b2b: "$1M Series A: 35% sales/marketing, 30% product development, 20% operations, 15% customer success. Team: 10-person cross-functional."
+    }
+  },
+  { 
+    icon: "calendar-alt", 
+    title: "Launch Timeline", 
+    guide: "Create a detailed timeline with milestones, dependencies, and key dates. Include pre-launch, launch, and post-launch phases.",
+    templates: {
+      saas: "Month 1-3: MVP development, Month 4: Beta testing, Month 5: Marketing preparation, Month 6: Public launch, Month 7-12: Growth and iteration.",
+      ecommerce: "Month 1-2: Platform setup, Month 3: Inventory sourcing, Month 4: Testing, Month 5: Soft launch, Month 6: Full launch and marketing.",
+      mobile: "Month 1-4: App development, Month 5: App store submission, Month 6: Marketing campaign, Month 7: Launch, Month 8-12: User acquisition.",
+      b2b: "Quarter 1: Product completion, Quarter 2: Pilot customers, Quarter 3: Sales team hiring, Quarter 4: Market launch and scale."
+    }
+  }
+];
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+  generateSections();
+  updateProgress();
+  setupAutoSave();
+  loadAutoSave();
+});
+
+// Generate sections dynamically
+function generateSections() {
+  const planner = document.getElementById('planner');
+  planner.innerHTML = '';
+  
+  sections.forEach((sec, index) => {
+    const sectionDiv = document.createElement('div');
+    sectionDiv.className = 'card fade-in';
+    sectionDiv.style.animationDelay = `${index * 0.1}s`;
+    
+    sectionDiv.innerHTML = `
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-${sec.icon}"></i>
+          <h2>${sec.title}</h2>
+        </div>
+        <div class="card-controls">
+          <i class="fa-solid fa-copy copy-btn" title="Copy content" onclick="copyContent(this)"></i>
+          <i class="fa-solid fa-trash clear-btn" title="Clear content" onclick="clearContent(this)"></i>
+          <i class="fa-solid fa-circle-info info-btn" title="Show guidance"></i>
+        </div>
+      </div>
+      <div class="contenteditable" contenteditable="true" placeholder="Type your ${sec.title.toLowerCase()} details..." oninput="updateProgress(); autoSave()"></div>
+      <div class="word-count">0 words</div>
+      <div class="popup">${sec.guide}</div>
+    `;
+    
+    planner.appendChild(sectionDiv);
+  });
+
+  // Setup event listeners
+  setupEventListeners();
+}
+
+// Setup event listeners
+function setupEventListeners() {
+  // Info button popups
+  document.querySelectorAll('.info-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const popup = this.closest('.card').querySelector('.popup');
+      document.querySelectorAll('.popup').forEach(p => {
+        if (p !== popup) p.style.display = 'none';
+      });
+      popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+    });
+  });
+
+  // Content editing and word count
+  document.querySelectorAll('.contenteditable').forEach(editor => {
+    editor.addEventListener('input', function() {
+      updateWordCount(this);
+    });
+  });
+
+  // Template selector
+  document.getElementById('templateSelector').addEventListener('change', function() {
+    if (this.value) {
+      loadTemplate(this.value);
+    }
+  });
+
+  // Modal controls
+  const modal = document.getElementById('loadModal');
+  const closeModal = document.querySelector('.close');
+  
+  closeModal.addEventListener('click', function() {
+    modal.style.display = 'none';
+  });
+
+  window.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+    if (!e.target.matches('.info-btn')) {
+      document.querySelectorAll('.popup').forEach(p => p.style.display = 'none');
+    }
+  });
+}
+
+// Update word count
+function updateWordCount(editor) {
+  const wordCount = editor.innerText.trim().split(/\s+/).filter(word => word.length > 0).length;
+  const wordCountElement = editor.closest('.card').querySelector('.word-count');
+  wordCountElement.textContent = `${wordCount} words`;
+}
+
+// Update progress bar
+function updateProgress() {
+  const editors = document.querySelectorAll('.contenteditable');
+  const filledEditors = Array.from(editors).filter(editor => 
+    editor.innerText.trim().length > 0
+  ).length;
+  
+  const progress = Math.round((filledEditors / editors.length) * 100);
+  
+  document.getElementById('progressFill').style.width = `${progress}%`;
+  document.getElementById('progressText').textContent = `${progress}% Complete (${filledEditors}/${editors.length} sections)`;
+}
+
+// Copy content functionality
+function copyContent(btn) {
+  const content = btn.closest('.card').querySelector('.contenteditable').innerText;
+  navigator.clipboard.writeText(content).then(() => {
+    showToast('Content copied to clipboard!');
+  });
+}
+
+// Clear content functionality
+function clearContent(btn) {
+  if (confirm('Are you sure you want to clear this section?')) {
+    const editor = btn.closest('.card').querySelector('.contenteditable');
+    editor.innerHTML = '';
+    updateWordCount(editor);
+    updateProgress();
+    autoSave();
+  }
+}
+
+// Template loading
+function loadTemplate(type) {
+  if (confirm('This will replace existing content. Continue?')) {
+    document.querySelectorAll('.contenteditable').forEach((editor, index) => {
+      if (sections[index].templates && sections[index].templates[type]) {
+        editor.innerHTML = sections[index].templates[type];
+        updateWordCount(editor);
+      }
+    });
+    updateProgress();
+    autoSave();
+    showToast(`${type.toUpperCase()} template loaded successfully!`);
+  }
+}
+
+// Auto-save functionality
+function setupAutoSave() {
+  setInterval(() => {
+    autoSave();
+  }, 30000); // Auto-save every 30 seconds
+}
+
+function autoSave() {
+  const data = {
+    title: document.getElementById('gtmTitle').value,
+    sections: Array.from(document.querySelectorAll('.contenteditable')).map(editor => editor.innerHTML),
+    timestamp: new Date().toISOString()
+  };
+  
+  localStorage.setItem('gtm_autosave', JSON.stringify(data));
+  
+  const indicator = document.getElementById('autoSaveIndicator');
+  indicator.classList.add('show');
+  setTimeout(() => indicator.classList.remove('show'), 2000);
+}
+
+function loadAutoSave() {
+  const saved = localStorage.getItem('gtm_autosave');
+  if (saved) {
+    const data = JSON.parse(saved);
+    document.getElementById('gtmTitle').value = data.title;
+    
+    const editors = document.querySelectorAll('.contenteditable');
+    data.sections.forEach((content, index) => {
+      if (editors[index]) {
+        editors[index].innerHTML = content;
+        updateWordCount(editors[index]);
+      }
+    });
+    updateProgress();
+  }
+}
+
+// Save strategy functionality
+function saveStrategy() {
+  const title = document.getElementById('gtmTitle').value || 'Untitled Strategy';
+  const data = {
+    title: title,
+    sections: Array.from(document.querySelectorAll('.contenteditable')).map(editor => editor.innerHTML),
+    timestamp: new Date().toISOString()
+  };
+  
+  const strategies = JSON.parse(localStorage.getItem('saved_strategies') || '[]');
+  strategies.push(data);
+  localStorage.setItem('saved_strategies', JSON.stringify(strategies));
+  
+  showToast('Strategy saved successfully!');
+}
+
+// Load strategy functionality
+function loadStrategy() {
+  const strategies = JSON.parse(localStorage.getItem('saved_strategies') || '[]');
+  const modal = document.getElementById('loadModal');
+  const container = document.getElementById('savedStrategies');
+  
+  if (strategies.length === 0) {
+    container.innerHTML = '<p>No saved strategies found.</p>';
+  } else {
+    container.innerHTML = strategies.map((strategy, index) => `
+      <div style="background: #374151; padding: 15px; margin: 10px 0; border-radius: 8px; cursor: pointer;" onclick="loadSpecificStrategy(${index})">
+        <h3>${strategy.title}</h3>
+        <p>Saved: ${new Date(strategy.timestamp).toLocaleDateString()}</p>
+        <button onclick="event.stopPropagation(); deleteStrategy(${index})" style="background: #dc2626; margin-top: 10px;">Delete</button>
+      </div>
+    `).join('');
+  }
+  
+  modal.style.display = 'block';
+}
+
+function loadSpecificStrategy(index) {
+  const strategies = JSON.parse(localStorage.getItem('saved_strategies') || '[]');
+  const strategy = strategies[index];
+  
+  if (strategy) {
+    document.getElementById('gtmTitle').value = strategy.title;
+    const editors = document.querySelectorAll('.contenteditable');
+    strategy.sections.forEach((content, i) => {
+      if (editors[i]) {
+        editors[i].innerHTML = content;
+        updateWordCount(editors[i]);
+      }
+    });
+    updateProgress();
+    document.getElementById('loadModal').style.display = 'none';
+    showToast('Strategy loaded successfully!');
+  }
+}
+
+function deleteStrategy(index) {
+  if (confirm('Are you sure you want to delete this strategy?')) {
+    const strategies = JSON.parse(localStorage.getItem('saved_strategies') || '[]');
+    strategies.splice(index, 1);
+    localStorage.setItem('saved_strategies', JSON.stringify(strategies));
+    loadStrategy(); // Refresh the modal
+    showToast('Strategy deleted successfully!');
+  }
+}
+
+// Clear all functionality
+function clearAll() {
+  if (confirm('Are you sure you want to clear all content? This cannot be undone.')) {
+    document.querySelectorAll('.contenteditable').forEach(editor => {
+      editor.innerHTML = '';
+      updateWordCount(editor);
+    });
+    document.getElementById('gtmTitle').value = 'My Startup GTM Strategy';
+    updateProgress();
+    autoSave();
+    showToast('All content cleared!');
+  }
+}
+
+// Toast notification
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.style.display = 'block';
+  setTimeout(() => {
+    toast.style.display = 'none';
+  }, 3000);
+}
+
+// Enhanced PDF Export
+function exportPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 20;
+  
+  // Title
+  doc.setFontSize(20);
+  doc.setTextColor('#2563eb');
+  doc.text(document.getElementById('gtmTitle').value, 20, y);
+  y += 15;
+  
+  // Date
+  doc.setFontSize(12);
+  doc.setTextColor('#6b7280');
+  doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, y);
+  y += 20;
+
+  // Sections
+  document.querySelectorAll('.card').forEach((card, index) => {
+    const title = card.querySelector('h2').textContent;
+    const content = card.querySelector('.contenteditable').innerText.trim() || "Not specified";
+    const wordCount = card.querySelector('.word-count').textContent;
+    
+    if (y > 250) {
+      doc.addPage();
+      y = 20;
+    }
+    
+    // Section title
+    doc.setFontSize(14);
+    doc.setTextColor('#2563eb');
+    doc.text(`${index + 1}. ${title}`, 20, y);
+    y += 10;
+    
+    // Word count
+    doc.setFontSize(10);
+    doc.setTextColor('#9ca3af');
+    doc.text(wordCount, 20, y);
+    y += 8;
+    
+    // Content
+    doc.setFontSize(11);
+    doc.setTextColor('#111827');
+    const splitContent = doc.splitTextToSize(content, 170);
+    doc.text(splitContent, 20, y);
+    y += splitContent.length * 5 + 15;
+  });
+
+  // Footer
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(10);
+    doc.setTextColor('#9ca3af');
+    doc.text(`Page ${i} of ${pageCount} | Generated by Ashi Tools`, 20, 290);
+  }
+
+  doc.save(`${document.getElementById('gtmTitle').value.replace(/[^a-z0-9]/gi, '_')}.pdf`);
+  showToast('PDF exported successfully!');
+}
+</script>
+
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashi Tools - Gantt Chart Generator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #0e0e0e;
+            color: #ffffff;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 255, 213, 0.2);
+            border: 1px solid #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #00ffd5;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(0, 255, 213, 0.3);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        button {
+            background-color: #00ffd5;
+            color: #0e0e0e;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background-color: #00b39e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 255, 213, 0.3);
+        }
+        
+        button.delete-btn {
+            background-color: #f72585;
+            color: white;
+        }
+        
+        button.delete-btn:hover {
+            background-color: #d1145a;
+        }
+        
+        button.edit-btn {
+            background-color: #ffb703;
+            color: #0e0e0e;
+        }
+        
+        button.edit-btn:hover {
+            background-color: #e6a502;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            border: 1px solid #333;
+            padding: 12px 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #333;
+            position: sticky;
+            top: 0;
+            color: #00ffd5;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #1a1a1a;
+        }
+        
+        tr:hover {
+            background-color: rgba(0, 255, 213, 0.1);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background-color: #222;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        input:focus, select:focus {
+            border-color: #00ffd5;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 255, 213, 0.2);
+        }
+        
+        .gantt-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+        }
+        
+        .gantt-header {
+            display: flex;
+            border-bottom: 2px solid #333;
+            background-color: #333;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .gantt-header-day {
+            min-width: 40px;
+            text-align: center;
+            padding: 8px 4px;
+            font-size: 11px;
+            border-right: 1px solid #444;
+            color: #cccccc;
+            font-weight: bold;
+        }
+        
+        .gantt-header-day:nth-child(7n), .gantt-header-day:nth-child(7n-1) {
+            background-color: rgba(0, 255, 213, 0.1);
+        }
+        
+        .gantt-body {
+            position: relative;
+            min-height: 400px;
+            background-color: #1a1a1a;
+            padding: 10px 0;
+        }
+        
+        .gantt-task {
+            position: absolute;
+            height: 25px;
+            border-radius: 12px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            color: white;
+            padding-left: 8px;
+            box-sizing: border-box;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            font-weight: bold;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
+        }
+        
+        .gantt-task:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            z-index: 5;
+        }
+        
+        .gantt-task-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 12px;
+            transition: width 0.3s ease;
+        }
+        
+        .task-label {
+            position: relative;
+            z-index: 2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .progress-indicator {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            padding: 1px 4px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: bold;
+            z-index: 3;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .modal-content {
+            background-color: #1e1e1e;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 12px;
+            width: 60%;
+            max-width: 600px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content h2 {
+            color: #00ffd5;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #cccccc;
+            font-weight: bold;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .close {
+            color: #888;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .close:hover {
+            color: #00ffd5;
+        }
+        
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            margin: auto;
+        }
+        
+        .task-row {
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: #00ffd5;
+            opacity: 0.5;
+            margin-bottom: 20px;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1001;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .toast.error {
+            background-color: #f72585;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .modal-content {
+                width: 90%;
+                margin: 10% auto;
+                padding: 20px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                font-size: 0.8rem;
+            }
+            
+            .gantt-header-day {
+                min-width: 30px;
+                font-size: 10px;
+            }
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #666;
+            border-top: 1px solid #333;
+            margin-top: 40px;
+        }
+        
+        .insta-link {
+            color: #00ffd5;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .insta-link:hover {
+            color: #00b39e;
+            text-shadow: 0 0 5px rgba(0, 255, 213, 0.5);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+    <div class="container">
+        <h1><i class="fas fa-chart-gantt"></i> Ashi Tools - Gantt Chart Generator</h1>
+        
+        <div class="controls">
+            <div>
+                <button id="addTask">
+                    <i class="fas fa-plus"></i> Add Task
+                </button>
+                <button id="generateChart">
+                    <i class="fas fa-chart-line"></i> Generate Gantt Chart
+                </button>
+            </div>
+            <div>
+                <button id="saveProject">
+                    <i class="fas fa-save"></i> Save Project
+                </button>
+                <button id="loadProject">
+                    <i class="fas fa-upload"></i> Load Project
+                </button>
+                <button id="exportPDF">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </button>
+                <button id="clearAll" class="delete-btn">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </div>
+        </div>
+        
+        <table id="taskTable" style="display: table;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Task Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Duration</th>
+                    <th>Progress%</th>
+                    <th>Dependency</th>
+                    <th>Resources</th>
+                    <th>Color</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="taskTableBody"><tr class="task-row" style="border-left-color: rgb(255, 183, 0);">
+                        <td><strong>T001</strong></td>
+                        <td>
+                            <i class="fas fa-tasks" style="color: #ffb700; margin-right: 8px;"></i>
+                            project planning 
+                        </td>
+                        <td>Jun 13</td>
+                        <td>Jun 20</td>
+                        <td>
+                            <span style="background: #ffb700; color: #0e0e0e; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;">
+                                8d
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="background: #333; border-radius: 10px; overflow: hidden; width: 60px; height: 8px;">
+                                    <div style="background: #ffb700; height: 100%; width: 20%; transition: width 0.3s;"></div>
+                                </div>
+                                <span style="font-size: 0.8rem; font-weight: bold;">20%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span style="background: #ffb703; color: #0e0e0e; padding: 2px 6px; border-radius: 8px; font-size: 0.8rem; font-weight: bold;">123456789</span>
+                        </td>
+                        <td>
+                            <i class="fas fa-users" style="color: #00ffd5; margin-right: 4px;"></i>ashish singh
+                        </td>
+                        <td>
+                            <div class="color-preview" style="background-color: #ffb700;" title="#ffb700"></div>
+                        </td>
+                        <td>
+                            <button class="edit-btn" data-id="T001">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="delete-btn" data-id="T001">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr></tbody>
+        </table>
+        
+        <div id="emptyTaskState" class="empty-state" style="display: none;">
+            <i class="fas fa-tasks"></i>
+            <h3>No tasks added yet</h3>
+            <p>Click "Add Task" to start building your Gantt chart</p>
+        </div>
+        
+        <div class="gantt-container" id="ganttContainer" style="display: none;">
+            <div class="gantt-header" id="ganttHeader" style="width: 3320px;"><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Fri</div>
+                    <div>29</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Dec</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sat</div>
+                    <div>30</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Dec</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sun</div>
+                    <div>31</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Dec</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Mon</div>
+                    <div>1</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Tue</div>
+                    <div>2</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Wed</div>
+                    <div>3</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Thu</div>
+                    <div>4</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Fri</div>
+                    <div>5</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sat</div>
+                    <div>6</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sun</div>
+                    <div>7</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Mon</div>
+                    <div>8</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Tue</div>
+                    <div>9</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Wed</div>
+                    <div>10</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Thu</div>
+                    <div>11</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Fri</div>
+                    <div>12</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sat</div>
+                    <div>13</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sun</div>
+                    <div>14</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Mon</div>
+                    <div>15</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Tue</div>
+                    <div>16</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Wed</div>
+                    <div>17</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Thu</div>
+                    <div>18</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Fri</div>
+                    <div>19</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sat</div>
+                    <div>20</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sun</div>
+                    <div>21</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Mon</div>
+                    <div>22</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Tue</div>
+                    <div>23</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Wed</div>
+                    <div>24</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Thu</div>
+                    <div>25</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Fri</div>
+                    <div>26</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sat</div>
+                    <div>27</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sun</div>
+                    <div>28</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Mon</div>
+                    <div>29</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Tue</div>
+                    <div>30</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Wed</div>
+                    <div>31</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Jan</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Thu</div>
+                    <div>1</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Fri</div>
+                    <div>2</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sat</div>
+                    <div>3</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sun</div>
+                    <div>4</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Mon</div>
+                    <div>5</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Tue</div>
+                    <div>6</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Wed</div>
+                    <div>7</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Thu</div>
+                    <div>8</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Fri</div>
+                    <div>9</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sat</div>
+                    <div>10</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sun</div>
+                    <div>11</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Mon</div>
+                    <div>12</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Tue</div>
+                    <div>13</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Wed</div>
+                    <div>14</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Thu</div>
+                    <div>15</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Fri</div>
+                    <div>16</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sat</div>
+                    <div>17</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sun</div>
+                    <div>18</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Mon</div>
+                    <div>19</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Tue</div>
+                    <div>20</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Wed</div>
+                    <div>21</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Thu</div>
+                    <div>22</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Fri</div>
+                    <div>23</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sat</div>
+                    <div>24</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sun</div>
+                    <div>25</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Mon</div>
+                    <div>26</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Tue</div>
+                    <div>27</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Wed</div>
+                    <div>28</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Thu</div>
+                    <div>29</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Feb</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Fri</div>
+                    <div>1</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sat</div>
+                    <div>2</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sun</div>
+                    <div>3</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Mon</div>
+                    <div>4</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Tue</div>
+                    <div>5</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Wed</div>
+                    <div>6</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Thu</div>
+                    <div>7</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Fri</div>
+                    <div>8</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sat</div>
+                    <div>9</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sun</div>
+                    <div>10</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Mon</div>
+                    <div>11</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Tue</div>
+                    <div>12</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Wed</div>
+                    <div>13</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Thu</div>
+                    <div>14</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Fri</div>
+                    <div>15</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sat</div>
+                    <div>16</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Sun</div>
+                    <div>17</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Mon</div>
+                    <div>18</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Tue</div>
+                    <div>19</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div><div class="gantt-header-day">
+                    <div style="font-size: 9px; opacity: 0.8;">Wed</div>
+                    <div>20</div>
+                    <div style="font-size: 9px; opacity: 0.8;">Mar</div>
+                </div></div>
+            <div class="gantt-body" id="ganttBody" style="width: 3320px; height: 400px;"><div class="gantt-task" title="Project Initiation
+Duration: 5 days
+Progress: 100%
+Resources: Project Manager" style="background-color: rgb(0, 255, 213); left: 120px; width: 200px; top: 10px;">
+                    <div class="gantt-task-progress" style="width: 100%;"></div>
+                    <span class="task-label">Project Initiation</span>
+                    <div class="progress-indicator">100%</div>
+                </div><div class="gantt-task" title="Requirement Analysis
+Duration: 7 days
+Progress: 80%
+Resources: Business Analyst" style="background-color: rgb(67, 97, 238); left: 320px; width: 280px; top: 45px;">
+                    <div class="gantt-task-progress" style="width: 80%;"></div>
+                    <span class="task-label">Requirement Analysis</span>
+                    <div class="progress-indicator">80%</div>
+                </div><div class="gantt-task" title="System Design
+Duration: 8 days
+Progress: 60%
+Resources: Design Team" style="background-color: rgb(247, 37, 133); left: 600px; width: 320px; top: 80px;">
+                    <div class="gantt-task-progress" style="width: 60%;"></div>
+                    <span class="task-label">System Design</span>
+                    <div class="progress-indicator">60%</div>
+                </div><div class="gantt-task" title="Requirement Gathering
+Duration: 30 days
+Progress: 20%
+Resources: ashish singh" style="background-color: rgb(153, 255, 0); left: 1840px; width: 1200px; top: 115px;">
+                    <div class="gantt-task-progress" style="width: 20%;"></div>
+                    <span class="task-label">Requirement Gathering</span>
+                    <div class="progress-indicator">20%</div>
+                </div></div>
+        </div>
+        
+        <div id="emptyChartState" class="empty-state" style="display: none;">
+            <i class="fas fa-chart-gantt"></i>
+            <h3>Generate your Gantt chart</h3>
+            <p>Add some tasks and click "Generate Gantt Chart" to visualize your project timeline</p>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Task Modal -->
+    <div id="taskModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2 id="modalTitle">Add New Task</h2>
+            <form id="taskForm">
+                <input type="hidden" id="taskId" value="T004">
+                
+                <div class="form-group">
+                    <label for="taskName">Task Name:</label>
+                    <input type="text" id="taskName" required="" placeholder="e.g., Project Planning">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="startDate">Start Date:</label>
+                        <input type="date" id="startDate" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">End Date:</label>
+                        <input type="date" id="endDate" required="">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="progress">Progress (%):</label>
+                        <input type="number" id="progress" min="0" max="100" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="taskColor">Color:</label>
+                        <input type="color" id="taskColor" value="#00ffd5">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dependency">Dependency (Task IDs, comma separated):</label>
+                    <input type="text" id="dependency" placeholder="e.g., T001, T002">
+                </div>
+                
+                <div class="form-group">
+                    <label for="resources">Resources:</label>
+                    <input type="text" id="resources" placeholder="e.g., John Doe, Design Team">
+                </div>
+                
+                <button type="submit">
+                    <i class="fas fa-save"></i> Save Task
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Toast Message -->
+    <div id="toast" class="toast success">Task "project planning " added successfully!</div>
+    
+    <footer>
+        Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+        Connect with me: 
+        <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank">
+            @ashish_singh_rajput_3
+        </a>
+    </footer>
+    
+    <script>
+        // Sample data with Ashi Tools theme
+        let tasks = [
+            {
+                id: "T001",
+                name: "Project Initiation",
+                start: "2024-01-01",
+                end: "2024-01-05",
+                duration: 5,
+                progress: 100,
+                dependency: "",
+                resources: "Project Manager",
+                color: "#00ffd5"
+            },
+            {
+                id: "T002", 
+                name: "Requirement Analysis",
+                start: "2024-01-06",
+                end: "2024-01-12",
+                duration: 7,
+                progress: 80,
+                dependency: "T001",
+                resources: "Business Analyst",
+                color: "#4361ee"
+            },
+            {
+                id: "T003",
+                name: "System Design",
+                start: "2024-01-13",
+                end: "2024-01-20",
+                duration: 8,
+                progress: 60,
+                dependency: "T002",
+                resources: "Design Team",
+                color: "#f72585"
+            }
+        ];
+        
+        let currentId = 3;
+        let isEditMode = false;
+        let currentEditId = null;
+        
+        // DOM elements
+        const taskTableBody = document.getElementById('taskTableBody');
+        const addTaskBtn = document.getElementById('addTask');
+        const generateChartBtn = document.getElementById('generateChart');
+        const saveProjectBtn = document.getElementById('saveProject');
+        const loadProjectBtn = document.getElementById('loadProject');
+        const exportPDFBtn = document.getElementById('exportPDF');
+        const clearAllBtn = document.getElementById('clearAll');
+        const taskModal = document.getElementById('taskModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const taskForm = document.getElementById('taskForm');
+        const closeBtn = document.querySelector('.close');
+        const ganttContainer = document.getElementById('ganttContainer');
+        const ganttHeader = document.getElementById('ganttHeader');
+        const ganttBody = document.getElementById('ganttBody');
+        const emptyTaskState = document.getElementById('emptyTaskState');
+        const emptyChartState = document.getElementById('emptyChartState');
+        const toast = document.getElementById('toast');
+        
+        // Initialize the app
+        function init() {
+            renderTaskTable();
+            setupEventListeners();
+            loadFromLocalStorage();
+        }
+        
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.className = `toast show ${type}`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Generate unique task ID
+        function generateTaskId() {
+            currentId++;
+            return `T${String(currentId).padStart(3, '0')}`;
+        }
+        
+        // Render the task table
+        function renderTaskTable() {
+            taskTableBody.innerHTML = '';
+            
+            if (tasks.length === 0) {
+                emptyTaskState.style.display = 'block';
+                document.getElementById('taskTable').style.display = 'none';
+            } else {
+                emptyTaskState.style.display = 'none';
+                document.getElementById('taskTable').style.display = 'table';
+                
+                tasks.forEach(task => {
+                    const row = document.createElement('tr');
+                    row.className = 'task-row';
+                    row.style.borderLeftColor = task.color;
+                    
+                    row.innerHTML = `
+                        <td><strong>${task.id}</strong></td>
+                        <td>
+                            <i class="fas fa-tasks" style="color: ${task.color}; margin-right: 8px;"></i>
+                            ${task.name}
+                        </td>
+                        <td>${formatDate(task.start)}</td>
+                        <td>${formatDate(task.end)}</td>
+                        <td>
+                            <span style="background: ${task.color}; color: #0e0e0e; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;">
+                                ${task.duration}d
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="background: #333; border-radius: 10px; overflow: hidden; width: 60px; height: 8px;">
+                                    <div style="background: ${task.color}; height: 100%; width: ${task.progress}%; transition: width 0.3s;"></div>
+                                </div>
+                                <span style="font-size: 0.8rem; font-weight: bold;">${task.progress}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            ${task.dependency ? `<span style="background: #ffb703; color: #0e0e0e; padding: 2px 6px; border-radius: 8px; font-size: 0.8rem; font-weight: bold;">${task.dependency}</span>` : '-'}
+                        </td>
+                        <td>
+                            ${task.resources ? `<i class="fas fa-users" style="color: #00ffd5; margin-right: 4px;"></i>${task.resources}` : '-'}
+                        </td>
+                        <td>
+                            <div class="color-preview" style="background-color: ${task.color};" title="${task.color}"></div>
+                        </td>
+                        <td>
+                            <button class="edit-btn" data-id="${task.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="delete-btn" data-id="${task.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    taskTableBody.appendChild(row);
+                });
+                
+                // Add event listeners to edit and delete buttons
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', handleEdit);
+                });
+                
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', handleDelete);
+                });
+            }
+        }
+        
+        // Format date for display
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+            });
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            addTaskBtn.addEventListener('click', () => {
+                isEditMode = false;
+                modalTitle.textContent = 'Add New Task';
+                taskForm.reset();
+                document.getElementById('taskColor').value = getRandomColor();
+                
+                // Set default dates
+                const today = new Date();
+                const nextWeek = new Date(today);
+                nextWeek.setDate(today.getDate() + 7);
+                
+                document.getElementById('startDate').value = today.toISOString().split('T')[0];
+                document.getElementById('endDate').value = nextWeek.toISOString().split('T')[0];
+                
+                taskModal.style.display = 'block';
+            });
+            
+            generateChartBtn.addEventListener('click', generateGanttChart);
+            saveProjectBtn.addEventListener('click', saveProject);
+            loadProjectBtn.addEventListener('click', loadProject);
+            exportPDFBtn.addEventListener('click', exportToPDF);
+            clearAllBtn.addEventListener('click', clearAllTasks);
+            
+            closeBtn.addEventListener('click', () => {
+                taskModal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', (event) => {
+                if (event.target === taskModal) {
+                    taskModal.style.display = 'none';
+                }
+            });
+            
+            taskForm.addEventListener('submit', handleFormSubmit);
+            
+            // Update duration when dates change
+            document.getElementById('startDate').addEventListener('change', updateDuration);
+            document.getElementById('endDate').addEventListener('change', updateDuration);
+        }
+        
+        // Get random color
+        function getRandomColor() {
+            const colors = [
+                '#00ffd5', '#4361ee', '#f72585', '#ffb703', 
+                '#06ffa5', '#7209b7', '#fb8500', '#8ecae6',
+                '#219ebc', '#023047', '#ffb3c6', '#fb8b24'
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        // Handle form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const id = isEditMode ? currentEditId : generateTaskId();
+            const name = document.getElementById('taskName').value;
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            const progress = parseInt(document.getElementById('progress').value);
+            const dependency = document.getElementById('dependency').value;
+            const resources = document.getElementById('resources').value;
+            const color = document.getElementById('taskColor').value;
+            
+            // Calculate duration in days
+            const startDate = new Date(start);
+            const endDate = new Date(end);
+            const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+            
+            if (duration <= 0) {
+                showToast('End date must be after start date', 'error');
+                return;
+            }
+            
+            const task = {
+                id,
+                name,
+                start,
+                end,
+                duration,
+                progress,
+                dependency,
+                resources,
+                color
+            };
+            
+            if (isEditMode) {
+                // Update existing task
+                const index = tasks.findIndex(t => t.id === id);
+                if (index !== -1) {
+                    tasks[index] = task;
+                    showToast(`Task "${name}" updated successfully!`);
+                }
+            } else {
+                // Add new task
+                tasks.push(task);
+                showToast(`Task "${name}" added successfully!`);
+            }
+            
+            renderTaskTable();
+            saveToLocalStorage();
+            taskModal.style.display = 'none';
+            
+            // Auto-generate chart if it's currently visible
+            if (ganttContainer.style.display !== 'none') {
+                generateGanttChart();
+            }
+        }
+        
+        // Handle edit button click
+        function handleEdit(e) {
+            const id = e.target.closest('button').dataset.id;
+            const task = tasks.find(t => t.id === id);
+            
+            if (task) {
+                isEditMode = true;
+                currentEditId = id;
+                modalTitle.textContent = 'Edit Task';
+                
+                document.getElementById('taskId').value = task.id;
+                document.getElementById('taskName').value = task.name;
+                document.getElementById('startDate').value = task.start;
+                document.getElementById('endDate').value = task.end;
+                document.getElementById('progress').value = task.progress;
+                document.getElementById('dependency').value = task.dependency;
+                document.getElementById('resources').value = task.resources;
+                document.getElementById('taskColor').value = task.color;
+                
+                taskModal.style.display = 'block';
+            }
+        }
+        
+        // Handle delete button click
+        function handleDelete(e) {
+            const id = e.target.closest('button').dataset.id;
+            const task = tasks.find(t => t.id === id);
+            
+            if (confirm(`Are you sure you want to delete task "${task.name}"?`)) {
+                tasks = tasks.filter(task => task.id !== id);
+                renderTaskTable();
+                saveToLocalStorage();
+                showToast(`Task "${task.name}" deleted successfully!`);
+                
+                // Regenerate chart if it's visible
+                if (ganttContainer.style.display !== 'none') {
+                    generateGanttChart();
+                }
+            }
+        }
+        
+        // Update duration when dates change
+        function updateDuration() {
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            
+            if (start && end) {
+                const startDate = new Date(start);
+                const endDate = new Date(end);
+                
+                if (startDate > endDate) {
+                    showToast('End date must be after start date', 'error');
+                    document.getElementById('endDate').value = '';
+                }
+            }
+        }
+        
+        // Generate Gantt chart
+        function generateGanttChart() {
+            if (tasks.length === 0) {
+                showToast('No tasks to display. Add some tasks first!', 'error');
+                ganttContainer.style.display = 'none';
+                emptyChartState.style.display = 'block';
+                return;
+            }
+            
+            // Hide empty state and show container
+            emptyChartState.style.display = 'none';
+            ganttContainer.style.display = 'block';
+            
+            // Clear previous content
+            ganttHeader.innerHTML = '';
+            ganttBody.innerHTML = '';
+            
+            // Get date range
+            const dates = [];
+            const startDates = tasks.map(task => new Date(task.start));
+            const endDates = tasks.map(task => new Date(task.end));
+            
+            const minDate = new Date(Math.min(...startDates));
+            const maxDate = new Date(Math.max(...endDates));
+            
+            // Add padding to date range
+            minDate.setDate(minDate.getDate() - 3);
+            maxDate.setDate(maxDate.getDate() + 7);
+            
+            // Generate all dates in the range
+            let currentDate = new Date(minDate);
+            while (currentDate <= maxDate) {
+                dates.push(new Date(currentDate));
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            // Create header with dates
+            dates.forEach((date, index) => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'gantt-header-day';
+                
+                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+                const isToday = date.toDateString() === new Date().toDateString();
+                
+                if (isToday) {
+                    dayElement.style.background = '#00ffd5';
+                    dayElement.style.color = '#0e0e0e';
+                    dayElement.style.fontWeight = 'bold';
+                }
+                
+                dayElement.innerHTML = `
+                    <div style="font-size: 9px; opacity: 0.8;">${date.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                    <div>${date.getDate()}</div>
+                    <div style="font-size: 9px; opacity: 0.8;">${date.toLocaleDateString('en-US', { month: 'short' })}</div>
+                `;
+                
+                ganttHeader.appendChild(dayElement);
+            });
+            
+            // Calculate pixel width per day
+            const dayWidth = 40;
+            const totalWidth = dates.length * dayWidth;
+            ganttHeader.style.width = `${totalWidth}px`;
+            
+            // Create tasks in the Gantt chart
+            tasks.forEach((task, index) => {
+                const taskElement = document.createElement('div');
+                taskElement.className = 'gantt-task';
+                taskElement.style.backgroundColor = task.color;
+                
+                const startDate = new Date(task.start);
+                const endDate = new Date(task.end);
+                
+                // Calculate position and width
+                const startDiff = Math.ceil((startDate - minDate) / (1000 * 60 * 60 * 24));
+                const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+                
+                const left = startDiff * dayWidth;
+                const width = Math.max(duration * dayWidth, 80); // Minimum width
+                
+                taskElement.style.left = `${left}px`;
+                taskElement.style.width = `${width}px`;
+                taskElement.style.top = `${index * 35 + 10}px`;
+                
+                taskElement.innerHTML = `
+                    <div class="gantt-task-progress" style="width: ${task.progress}%;"></div>
+                    <span class="task-label">${task.name}</span>
+                    <div class="progress-indicator">${task.progress}%</div>
+                `;
+                
+                taskElement.title = `${task.name}\nDuration: ${task.duration} days\nProgress: ${task.progress}%\nResources: ${task.resources || 'None'}`;
+                
+                ganttBody.appendChild(taskElement);
+            });
+            
+            // Set body width and height
+            ganttBody.style.width = `${totalWidth}px`;
+            ganttBody.style.height = `${Math.max(tasks.length * 35 + 50, 400)}px`;
+            
+            showToast('Gantt chart generated successfully!');
+            
+            // Scroll to show current date if exists
+            const todayIndex = dates.findIndex(date => date.toDateString() === new Date().toDateString());
+            if (todayIndex > -1) {
+                ganttContainer.scrollLeft = Math.max(0, (todayIndex - 5) * dayWidth);
+            }
+        }
+        
+        // Clear all tasks
+        function clearAllTasks() {
+            if (confirm('Are you sure you want to clear all tasks? This action cannot be undone.')) {
+                tasks = [];
+                currentId = 0;
+                renderTaskTable();
+                ganttContainer.style.display = 'none';
+                saveToLocalStorage();
+                showToast('All tasks cleared successfully!');
+            }
+        }
+        
+        // Save project to localStorage
+        function saveProject() {
+            const project = {
+                tasks,
+                currentId,
+                savedAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('ashiGanttProject', JSON.stringify(project));
+            showToast('Project saved successfully!');
+        }
+        
+        // Load project from localStorage
+        function loadFromLocalStorage() {
+            const savedProject = localStorage.getItem('ashiGanttProject');
+            
+            if (savedProject) {
+                try {
+                    const project = JSON.parse(savedProject);
+                    if (project.tasks) {
+                        tasks = project.tasks;
+                        currentId = project.currentId || tasks.length;
+                        renderTaskTable();
+                    }
+                } catch (error) {
+                    console.error('Error loading saved project:', error);
+                }
+            }
+        }
+        
+        // Load project from file
+        function loadProject() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const project = JSON.parse(e.target.result);
+                        
+                        if (confirm('Load project? Current data will be lost.')) {
+                            tasks = project.tasks || [];
+                            currentId = project.currentId || tasks.length;
+                            renderTaskTable();
+                            saveToLocalStorage();
+                            showToast('Project loaded successfully!');
+                            
+                            // Hide chart if visible
+                            ganttContainer.style.display = 'none';
+                        }
+                    } catch (error) {
+                        showToast('Invalid project file format', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+        
+        // Export to PDF
+        function exportToPDF() {
+            if (tasks.length === 0) {
+                showToast('No tasks to export. Add some tasks first!', 'error');
+                return;
+            }
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4');
+            
+            let y = 20;
+            const margin = 20;
+            
+            // Title
+            doc.setFontSize(20);
+            doc.setFont("helvetica", "bold");
+            doc.text('Ashi Tools - Gantt Chart Report', margin, y);
+            y += 15;
+            
+            // Summary
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Generated: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`, margin, y);
+            y += 10;
+            doc.text(`Total Tasks: ${tasks.length}`, margin, y);
+            y += 8;
+            
+            const completedTasks = tasks.filter(task => task.progress === 100).length;
+            const avgProgress = Math.round(tasks.reduce((sum, task) => sum + task.progress, 0) / tasks.length);
+            
+            doc.text(`Completed Tasks: ${completedTasks}`, margin, y);
+            y += 8;
+            doc.text(`Average Progress: ${avgProgress}%`, margin, y);
+            y += 15;
+            
+            // Tasks Table
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text('Task Details:', margin, y);
+            y += 12;
+            
+            // Table header
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "bold");
+            doc.text('ID', margin, y);
+            doc.text('Task Name', margin + 25, y);
+            doc.text('Start Date', margin + 80, y);
+            doc.text('End Date', margin + 120, y);
+            doc.text('Duration', margin + 160, y);
+            doc.text('Progress', margin + 190, y);
+            doc.text('Resources', margin + 220, y);
+            y += 8;
+            
+            // Line under header
+            doc.line(margin, y - 2, 280, y - 2);
+            y += 5;
+            
+            // Task rows
+            doc.setFont("helvetica", "normal");
+            tasks.forEach((task, index) => {
+                if (y > 180) {
+                    doc.addPage();
+                    y = 20;
+                }
+                
+                doc.text(task.id, margin, y);
+                
+                const taskName = task.name.length > 25 ? task.name.substring(0, 25) + '...' : task.name;
+                doc.text(taskName, margin + 25, y);
+                
+                doc.text(formatDate(task.start), margin + 80, y);
+                doc.text(formatDate(task.end), margin + 120, y);
+                doc.text(`${task.duration} days`, margin + 160, y);
+                doc.text(`${task.progress}%`, margin + 190, y);
+                
+                const resources = task.resources || 'N/A';
+                const resourcesText = resources.length > 20 ? resources.substring(0, 20) + '...' : resources;
+                doc.text(resourcesText, margin + 220, y);
+                
+                y += 8;
+            });
+            
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(128);
+            doc.text('Generated by Ashi Tools - Gantt Chart Generator', margin, 200);
+            
+            doc.save(`Ashi_Gantt_Chart_${new Date().toISOString().split('T')[0]}.pdf`);
+            showToast('PDF exported successfully!');
+        }
+        
+        // Initialize the app
+        init();
+    </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

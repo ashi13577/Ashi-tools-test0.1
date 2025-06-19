@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <title>NABC Framework Template - Ashi Tools</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+:root {
+  --primary: #00ffd5;
+  --accent: #00b39e;
+  --dark-bg: #101820;
+  --card-bg: #1e1e1e;
+  --text-light: #e8e8e8;
+  --border: #222;
+}
+body {
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, var(--dark-bg), #232c38 80%);
+  color: var(--text-light);
+  min-height: 100vh;
+}
+a {
+  color: var(--primary); text-decoration: none;
+}
+a:hover { text-decoration: underline;}
+.container {
+  max-width: 860px;
+  margin: 32px auto 30px auto;
+  background: var(--card-bg);
+  border-radius: 18px;
+  padding: 32px 12px 26px 12px;
+  border: 1.5px solid var(--border);
+  box-shadow: 0 8px 36px rgba(0, 255, 213,0.11), 0 1.5px 8px #0005;
+}
+h1 {
+  color: var(--primary);
+  font-size: 2.2rem; text-align: center; margin-bottom: 10px;
+  letter-spacing: .7px;
+}
+h2, h3 {color: var(--primary);text-align: center;margin: 22px 0 19px 0; font-weight: 500;}
+.progress-bar {
+  width: 100%; height: 10px;
+  border-radius: 7px; background: #202930;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.progress { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 0.3s; border-radius: 7px;}
+.nabc-progress {
+  display:flex;justify-content:center;gap:18px;margin-bottom:23px;
+}
+.nabc-badge {
+  width:40px; height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:700; font-size: 17px;background:#243147; color: #5ae4cc; border: 1.5px solid var(--border);transition:.2s;}
+.nabc-badge.active, .nabc-badge.done{background:var(--primary);color:#133;border-color:var(--primary);}
+.nabc-badge.done {background: var(--accent) !important;color:#131;}
+.nabc-badge .fa{margin-right:0;}
+.nabc-framework {display:flex;flex-direction:column;gap:40px;}
+.nabc-card {
+  background:linear-gradient(135deg,#131f29 70%,#1e2328 100%);
+  border-radius:16px; margin-bottom:27px; box-shadow:0 5px 28px #0004;
+  padding:2px 0 4px 0; border:1.6px solid #00ffd526;
+  overflow:hidden;
+}
+.card-header {display:flex;align-items:center;padding:16px 25px 20px 23px;gap:15px;}
+.card-icon {width:52px; height:52px; border-radius: 50%;background:#141e2b;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--primary);}
+.card-title {font-size:1.45rem;font-weight:600;color:var(--primary);}
+.card-description {color: #9fffdd; font-size:1.1rem; margin: 0;}
+.card-content {padding:24px;}
+.input-group {margin-bottom:20px;}
+.input-group label{color:var(--primary);font-weight:500;display:block;margin-bottom:7px;}
+input, textarea, select {
+  width:100%;padding:11px 15px; background: #1b2430; border:1.5px solid #25303d;
+  color:var(--text-light);font-size:1.04em;border-radius:7px;transition:.3s;
+}
+input:focus, textarea:focus{border-color:var(--accent); background:#19222f;}
+textarea{min-height: 60px;max-height:185px;}
+.item-list{display:flex;flex-direction:column;gap:10px;}
+.list-item{display:flex;gap:9px;align-items:flex-start;}
+.item-content {
+  flex:1;
+  padding:12px;background: #171f28;
+  border:2px solid #2e3d4d;border-radius:7px;color:#acfff2; min-height:40px;
+  font-size:1.07em;resize:vertical;
+}
+.remove-item-btn {
+  background: #dc2626;color:#fff;border:none;border-radius:50%;width:28px;height:28px;
+  cursor:pointer;font-size:.9em;transition:.2s;}
+.remove-item-btn:hover {background:#b91c1c;}
+.add-item-btn {
+  background: var(--primary);
+  color: #101010;font-weight:600;
+  border: none;border-radius:7px;
+  padding:8px 18px;margin-top:8px;cursor: pointer;
+  transition:.18s;box-shadow:0 1px 13px #22ffd511;
+  font-size:1em;
+}
+.add-item-btn:hover{background: var(--accent); color: #fff;}
+footer {
+  text-align: center;
+  margin-top: 40px;
+  color: #5bebcf;
+  padding: 20px 10px;
+  font-size: 1em;
+  border-top:2px solid #173440;
+  line-height: 1.65;
+}
+.insta-link {
+  color: #e1306c; font-weight:600;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all .18s;
+}
+.insta-link:hover {
+  color: #fff;
+  text-shadow:0 0 8px #e232b855;
+  -webkit-text-fill-color: unset;
+}
+.toast {
+  position: fixed; bottom: 28px; right: 30px; z-index:2000;
+  background: var(--accent); color: #181f24; border-radius: 7px; padding: 15px 23px;
+  font-size:1em;font-weight:600; box-shadow:0 4px 16px #0008;
+  display:none; min-width:170px; text-align:center;
+}
+@media (max-width:700px){.container{padding:10px 2vw;} h1{font-size:1.22rem;}
+input, textarea{font-size:1em;}
+}
+</style>
+
+
+<div class="container">
+  <h1><i class="fa-solid fa-lightbulb"></i> NABC Framework Template</h1>
+  <p style="text-align:center;color:#74ffe2;max-width:600px;margin:0 auto 18px auto;">Articulate your value proposition using SRI’s NABC framework: <b>Need</b>, <b>Approach</b>, <b>Benefits</b>, <b>Competition</b></p>
+  <div class="nabc-progress">
+    <div class="nabc-badge active" onclick="scrollNABC(0)"><i class="fa-solid fa-search"></i></div>
+    <div class="nabc-badge" onclick="scrollNABC(1)"><i class="fa-solid fa-route"></i></div>
+    <div class="nabc-badge" onclick="scrollNABC(2)"><i class="fa-solid fa-gift"></i></div>
+    <div class="nabc-badge" onclick="scrollNABC(3)"><i class="fa-solid fa-trophy"></i></div>
+  </div>
+  <div class="progress-bar">
+    <div class="progress" id="progress"></div>
+  </div>
+
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:20px;">
+    <input type="text" id="projectTitleInput" placeholder="Enter Project/Idea Title" value="New Product Concept" style="flex:1;max-width:540px;">
+    <button class="add-item-btn" onclick="exportPDF()"><i class="fa-solid fa-file-pdf"></i> Export PDF</button>
+  </div>
+
+  <div class="nabc-framework" id="nabcFramework">
+    <!-- NEED -->
+    <div class="nabc-card" id="nabc-need">
+      <div class="card-header">
+        <div class="card-icon"><i class="fa-solid fa-search"></i></div>
+        <div>
+          <div class="card-title">Need</div>
+          <div class="card-description">What is the important customer and market need?</div>
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="input-group">
+          <label for="need-summary">Need Summary</label>
+          <textarea id="need-summary" placeholder="Clearly articulate the customer and market need..."></textarea>
+        </div>
+        <div class="input-group">
+          <label for="need-pain-points">Customer Pain Points</label>
+          <textarea id="need-pain-points" placeholder="What problems or challenges do customers face?"></textarea>
+        </div>
+        <div class="input-group">
+          <label>Key Stakeholders</label>
+          <div class="item-list" id="stakeholders-list">
+            <div class="list-item">
+              <div class="item-content" contenteditable="true" placeholder="Enter stakeholder...">End Users - Individuals who will directly use the product</div>
+              <button class="remove-item-btn"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <button class="add-item-btn" onclick="addListItem('stakeholders-list')" style="margin-top:8px;"><i class="fas fa-plus"></i> Add</button>
+        </div>
+        <div class="input-group">
+          <label for="need-market-size">Market Size &amp; Opportunity</label>
+          <textarea id="need-market-size" placeholder="Describe the size of the market and the opportunity..."></textarea>
+        </div>
+        <div class="input-group">
+          <label for="need-evidence">Evidence of Need</label>
+          <textarea id="need-evidence" placeholder="What evidence validates this need exists?"></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- APPROACH -->
+    <div class="nabc-card" id="nabc-approach">
+      <div class="card-header">
+        <div class="card-icon"><i class="fa-solid fa-route"></i></div>
+        <div>
+          <div class="card-title">Approach</div>
+          <div class="card-description">What is your approach to address this need?</div>
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="input-group">
+          <label for="approach-summary">Approach Summary</label>
+          <textarea id="approach-summary" placeholder="Describe your approach to addressing the need..."></textarea>
+        </div>
+        <div class="input-group">
+          <label for="approach-solution">Solution Description</label>
+          <textarea id="approach-solution" placeholder="What is your product, service, or solution in detail?"></textarea>
+        </div>
+        <div class="input-group">
+          <label>Key Features</label>
+          <div class="item-list" id="features-list">
+            <div class="list-item">
+              <div class="item-content" contenteditable="true" placeholder="Describe a key feature...">Intuitive interface</div>
+              <button class="remove-item-btn"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <button class="add-item-btn" onclick="addListItem('features-list')" style="margin-top:8px;"><i class="fas fa-plus"></i> Add</button>
+        </div>
+        <div class="input-group">
+          <label for="approach-uniqueness">Uniqueness of Approach</label>
+          <textarea id="approach-uniqueness" placeholder="What makes your approach unique or innovative?"></textarea>
+        </div>
+        <div class="input-group">
+          <label for="approach-technology">Technology &amp; Resources</label>
+          <textarea id="approach-technology" placeholder="What technology or resources are required?"></textarea>
+        </div>
+        <div class="input-group">
+          <label for="approach-feasibility">Feasibility Assessment</label>
+          <textarea id="approach-feasibility" placeholder="How feasible is your approach?"></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- BENEFITS -->
+    <div class="nabc-card" id="nabc-benefits">
+      <div class="card-header">
+        <div class="card-icon"><i class="fa-solid fa-gift"></i></div>
+        <div>
+          <div class="card-title">Benefits</div>
+          <div class="card-description">What are the benefits of your approach?</div>
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="input-group">
+          <label for="benefits-summary">Benefits Summary</label>
+          <textarea id="benefits-summary" placeholder="Summarize the key benefits..."></textarea>
+        </div>
+        <div class="input-group">
+          <label>Quantifiable Benefits</label>
+          <div class="item-list" id="benefits-quantitative-list">
+            <div class="list-item">
+              <div class="item-content" contenteditable="true" placeholder="Add a quantifiable benefit...">Reduces turnaround time by 40%</div>
+              <button class="remove-item-btn"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <button class="add-item-btn" onclick="addListItem('benefits-quantitative-list')" style="margin-top:8px;"><i class="fas fa-plus"></i> Add</button>
+        </div>
+        <div class="input-group">
+          <label>Qualitative Benefits</label>
+          <div class="item-list" id="benefits-qualitative-list">
+            <div class="list-item">
+              <div class="item-content" contenteditable="true" placeholder="Add a qualitative benefit...">Enhances brand reputation</div>
+              <button class="remove-item-btn"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <button class="add-item-btn" onclick="addListItem('benefits-qualitative-list')" style="margin-top:8px;"><i class="fas fa-plus"></i> Add</button>
+        </div>
+        <div class="input-group">
+          <label for="benefits-business-impact">Business Impact</label>
+          <textarea id="benefits-business-impact" placeholder="How will benefits impact the business?"></textarea>
+        </div>
+        <div class="input-group">
+          <label for="benefits-customer-impact">Customer Impact</label>
+          <textarea id="benefits-customer-impact" placeholder="How will customers experience the benefits?"></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- COMPETITION -->
+    <div class="nabc-card" id="nabc-competition">
+      <div class="card-header">
+        <div class="card-icon"><i class="fa-solid fa-trophy"></i></div>
+        <div>
+          <div class="card-title">Competition</div>
+          <div class="card-description">How do your benefits compare to the competition and alternatives?</div>
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="input-group">
+          <label for="competition-summary">Competition Summary</label>
+          <textarea id="competition-summary" placeholder="Summarize your competitive landscape..."></textarea>
+        </div>
+        <div class="input-group">
+          <label>Key Competitors</label>
+          <div class="item-list" id="competition-list">
+            <div class="list-item">
+              <div class="item-content" contenteditable="true" placeholder="Describe a competitor...">Competitor A - Market leader</div>
+              <button class="remove-item-btn"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <button class="add-item-btn" onclick="addListItem('competition-list')" style="margin-top:8px;"><i class="fas fa-plus"></i> Add</button>
+        </div>
+        <div class="input-group">
+          <label>Alternative Solutions</label>
+          <div class="item-list" id="alternatives-list">
+            <div class="list-item">
+              <div class="item-content" contenteditable="true" placeholder="Describe an alternative solution...">Manual process</div>
+              <button class="remove-item-btn"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <button class="add-item-btn" onclick="addListItem('alternatives-list')" style="margin-top:8px;"><i class="fas fa-plus"></i> Add</button>
+        </div>
+        <div class="input-group">
+          <label for="competition-advantages">Competitive Advantages</label>
+          <textarea id="competition-advantages" placeholder="What advantages do you have over competitors?"></textarea>
+        </div>
+        <div class="input-group">
+          <label for="competition-barriers">Barriers to Entry</label>
+          <textarea id="competition-barriers" placeholder="What barriers protect your solution?"></textarea>
+        </div>
+        <div class="input-group">
+          <label for="competition-market-position">Market Positioning</label>
+          <textarea id="competition-market-position" placeholder="How will you position your solution in the market?"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <footer>
+    Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+    Connect with me: 
+    <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank">
+      @ashish_singh_rajput_3
+    </a>
+  </footer>
+</div>
+<script>
+function scrollNABC(index) {
+  document.querySelectorAll('.nabc-badge').forEach((e,i)=>{
+    e.classList.toggle('active',i===index);
+    e.classList.toggle('done',i<index);
+  });
+  let sections = ['nabc-need','nabc-approach','nabc-benefits','nabc-competition'];
+  document.getElementById(sections[index]).scrollIntoView({behavior:'smooth'});
+  updateProgressBar(index);
+}
+function updateProgressBar(idx){
+  document.getElementById('progress').style.width=`${((idx+1)/4)*100}%`;
+}
+function addListItem(listId) {
+  const container = document.getElementById(listId);
+  const newItem = container.querySelector('.list-item').cloneNode(true);
+  newItem.querySelector('.item-content').textContent = '';
+  container.appendChild(newItem);
+  setTimeout(()=>{newItem.querySelector('.item-content').focus()}, 100);
+}
+document.addEventListener('click', function(e){
+  if(e.target.closest('.remove-item-btn')) {
+    const btn = e.target.closest('.remove-item-btn');
+    const item = btn.closest('.list-item');
+    const list = item.parentElement;
+    if(list.childElementCount > 1) item.remove();
+  }
+});
+
+// PDF EXPORT
+function exportPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 20;
+  let s = t => t && t.trim() ? t.trim() : '[Not filled]';
+  // title
+  const projectTitle = document.getElementById('projectTitleInput').value.trim() || 'NABC Framework Project';
+  doc.setFontSize(20); doc.setTextColor('#00ffd5');
+  doc.text('NABC Value Proposition Framework', 20, y); y+=12;
+  doc.setFontSize(16); doc.setTextColor('#00ffd5');
+  doc.text(projectTitle, 20, y); y+=14;
+  doc.setFontSize(10); doc.setTextColor('#999');
+  doc.text(`Exported: ${new Date().toLocaleString()}`, 20, y); y+=18;
+
+  function addSection(title, color, fields){
+    if(y>250){doc.addPage();y=20;}
+    doc.setFontSize(14);doc.setTextColor(color);doc.text(title, 20, y);y+=11;
+    doc.setFontSize(11);doc.setTextColor('#222');
+    fields.forEach(f=>{
+      if(!f.label) return;
+      if(y>265){doc.addPage();y=20;}
+      doc.text(f.label, 20, y);y+=7;
+      if(Array.isArray(f.value)){
+        f.value.forEach(v=>{
+          if(v && v.trim()){ doc.text('- '+v, 27, y); y+=6; }
+        });
+      }else{
+        doc.text(s(f.value), 27, y);y+=8;
+      }
+      y+=2;
+    });
+    y+=6;
+  }
+  // NEED
+  addSection('NEED', '#00bcff',[
+    {label:'Need Summary', value:document.getElementById('need-summary').value},
+    {label:'Customer Pain Points', value:document.getElementById('need-pain-points').value},
+    {label:'Stakeholders', value:[...document.querySelectorAll('#stakeholders-list .item-content')].map(e=>e.textContent)},
+    {label:'Market Size & Opportunity', value:document.getElementById('need-market-size').value},
+    {label:'Evidence of Need', value:document.getElementById('need-evidence').value}
+  ]);
+  // APPROACH
+  addSection('APPROACH', '#12ff95',[
+    {label:'Approach Summary', value:document.getElementById('approach-summary').value},
+    {label:'Solution Description', value:document.getElementById('approach-solution').value},
+    {label:'Features', value:[...document.querySelectorAll('#features-list .item-content')].map(e=>e.textContent)},
+    {label:'Uniqueness of Approach', value:document.getElementById('approach-uniqueness').value},
+    {label:'Technology & Resources', value:document.getElementById('approach-technology').value},
+    {label:'Feasibility Assessment', value:document.getElementById('approach-feasibility').value}
+  ]);
+  // BENEFITS
+  addSection('BENEFITS', '#BDB2FF',[
+    {label:'Benefits Summary', value:document.getElementById('benefits-summary').value},
+    {label:'Quantifiable Benefits', value:[...document.querySelectorAll('#benefits-quantitative-list .item-content')].map(e=>e.textContent)},
+    {label:'Qualitative Benefits', value:[...document.querySelectorAll('#benefits-qualitative-list .item-content')].map(e=>e.textContent)},
+    {label:'Business Impact', value:document.getElementById('benefits-business-impact').value},
+    {label:'Customer Impact', value:document.getElementById('benefits-customer-impact').value}
+  ]);
+  // COMPETITION
+  addSection('COMPETITION', '#FF6464',[
+    {label:'Competition Summary', value:document.getElementById('competition-summary').value},
+    {label:'Key Competitors', value:[...document.querySelectorAll('#competition-list .item-content')].map(e=>e.textContent)},
+    {label:'Alternative Solutions', value:[...document.querySelectorAll('#alternatives-list .item-content')].map(e=>e.textContent)},
+    {label:'Competitive Advantages', value:document.getElementById('competition-advantages').value},
+    {label:'Barriers to Entry', value:document.getElementById('competition-barriers').value},
+    {label:'Market Positioning', value:document.getElementById('competition-market-position').value}
+  ]);
+  // footer all pages
+  const pages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pages; i++) {
+    doc.setPage(i); doc.setFontSize(9); doc.setTextColor('#9ca3af');
+    doc.text(`Page ${i} of ${pages} | Ashi Tools NABC`, 20, 290);
+  }
+  doc.save(`${projectTitle.replace(/[^a-z0-9]/gi, '_')}_NABC.pdf`);
+  showToast('PDF exported successfully!');
+}
+function showToast(msg){
+  let toast=document.getElementById('toast');
+  toast.textContent=msg; toast.style.display='block'; setTimeout(()=>{toast.style.display='none'},2200);
+}
+</script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        <style type="text/css">.lf-progress {
+  -webkit-appearance: none;
+  -moz-apperance: none;
+  width: 100%;
+  /* margin: 0 10px; */
+  height: 4px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.lf-progress:focus {
+  outline: none;
+  border: none;
+}
+.lf-progress::-moz-range-track {
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+}
+.lf-progress::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress::-moz-range-thumb {
+  -moz-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress::-ms-track {
+  width: 100%;
+  height: 3px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.lf-progress::-ms-fill-lower {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lf-progress::-ms-fill-upper {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lf-progress::-ms-thumb {
+  border: 0;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress:focus::-ms-fill-lower {
+  background: #ccc;
+}
+.lf-progress:focus::-ms-fill-upper {
+  background: #ccc;
+}
+.lf-player-container :focus {
+  outline: 0;
+}
+.lf-popover {
+  position: relative;
+}
+
+.lf-popover-content {
+  display: inline-block;
+  position: absolute;
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+}
+
+.lf-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lf-player-btn-container {
+  display: flex;
+  align-items: center;
+}
+.lf-player-btn {
+  cursor: pointer;
+  fill: #999;
+  width: 14px;
+}
+
+.lf-player-btn.active {
+  fill: #555;
+}
+
+.lf-popover {
+  position: relative;
+}
+
+.lf-popover-content {
+  display: inline-block;
+  position: absolute;
+  background-color: #ffffff;
+  opacity: 1;
+
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+  padding: 10px;
+}
+
+.lf-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lf-arrow {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  bottom: -9px;
+  border-style: solid;
+  border-width: 10px 10px 0px 10px;
+}
+
+.lf-left-align,
+.lf-left-align .lfarrow {
+  left: 0;
+  right: unset;
+}
+
+.lf-right-align,
+.lf-right-align .lf-arrow {
+  right: 0;
+  left: unset;
+}
+
+.lf-text-input {
+  border: 1px #ccc solid;
+  border-radius: 5px;
+  padding: 3px;
+  width: 60px;
+  margin: 0;
+}
+
+.lf-color-picker {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 90px;
+}
+
+.lf-color-selectors {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lf-color-component {
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.lf-color-component strong {
+  width: 40px;
+}
+
+.lf-color-component input[type='range'] {
+  margin: 0 0 0 10px;
+}
+
+.lf-color-component input[type='number'] {
+  width: 50px;
+  margin: 0 0 0 10px;
+}
+
+.lf-color-preview {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 5px;
+}
+
+.lf-preview {
+  height: 60px;
+  width: 60px;
+}
+
+.lf-popover-snapshot {
+  width: 150px;
+}
+.lf-popover-snapshot h5 {
+  margin: 5px 0 10px 0;
+  font-size: 0.75rem;
+}
+.lf-popover-snapshot a {
+  display: block;
+  text-decoration: none;
+}
+.lf-popover-snapshot a:before {
+  content: '⥼';
+  margin-right: 5px;
+}
+.lf-popover-snapshot .lf-note {
+  display: block;
+  margin-top: 10px;
+  color: #999;
+}
+.lf-player-controls > div {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.lf-player-controls > div:first-child {
+  margin-left: 0px;
+}
+.lf-player-controls > div:last-child {
+  margin-right: 0px;
+}
+</style></head>
+        <body data-new-gr-c-s-check-loaded="14.1238.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1238.0">
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go-to-Market Strategy Framework - Ashi Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #3498db; /* Blue for GTM */
+            --primary-dark: #2980b9;
+            --secondary: #e67e22; /* Orange for accents */
+            --dark-bg: #1e272e; 
+            --card-bg: #2c3e50; 
+            --text-light: #ecf0f1;
+            --border-light: rgba(236, 240, 241, 0.2);
+            --input-bg: rgba(236, 240, 241, 0.05);
+            --heading-color: var(--primary); /* Make headings stand out */
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.7; /* Improved readability */
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--dark-bg);
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+        .logo-container {
+            display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px;
+        }
+        .logo-icon {
+            background: var(--primary); color: white; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem;
+        }
+        h1 { font-size: 2.2rem; color: var(--primary); }
+        .header-sub { font-size: 1rem; color: #bdc3c7; max-width: 700px; margin: 10px auto 0; }
+
+        .controls-panel {
+            padding: 15px 20px;
+            background: var(--dark-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--card-bg);
+            position: sticky; /* Keep controls visible while scrolling */
+            top: 0;
+            z-index: 100;
+        }
+        #gtmTitleInput {
+            flex-grow: 1;
+            max-width: 500px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-light);
+            background: var(--input-bg);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        #gtmTitleInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+
+
+        .btn {
+            padding: 10px 25px; border:none; border-radius: 6px; font-size: 1rem;
+            font-weight: 600; cursor: pointer; transition: var(--transition);
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--primary); color: white;
+        }
+        .btn:hover { background: var(--primary-dark); }
+        .btn i { margin-right: 5px; }
+
+
+        .gtm-framework-wrapper {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto; /* Main scroll for content */
+            max-width: 900px; /* Optimal reading width */
+            margin: 0 auto; /* Center content */
+        }
+
+        .gtm-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            margin-bottom: 25px;
+            padding: 20px;
+        }
+
+        .gtm-section h2 {
+            font-size: 1.4rem;
+            color: var(--heading-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .gtm-section h2 i {
+            font-size: 1.1em; /* Slightly larger icon */
+        }
+
+        .gtm-section-content {
+            background: var(--input-bg);
+            color: var(--text-light);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 15px;
+            font-size: 1rem;
+            min-height: 120px; /* Ensure enough space to click and type */
+            white-space: pre-wrap; /* Preserve line breaks */
+            word-wrap: break-word;
+        }
+        .gtm-section-content:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+        .gtm-section-content[placeholder]:empty:before {
+            content: attr(placeholder);
+            color: #777; /* Placeholder text color */
+            pointer-events: none; /* Allow click through to focus */
+        }
+
+
+        footer {
+            text-align: center; padding: 20px; background: var(--dark-bg);
+            border-top: 1px solid var(--card-bg); font-size: 0.9em; flex-shrink: 0;
+        }
+        .insta-link { color: var(--primary); text-decoration: none; font-weight: bold; }
+        .insta-link:hover { text-decoration: underline; }
+
+    </style>
+
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon"><i class="fas fa-rocket"></i></div>
+            <div class="logo-text">
+                <h1>Go-to-Market Strategy</h1>
+            </div>
+        </div>
+        <p class="header-sub">Outline your plan to deliver your product's unique value proposition to your target customers.</p>
+    </header>
+
+    <div class="controls-panel">
+        <input type="text" id="gtmTitleInput" placeholder="Enter GTM Strategy Title (e.g., Product Launch Q4)" value="My Product Launch GTM Strategy">
+        <button class="btn" id="exportPdfBtn"><i class="fas fa-file-pdf"></i> Export as PDF</button>
+    </div>
+
+    <div class="gtm-framework-wrapper">
+        <div class="gtm-section" data-id="target-audience">
+            <h2><i class="fas fa-users"></i> 1. Target Audience &amp; Segments</h2>
+            <div class="gtm-section-content is-placeholder" contenteditable="true" placeholder="Describe your ideal customers, key demographics, psychographics, and distinct market segments..." data-placeholder="Describe your ideal customers, key demographics, psychographics, and distinct market segments..." data-qb-tmp-id="lt-236012" spellcheck="false" data-gramm="false">Describe your ideal customers, key demographics, psychographics, and distinct market segments...</div>
+        </div>
+
+        <div class="gtm-section" data-id="value-proposition">
+            <h2><i class="fas fa-gift"></i> 2. Value Proposition</h2>
+            <div class="gtm-section-content is-placeholder" contenteditable="true" placeholder="What unique value do you offer? What problems do you solve? What makes you different?" data-placeholder="What unique value do you offer? What problems do you solve? What makes you different?">What unique value do you offer? What problems do you solve? What makes you different?</div>
+        </div>
+
+        <div class="gtm-section" data-id="product-strategy">
+            <h2><i class="fas fa-box-open"></i> 3. Product Strategy</h2>
+            <div class="gtm-section-content is-placeholder" contenteditable="true" placeholder="Overview of the product/service, key features, benefits, and highlights of the product roadmap..." data-placeholder="Overview of the product/service, key features, benefits, and highlights of the product roadmap...">Overview of the product/service, key features, benefits, and highlights of the product roadmap...</div>
+        </div>
+
+        <div class="gtm-section" data-id="pricing-strategy">
+            <h2><i class="fas fa-dollar-sign"></i> 4. Pricing Strategy</h2>
+            <div class="gtm-section-content is-placeholder" contenteditable="true" placeholder="Describe your pricing model (e.g., subscription, freemium, one-time), price points, and any discount or promotional strategies..." data-placeholder="Describe your pricing model (e.g., subscription, freemium, one-time), price points, and any discount or promotional strategies...">Describe your pricing model (e.g., subscription, freemium, one-time), price points, and any discount or promotional strategies...</div>
+        </div>
+        
+        <div class="gtm-section" data-id="marketing-sales">
+            <h2><i class="fas fa-bullhorn"></i> 5. Marketing &amp; Sales Strategy</h2>
+            <div class="gtm-section-content is-placeholder" contenteditable="true" placeholder="How will you reach customers (marketing channels)? How will you sell (sales channels)? What is your core messaging and positioning?" data-placeholder="How will you reach customers (marketing channels)? How will you sell (sales channels)? What is your core messaging and positioning?">How will you reach customers (marketing channels)? How will you sell (sales channels)? What is your core messaging and positioning?</div>
+        </div>
+
+        <div class="gtm-section" data-id="onboarding-support">
+            <h2><i class="fas fa-concierge-bell"></i> 6. Customer Onboarding &amp; Support</h2>
+            <div class="gtm-section-content is-placeholder" contenteditable="true" placeholder="Describe the customer onboarding process. How will you provide support and ensure customer success?" data-placeholder="Describe the customer onboarding process. How will you provide support and ensure customer success?">Describe the customer onboarding process. How will you provide support and ensure customer success?</div>
+        </div>
+
+        <div class="gtm-section" data-id="success-metrics">
+            <h2><i class="fas fa-chart-line"></i> 7. Success Metrics (KPIs)</h2>
+            <div class="gtm-section-content is-placeholder" contenteditable="true" placeholder="List key performance indicators (KPIs) to measure success (e.g., user acquisition, conversion rates, revenue targets)..." data-placeholder="List key performance indicators (KPIs) to measure success (e.g., user acquisition, conversion rates, revenue targets)...">List key performance indicators (KPIs) to measure success (e.g., user acquisition, conversion rates, revenue targets)...</div>
+        </div>
+        
+        <div class="gtm-section" data-id="budget-resources">
+            <h2><i class="fas fa-wallet"></i> 8. Budget &amp; Resources</h2>
+            <div class="gtm-section-content is-placeholder" contenteditable="true" placeholder="Outline the allocated budget for the GTM strategy and key resources required (team, tools, partnerships)..." data-placeholder="Outline the allocated budget for the GTM strategy and key resources required (team, tools, partnerships)...">Outline the allocated budget for the GTM strategy and key resources required (team, tools, partnerships)...</div>
+        </div>
+
+        <div class="gtm-section" data-id="timeline-roadmap">
+            <h2><i class="fas fa-calendar-alt"></i> 9. Timeline / Launch Plan</h2>
+            <div class="gtm-section-content is-placeholder" contenteditable="true" placeholder="Key milestones, launch phases, and important dates for the GTM execution..." data-placeholder="Key milestones, launch phases, and important dates for the GTM execution...">Key milestones, launch phases, and important dates for the GTM execution...</div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Go-to-Market Strategy Framework - Part of Ashi Tools | Connect <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="insta-link">@ashish_singh_rajput_3</a></p>
+        <p class_content="copyright">© 2025 Ashi Tools. Plan Your Success.</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const exportPdfBtn = document.getElementById('exportPdfBtn');
+        const gtmTitleInput = document.getElementById('gtmTitleInput');
+        const sections = document.querySelectorAll('.gtm-section');
+
+        // Placeholder logic for contenteditable divs
+        sections.forEach(section => {
+            const contentDiv = section.querySelector('.gtm-section-content');
+            if (contentDiv.hasAttribute('placeholder') && !contentDiv.textContent.trim()) {
+                contentDiv.dataset.placeholder = contentDiv.getAttribute('placeholder');
+                contentDiv.classList.add('is-placeholder');
+                contentDiv.textContent = contentDiv.dataset.placeholder;
+            }
+
+            contentDiv.addEventListener('focus', function() {
+                if (this.classList.contains('is-placeholder')) {
+                    this.textContent = '';
+                    this.classList.remove('is-placeholder');
+                }
+            });
+
+            contentDiv.addEventListener('blur', function() {
+                if (!this.textContent.trim() && this.dataset.placeholder) {
+                    this.classList.add('is-placeholder');
+                    this.textContent = this.dataset.placeholder;
+                }
+            });
+        });
+
+        exportPdfBtn.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'pt', 'a4'); // Portrait, points, A4
+
+            const pageMargin = 40;
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const contentWidth = pageWidth - 2 * pageMargin;
+            let currentY = pageMargin;
+            const lineSpacing = 5; // Additional spacing between lines of text
+            const sectionSpacing = 20; // Space after each section's content
+
+            // PDF Styling
+            doc.setFillColor(255, 255, 255); // White background is default, but good to be explicit
+            doc.rect(0, 0, pageWidth, pageHeight, 'F'); // Ensure full page background
+            doc.setTextColor(40, 40, 40); // Dark text
+
+            // Helper function to add text and handle page breaks
+            function addTextWithSplit(text, x, y, fontSize, fontStyle, maxWidth, color = [40,40,40]) {
+                doc.setFontSize(fontSize);
+                doc.setFont("helvetica", fontStyle);
+                doc.setTextColor(color[0],color[1],color[2]);
+                const lines = doc.splitTextToSize(text, maxWidth);
+                lines.forEach(line => {
+                    if (y + (fontSize * 0.352777) > pageHeight - pageMargin) { // Check if new line exceeds page
+                        doc.addPage();
+                        y = pageMargin;
+                         // Optional: Add header/footer to new pages if needed
+                        doc.setFontSize(8);
+                        doc.setTextColor(150,150,150);
+                        doc.text(`Page ${doc.internal.getNumberOfPages()}`, pageWidth - pageMargin, pageHeight - 10, {align: 'right'});
+                    }
+                    doc.text(line, x, y);
+                    y += (fontSize * 0.352777) + lineSpacing; // Convert pt to mm approx for line height
+                });
+                return y;
+            }
+            
+            // PDF Header
+            currentY = addTextWithSplit("Go-to-Market Strategy", pageWidth / 2, currentY, 20, "bold", contentWidth, [52, 152, 219]);
+            doc.setFont("helvetica", "normal"); // Reset font style
+            currentY += 5;
+
+            const gtmUserTitle = gtmTitleInput.value.trim() || "My GTM Plan";
+            currentY = addTextWithSplit(gtmUserTitle, pageWidth / 2, currentY, 16, "bold", contentWidth);
+            currentY += 5;
+            
+            doc.setLineWidth(0.5);
+            doc.setDrawColor(200, 200, 200);
+            doc.line(pageMargin, currentY, pageWidth - pageMargin, currentY); // Separator line
+            currentY += sectionSpacing / 2;
+
+
+            // Iterate through GTM sections
+            sections.forEach(section => {
+                const titleElement = section.querySelector('h2');
+                const contentDiv = section.querySelector('.gtm-section-content');
+                
+                let sectionTitle = titleElement.textContent.trim();
+                let sectionContent = contentDiv.textContent.trim();
+
+                if (contentDiv.classList.contains('is-placeholder') && sectionContent === contentDiv.dataset.placeholder) {
+                    sectionContent = "N/A"; // Or leave blank: ""
+                }
+                
+                // Section Title
+                currentY = addTextWithSplit(sectionTitle, pageMargin, currentY, 14, "bold", contentWidth, [39, 174, 96]); // Section title color
+                currentY += 2; // Little space after title
+
+                // Section Content
+                currentY = addTextWithSplit(sectionContent || "No content provided.", pageMargin + 10, currentY, 10, "normal", contentWidth - 10);
+                currentY += sectionSpacing; // Space after section content
+            });
+
+            // PDF Footer (on each page if using a loop for multi-page, or just at the end if simple)
+            // For a simple single page or last page footer:
+            const finalPageNum = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= finalPageNum; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.setTextColor(150, 150, 150);
+                doc.text(`Page ${i} of ${finalPageNum}`, pageWidth - pageMargin, pageHeight - 10, {align: 'right'});
+                doc.text(`Ashi Tools GTM Framework | @ashish_singh_rajput_3`, pageMargin, pageHeight - 10);
+            }
+
+
+            doc.save(`GTM-Strategy-${gtmUserTitle.replace(/\s+/g, '_') || 'AshiTools'}.pdf`);
+        });
+    });
+    </script>
+
+
+            <script></script>
+        
+    
+<qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 1061px; position: absolute !important; top: 430px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

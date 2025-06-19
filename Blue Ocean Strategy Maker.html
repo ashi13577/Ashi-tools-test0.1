@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <title>Blue Ocean Strategy Maker - Ashi Tools</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+/* ...theme and layout as before, see previous answers for details/brand... */
+:root {
+  --primary: #00ceea;
+  --accent: #2ddbaf;
+  --dark-bg: #0a1522;
+  --card-bg: #172230;
+  --text-light: #edfffc;
+  --border: #26475a;
+  --eliminate: #e74c3c;
+  --reduce: #f8c471;
+  --raise: #2980b9;
+  --create: #2ecc71;
+}
+body { font-family: 'Roboto', 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, var(--dark-bg), #233448 80%);
+  color: var(--text-light);margin:0;min-height:100vh;padding:0 0 30px 0;}
+.container{max-width:900px;margin:30px auto 0 auto;background:var(--card-bg);border-radius:18px;padding:30px 12px 26px 12px;border:1.2px solid var(--border);box-shadow:0 8px 36px 0 #11dde111,0 1.5px 8px #0005;}
+header {text-align:center;margin-bottom:18px;}
+h1 {color: var(--primary); font-size:2.1rem;}
+h2 {color:var(--primary); font-size:1.24rem;margin-top:24px;}
+.strategy-intro {background: #191f2c;border-left:5px solid var(--primary);padding:16px 18px;margin-bottom:13px;border-radius:9px;color:#e2f7f4;}
+.strategy-intro h3 {margin-top:0; color:var(--primary);}
+.strategy-table-section h3 {margin:12px 0 12px 0;color:var(--primary);}
+.strategy-form-row {display:flex;flex-wrap:wrap;gap:13px;align-items: center;margin-bottom:8px;}
+input, select, textarea, button {padding: 10px; border-radius: 6px; border: 1px solid #2b3d50; background: #172937; color: #f6fafd; font-size:1em; font-family:inherit;}
+input:focus, select:focus, textarea:focus{outline:none; border-color: var(--primary);background: #182d3c;}
+input, select {min-width: 128px;max-width:210px;}
+textarea {resize:vertical;min-width:190px;max-width:410px;}
+button {background: var(--primary);color: #30373b;border: none; cursor: pointer;font-weight:600;transition: .2s; box-shadow:0 1px 13px #11ffe133;}
+button:hover {background: var(--accent); color: #111;}
+.delete-btn{background:#e74c3c;color:#fff;padding:6px 10px;margin-left:5px;box-shadow:none;}
+.delete-btn:hover{background:#c0392b;}
+.action-btns { margin-top:16px; display:flex; gap:12px; }
+.add-demo-btn{background:#22ce7d; color:#161616; font-weight:700;}
+.clear-btn{background:#e74c3c; color:#fff;}
+.demo-tip {color: #aceedc; font-size:.97em;margin-top:6px;margin-bottom:8px;background:rgba(0,255,220,0.08); padding:8px 11px;border-radius:5px;}
+.strategy-canvas-section {margin:32px 0 22px 0;}
+.strategy-canvas-label {text-align:center;font-weight:600;color:#43ffe0;margin-bottom:7px;}
+#blueOceanQuad {max-width:660px;margin:0 auto 15px auto;background:#131f2a;border-radius:10px;box-shadow:0 1px 10px #0ff5;}
+#quadGrid {display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;}
+.blueo-quad {min-height:132px;padding:10px 10px 6px 16px;}
+.blueo-quad h4{margin:5px 0 6px 0;font-weight:700;font-size:1.07em;}
+.blueo-quad ul{padding-left:14px;margin:5px 0 0 0;list-style-type: disc;}
+.blueo-quad li{margin-bottom:2px;font-size:1em;font-weight:500;}
+.strategy-table {width: 100%;border-collapse: separate;border-spacing: 0;margin-bottom: 14px;background: #15202d;border-radius: 9px;overflow: hidden;}
+.strategy-table th, .strategy-table td {padding:12px 8px;text-align: left;}
+.strategy-table th {background: #102a32;color: var(--primary);border-bottom: 2.5px solid var(--border);}
+.strategy-table td {border-bottom: 1px solid #123;}
+.row-eliminate { background: rgba(231,76,60,0.09);}
+.row-reduce { background: rgba(248,196,113,0.11);}
+.row-raise { background: rgba(52,152,219,0.09);}
+.row-create { background: rgba(46,204,113,0.10);}
+.label-eliminate{background:#e74c3c;color:#fff;padding:3px 13px;border-radius:8px;}
+.label-reduce{background:#f8c471;color:#222;padding:3px 13px;border-radius:8px;}
+.label-raise{background:#2980b9;color:#fff;padding:3px 13px;border-radius:8px;}
+.label-create{background:#2ecc71;color:#fff;padding:3px 13px;border-radius:8px;}
+.toast {position: fixed; bottom: 28px; right: 25px; z-index:1999; background: var(--accent); color: #191f23; border-radius:7px; padding:15px 20px; font-size:1em;font-weight:600; box-shadow:0 3.5px 18px #0006;display:none;min-width:160px;text-align:center;}
+footer {text-align:center; margin-top:40px; color:#5bebcf;padding-top:20px;font-size:1em;border-top:2px solid #173440;line-height:1.65;}
+.insta-link { color: #e1306c; font-weight:600; background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;transition:all .18s;}
+.insta-link:hover{color:#fff;text-shadow:0 0 8px #e232b855;-webkit-text-fill-color:unset;}
+@media (max-width:600px){
+  .container{padding:3px 2vw;}
+  .strategy-table th, .strategy-table td { font-size:.92em; padding:7px 4px;}
+  textarea {min-width:110px;}
+  #blueOceanQuad{max-width:98vw;}
+}
+  </style>
+
+
+<div class="container">
+  <header>
+    <h1><i class="fa-solid fa-water"></i> Blue Ocean Strategy Maker</h1>
+    <div class="strategy-intro">
+      <h3>What is Blue Ocean Strategy?</h3>
+      <p>
+        <b>Blue Ocean Strategy</b> is about creating uncontested market space ("blue oceans") instead of fighting in saturated markets ("red oceans"). Use the <b>Four Actions Framework</b>:
+        </p><ul style="margin-bottom:4px;">
+          <li><b style="color:#e74c3c">Eliminate</b>: Which factors should be eliminated?</li>
+          <li><b style="color:#f8c471">Reduce</b>: Which factors should be reduced below industry standard?</li>
+          <li><b style="color:#2980b9">Raise</b>: Which factors should be raised above industry standard?</li>
+          <li><b style="color:#2ecc71">Create</b>: What new factors should be created?</li>
+        </ul>
+        <div style="margin-top:8px;">Use <b>Load Demo</b> for a Cirque du Soleil example!</div>
+      <p></p>
+    </div>
+  </header>
+  <section class="input-section">
+    <h2>Build Your Strategy Canvas</h2>
+    <div class="strategy-form-row">
+      <select id="actionType">
+        <option value="Eliminate">Eliminate</option>
+        <option value="Reduce">Reduce</option>
+        <option value="Raise">Raise</option>
+        <option value="Create">Create</option>
+      </select>
+      <input type="text" id="factor" placeholder="Factor (e.g., Delivery Time)" required="">
+      <textarea id="description" placeholder="Explain your strategic action here..."></textarea>
+      <button onclick="addRow()"><i class="fa-solid fa-plus"></i> Add Action</button>
+    </div>
+    <div class="action-btns">
+      <button class="add-demo-btn" onclick="loadDemo()"><i class="fa-solid fa-rocket"></i> Load Demo</button>
+      <button class="clear-btn" onclick="clearAll()"><i class="fa-solid fa-eraser"></i> Clear All</button>
+      <button class="add-item-btn" onclick="exportPDF()"><i class="fa-solid fa-file-pdf"></i> Export PDF</button>
+    </div>
+  </section>
+  <section class="strategy-canvas-section">
+    <div class="strategy-canvas-label">Four Actions Framework Quadrant (Web Only)</div>
+    <div id="blueOceanQuad">
+      <div id="quadGrid" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;">
+        <div id="quad-Eliminate" class="blueo-quad" style="border-right:2px solid #122a; border-bottom:2px solid #122a;"><h4 style="color:#e74c3c;">Eliminate <span style="color:#eee;font-size:0.94em;font-weight:400;">- Remove factors</span></h4><ul><li style="color:#adbbe2;">No action</li></ul></div>
+        <div id="quad-Reduce" class="blueo-quad" style="border-bottom:2px solid #122a;"><h4 style="color:#f8c471;">Reduce <span style="color:#eee;font-size:0.94em;font-weight:400;">- Below standard</span></h4><ul><li style="color:#adbbe2;">No action</li></ul></div>
+        <div id="quad-Raise" class="blueo-quad" style="border-right:2px solid #122a;"><h4 style="color:#2980b9;">Raise <span style="color:#eee;font-size:0.94em;font-weight:400;">- Above standard</span></h4><ul><li style="color:#adbbe2;">No action</li></ul></div>
+        <div id="quad-Create" class="blueo-quad"><h4 style="color:#2ecc71;">Create <span style="color:#eee;font-size:0.94em;font-weight:400;">- New factors</span></h4><ul><li style="color:#adbbe2;">No action</li></ul></div>
+      </div>
+    </div>
+  </section>
+  <section class="strategy-table-section">
+    <h3>Your Blue Ocean Strategic Moves</h3>
+    <table class="strategy-table" id="strategyTable">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>Factor</th>
+          <th>Description / Reasoning</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody id="strategyTableBody"><tr><td colspan="4" style="text-align:center;color:#aff;">No actions added yet. Use the form above to start.</td></tr></tbody>
+    </table>
+  </section>
+  <footer>
+    Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+    Connect with me: 
+    <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank">
+      @ashish_singh_rajput_3
+    </a>
+  </footer>
+  <div class="toast" id="toast" style="display: none;">Canvas cleared.</div>
+</div>
+<script>
+let strategy = [];
+function getLabelHtml(type){
+  switch(type){
+    case 'Eliminate': return '<span class="label-eliminate">Eliminate</span>';
+    case 'Reduce': return '<span class="label-reduce">Reduce</span>';
+    case 'Raise': return '<span class="label-raise">Raise</span>';
+    case 'Create': return '<span class="label-create">Create</span>';
+  }
+}
+function renderTable(){
+  const tbody = document.getElementById('strategyTableBody');
+  tbody.innerHTML = "";
+  if(strategy.length === 0){
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:#aff;">No actions added yet. Use the form above to start.</td></tr>`;
+    drawQuad();
+    return;
+  }
+  strategy.forEach((row,i)=>{
+    tbody.innerHTML +=
+      `<tr class="row-${row.type.toLowerCase()}">
+        <td>${getLabelHtml(row.type)}</td>
+        <td>${row.factor}</td>
+        <td>${row.description}</td>
+        <td><button class="delete-btn" onclick="removeRow(${i})"><i class="fa-solid fa-trash"></i></button></td>
+      </tr>`;
+  });
+  drawQuad();
+}
+renderTable();
+function drawQuad(){
+  const Q = {Eliminate:[], Reduce:[], Raise:[], Create:[]};
+  strategy.forEach(row => { Q[row.type].push(row); });
+  const labels = {
+    Eliminate: {title:"Eliminate", color:"#e74c3c", hint:"Remove factors"},
+    Reduce: {title:"Reduce", color:"#f8c471", hint:"Below standard"},
+    Raise: {title:"Raise", color:"#2980b9", hint:"Above standard"},
+    Create: {title:"Create", color:"#2ecc71", hint:"New factors"}
+  };
+  ["Eliminate","Reduce","Raise","Create"].forEach(type=>{
+    const el = document.getElementById('quad-'+type);
+    el.innerHTML = `<h4 style="color:${labels[type].color};">${labels[type].title} <span style="color:#eee;font-size:0.94em;font-weight:400;">- ${labels[type].hint}</span></h4><ul>${Q[type].length===0 ? '<li style="color:#adbbe2;">No action</li>' : Q[type].map(f=>`<li style="color:${labels[type].color};">${f.factor}<span style="color:#d0fff6;font-weight:400;font-size:.95em;">${f.description?": "+f.description:""}</span></li>`).join('')}</ul>`;
+  });
+}
+function addRow(){
+  const type = document.getElementById('actionType').value;
+  const factor = document.getElementById('factor').value.trim();
+  const description = document.getElementById('description').value.trim();
+  if(!factor){ showToast('Factor is required'); return; }
+  strategy.push({type,factor,description});
+  document.getElementById('factor').value = '';
+  document.getElementById('description').value = '';
+  renderTable();
+  showToast('Strategy action added!');
+}
+function removeRow(idx){
+  strategy.splice(idx,1);
+  renderTable();
+}
+function loadDemo(){
+  strategy = [
+    { type: 'Eliminate', factor: 'Tips for Waiters', description: 'No tips — like Cirque du Soleil — from Blue Ocean case (does not add value for audience or business model).' },
+    { type: 'Eliminate', factor: 'Star Performers', description: 'Eliminated expensive star performers, reducing cost and dependence.' },
+    { type: 'Reduce', factor: 'Fun Fair Food', description: 'Reduced typical circus food and midway distractions.' },
+    { type: 'Raise', factor: 'Theme', description: 'Raised show theme and production value.' },
+    { type: 'Raise', factor: 'Venue Experience', description: 'Enhanced comfort, safety, and venue atmosphere.' },
+    { type: 'Create', factor: 'Storyline/Artistic Performance', description: 'Created plot and dance, new for adult crowd.' },
+    { type: 'Create', factor: 'Live Music', description: 'Original, customized musical scores.' }
+  ];
+  renderTable();
+  showToast('Demo loaded! You can now view and edit strategic actions.');
+}
+function clearAll(){
+  if(confirm('Clear the entire strategy canvas?')) {
+    strategy = [];
+    renderTable();
+    showToast('Canvas cleared.');
+  }
+}
+function showToast(txt){
+  let t=document.getElementById('toast');
+  t.textContent = txt; t.style.display="block";
+  setTimeout(()=>{ t.style.display="none"; },2000);
+}
+// PDF (no chart, professional report)
+function exportPDF() {
+  if(!strategy.length) return showToast("Add at least one row!");
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p','pt','a4');
+  let y = 48;
+  doc.setFontSize(18); doc.setTextColor(12, 206, 234);
+  doc.text("Blue Ocean Strategy Report", 40, y); y+=22;
+  doc.setFontSize(11); doc.setTextColor(42,219,175);
+  doc.text("Four Actions Framework",40, y); y+=16;
+  doc.setTextColor(110); doc.setFontSize(9);
+  doc.text("Date: "+(new Date().toLocaleString()),40,y); y+=18;
+  doc.setFontSize(13); doc.setTextColor(44, 183, 191);
+  doc.text("Strategic Moves by Quadrant:",40,y); y+=12;
+  // Section definitions
+  const quadrants = [
+    {key:'Eliminate',  label:'Eliminate',  color:[231,76,60]},
+    {key:'Reduce',     label:'Reduce',     color:[248,196,113]},
+    {key:'Raise',      label:'Raise',      color:[52,152,219]},
+    {key:'Create',     label:'Create',     color:[46,204,113]}
+  ];
+  quadrants.forEach(q=>{
+    const items = strategy.filter(r=>r.type===q.label);
+    if(y>760) {doc.addPage(); y=38;}
+    doc.setFontSize(12); doc.setTextColor(...q.color);
+    doc.text(q.label, 48, y);
+    y+=8;
+    if(!items.length){
+      doc.setFontSize(9);doc.setTextColor(145); doc.text("  [ No actions listed ]",56,y); y+=10;
+    } else {
+      items.forEach(a=>{
+        doc.setFontSize(10); doc.setTextColor(...q.color);
+        let txt = a.factor + (a.description?(": "+a.description):"");
+        const lines = doc.splitTextToSize(txt, 410);
+        doc.text("- "+lines[0], 56, y); y+=12;
+        for(let l=1;l<lines.length;l++){ doc.text(lines[l], 62, y); y+=11;}
+      });
+    }
+    y+=6;
+  });
+  y+=6;
+  // Summary Table (PROFESSIONAL WRAP: NO OVERLAP)
+  doc.setFontSize(13);doc.setTextColor(11,190,231);if(y>760){doc.addPage();y=38;}
+  doc.text("All Blue Ocean Actions (Table):",40,y);y+=12;
+  doc.setFontSize(10);doc.setTextColor(55,180,210);
+  let headers=["Action","Factor","Description"];
+  doc.text(headers[0], 46, y);
+  doc.text(headers[1],105,y);
+  doc.text(headers[2], 180, y);
+  y+=4; doc.setDrawColor(180); doc.line(42,y,500,y); y+=8;
+
+  strategy.forEach((r,i)=>{
+    if(y>790) {doc.addPage();y=35;}
+    const color = {
+      Eliminate:[231,76,60],
+      Reduce:[248,196,113],
+      Raise:[52,152,219],
+      Create:[46,204,113]
+    }[r.type]||[50,50,50];
+    doc.setFontSize(9); doc.setTextColor(...color);
+    doc.text(r.type, 48, y);
+
+    // Factor
+    doc.setTextColor(35,170,190);
+    let facLines = doc.splitTextToSize(r.factor||"", 66);
+    facLines.forEach((fLine,i) => {
+      doc.text(fLine, 105, y + (i*11));
+    });
+
+    // Description, under factor, left-aligned
+    doc.setTextColor(90);
+    let descLines = doc.splitTextToSize(r.description||"", 310);
+    descLines.forEach((dLine, i) => {
+      doc.text(dLine, 105, y + (facLines.length+i)*11);
+    });
+    y += Math.max(facLines.length+descLines.length,1)*11;
+  });
+
+  // Footer
+  const pages = doc.internal.getNumberOfPages();
+  for(let i=1;i<=pages;i++){
+    doc.setPage(i);doc.setFontSize(8);doc.setTextColor(40,220,213);
+    doc.text("Blue Ocean Strategy | Ashi Tools | "+i+"/"+pages, 40, 820);
+  }
+  doc.save("blue_ocean_strategy.pdf");
+  showToast('PDF exported successfully!');
+}
+</script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

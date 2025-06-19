@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body>
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWOT Analysis Generator - Ashi Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #00ffe1;
+            --primary-dark: #00c4aa;
+            --secondary: #ff0077;
+            --dark-bg: #080c14;
+            --mid-bg: #0f1725;
+            --card-bg: rgba(30, 40, 60, 0.7);
+            --border: rgba(0, 255, 225, 0.3);
+            --text-light: #e0f3ff;
+            --transition: all 0.4s ease;
+            --strength: rgba(0, 200, 83, 0.15);
+            --weakness: rgba(244, 67, 54, 0.15);
+            --opportunity: rgba(33, 150, 243, 0.15);
+            --threat: rgba(255, 152, 0, 0.15);
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #081020 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .floating-elements span {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(0, 255, 225, 0.1) 0%, rgba(255, 0, 119, 0.1) 100%);
+            border-radius: 50%;
+            filter: blur(30px);
+            animation: float 16s linear infinite;
+        }
+        
+        .floating-elements span:nth-child(1) {
+            width: 30vw;
+            height: 30vw;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+            animation-duration: 20s;
+            background: radial-gradient(var(--primary) 0%, transparent 70%);
+        }
+        
+        .floating-elements span:nth-child(2) {
+            width: 25vw;
+            height: 25vw;
+            top: 75%;
+            left: 70%;
+            animation-delay: 4s;
+            animation-duration: 25s;
+            background: radial-gradient(var(--secondary) 0%, transparent 70%);
+        }
+        
+        .floating-elements span:nth-child(3) {
+            width: 20vw;
+            height: 20vw;
+            top: 35%;
+            left: 80%;
+            animation-delay: 8s;
+            animation-duration: 18s;
+            background: radial-gradient(var(--primary) 0%, transparent 70%);
+        }
+        
+        .floating-elements span:nth-child(4) {
+            width: 15vw;
+            height: 15vw;
+            top: 65%;
+            left: 15%;
+            animation-delay: 12s;
+            animation-duration: 22s;
+            background: radial-gradient(var(--secondary) 0%, transparent 70%);
+        }
+        
+        .floating-elements span:nth-child(5) {
+            width: 10vw;
+            height: 10vw;
+            top: 20%;
+            left: 50%;
+            animation-delay: 16s;
+            animation-duration: 15s;
+            background: radial-gradient(#6098ff 0%, transparent 70%);
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg); 
+                opacity: 0.4;
+            }
+            50% {
+                transform: translate(50px, 100px) rotate(180deg); 
+                opacity: 0.7;
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg); 
+                opacity: 0.4;
+            }
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 20px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .logo-icon {
+            background: var(--primary);
+            color: var(--dark-bg);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--primary), #a8ffe7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            max-width: 600px;
+            margin: 0 auto 25px;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 95%;
+            margin: 0 auto 40px;
+            background: rgba(8, 15, 28, 0.6);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .tool-flex {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        
+        .tool-controls {
+            flex: 1;
+            background: rgba(15, 23, 37, 0.5);
+            border-radius: 15px;
+            padding: 30px 25px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .tool-preview {
+            flex: 1;
+            background: rgba(15, 23, 37, 0.5);
+            border-radius: 15px;
+            padding: 30px 25px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .section-header {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .form-group {
+            margin-bottom: 22px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1.05rem;
+            transition: var(--transition);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-group input:focus, 
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 225, 0.2);
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: var(--dark-bg);
+            border: none;
+            padding: 16px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 255, 225, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(15, 23, 37, 0.8);
+            color: var(--text-light);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 150, 150, 0.3);
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .template-selector {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .template-selector label {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .template-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .template-btn {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            color: var(--text-light);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+        
+        .template-btn:hover {
+            background: rgba(0, 255, 225, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .swot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+        
+        .swot-quadrant {
+            min-height: 250px;
+            border-radius: 15px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quadrant-header {
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .strengths-box {
+            border-color: #00c853;
+            background: var(--strength);
+        }
+        
+        .strengths-box .quadrant-header {
+            border-color: #00c853;
+            color: #00c853;
+        }
+        
+        .weaknesses-box {
+            border-color: #ff5252;
+            background: var(--weakness);
+        }
+        
+        .weaknesses-box .quadrant-header {
+            border-color: #ff5252;
+            color: #ff5252;
+        }
+        
+        .opportunities-box {
+            border-color: #448aff;
+            background: var(--opportunity);
+        }
+        
+        .opportunities-box .quadrant-header {
+            border-color: #448aff;
+            color: #448aff;
+        }
+        
+        .threats-box {
+            border-color: #ffab00;
+            background: var(--threat);
+        }
+        
+        .threats-box .quadrant-header {
+            border-color: #ffab00;
+            color: #ffab00;
+        }
+        
+        .swot-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .swot-content ul {
+            padding-left: 22px;
+            list-style: none;
+        }
+        
+        .swot-content li {
+            margin-bottom: 12px;
+            position: relative;
+            line-height: 1.5;
+            padding-left: 20px;
+        }
+        
+        .swot-content li:before {
+            content: "●";
+            position: absolute;
+            left: 0;
+            font-size: 1.1rem;
+            color: inherit;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 10px;
+            font-size: 1rem;
+            margin-top: auto;
+            border-top: 1px solid rgba(0, 120, 150, 0.3);
+            position: relative;
+            z-index: 10;
+            background: rgba(8, 12, 20, 0.9);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .social-icon {
+            display: inline-flex;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 150, 150, 0.15);
+            border: 1px solid rgba(0, 220, 200, 0.3);
+            font-size: 1.3rem;
+            color: var(--text-light);
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        
+        .social-icon:hover {
+            background: var(--primary);
+            color: var(--dark-bg);
+            transform: translateY(-5px);
+        }
+        
+        .insta-link {
+            color: var(--primary);
+            font-weight: bold;
+            position: relative;
+            display: inline-block;
+            margin-top: 20px;
+            background: rgba(0, 150, 150, 0.15);
+            padding: 8px 25px;
+            border-radius: 30px;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+        
+        .insta-link:hover {
+            background: var(--primary);
+            color: var(--dark-bg);
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .tool-flex {
+                flex-direction: column;
+            }
+            
+            .tool-controls, .tool-preview {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .btn-container {
+                flex-direction: column;
+            }
+            
+            .template-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .container {
+                padding: 25px;
+            }
+            
+            .section-header {
+                font-size: 1.5rem;
+            }
+            
+            .swot-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+
+    <!-- Floating Background Elements -->
+    <div class="floating-elements">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    
+    <header>
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-th-list"></i></div>
+            <div>
+                <h1>SWOT Analysis Generator</h1>
+                <p class="subtitle">Identify Strengths, Weaknesses, Opportunities &amp; Threats</p>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="tool-flex">
+            <div class="tool-controls">
+                <div class="section-header">
+                    <i class="fas fa-edit"></i>
+                    <h2>Input Your Analysis</h2>
+                </div>
+                
+                <!-- Template Selector -->
+                <div class="template-selector">
+                    <label>Choose a Template:</label>
+                    <div class="template-buttons">
+                        <button class="template-btn" onclick="loadTemplate('startup')">
+                            <i class="fas fa-rocket"></i> Tech Startup
+                        </button>
+                        <button class="template-btn" onclick="loadTemplate('restaurant')">
+                            <i class="fas fa-utensils"></i> Restaurant Business
+                        </button>
+                        <button class="template-btn" onclick="loadTemplate('ecommerce')">
+                            <i class="fas fa-shopping-cart"></i> E-commerce Store
+                        </button>
+                        <button class="template-btn" onclick="loadTemplate('university')">
+                            <i class="fas fa-graduation-cap"></i> University Program
+                        </button>
+                        <button class="template-btn" onclick="loadTemplate('freelance')">
+                            <i class="fas fa-user-tie"></i> Freelance Business
+                        </button>
+                        <button class="template-btn" onclick="loadTemplate('manufacturing')">
+                            <i class="fas fa-industry"></i> Manufacturing
+                        </button>
+                        <button class="template-btn" onclick="loadTemplate('nonprofit')">
+                            <i class="fas fa-heart"></i> Non-Profit Org
+                        </button>
+                        <button class="template-btn" onclick="loadTemplate('clear')">
+                            <i class="fas fa-eraser"></i> Clear All
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="analysis-title">Analysis Title:</label>
+                    <input type="text" id="analysis-title" placeholder="Enter analysis title" value="Tech Startup SWOT Analysis">
+                </div>
+                
+                <div class="form-group">
+                    <label for="strengths">Strengths:</label>
+                    <textarea id="strengths" placeholder="Internal positive factors...">Innovative technology solution
+Strong technical team
+Low operational costs
+Agile development process
+First-mover advantage</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="weaknesses">Weaknesses:</label>
+                    <textarea id="weaknesses" placeholder="Internal negative factors...">Limited funding
+No established customer base
+Lack of brand recognition
+Dependence on key personnel
+Limited marketing budget</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="opportunities">Opportunities:</label>
+                    <textarea id="opportunities" placeholder="External positive factors...">Growing market demand
+Partnership opportunities
+Government incentives for startups
+Emerging technology trends
+Remote work adoption</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="threats">Threats:</label>
+                    <textarea id="threats" placeholder="External negative factors...">Intense competition
+Regulatory changes
+Economic uncertainty
+Technology obsolescence
+Talent shortage in tech</textarea>
+                </div>
+                
+                <div class="btn-container">
+                    <button class="btn" id="generate-swot">
+                        <i class="fas fa-bolt"></i> Generate SWOT
+                    </button>
+                    
+                    <button class="btn btn-secondary" id="export-pdf">
+                        <i class="fas fa-file-pdf"></i> Export as PDF
+                    </button>
+                </div>
+            </div>
+            
+            <div class="tool-preview">
+                <div class="section-header">
+                    <i class="fas fa-eye"></i>
+                    <h2>SWOT Analysis Preview</h2>
+                </div>
+                
+                <div>
+                    <h3 style="color: var(--primary); text-align: center; margin-bottom: 20px; font-size: 1.5rem;" id="preview-title">Tech Startup SWOT Analysis</h3>
+                    <div class="swot-grid" id="swot-preview">
+                        <!-- Strengths -->
+                        <div class="swot-quadrant strengths-box">
+                            <div class="quadrant-header">
+                                <i class="fas fa-shield-alt"></i>
+                                <h3>Strengths</h3>
+                            </div>
+                            <div class="swot-content">
+                                <ul id="strengths-preview"><li>Innovative technology solution</li><li>Strong technical team</li><li>Low operational costs</li><li>Agile development process</li><li>First-mover advantage</li></ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Weaknesses -->
+                        <div class="swot-quadrant weaknesses-box">
+                            <div class="quadrant-header">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h3>Weaknesses</h3>
+                            </div>
+                            <div class="swot-content">
+                                <ul id="weaknesses-preview"><li>Limited funding</li><li>No established customer base</li><li>Lack of brand recognition</li><li>Dependence on key personnel</li><li>Limited marketing budget</li></ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Opportunities -->
+                        <div class="swot-quadrant opportunities-box">
+                            <div class="quadrant-header">
+                                <i class="fas fa-bullseye"></i>
+                                <h3>Opportunities</h3>
+                            </div>
+                            <div class="swot-content">
+                                <ul id="opportunities-preview"><li>Growing market demand</li><li>Partnership opportunities</li><li>Government incentives for startups</li><li>Emerging technology trends</li><li>Remote work adoption</li></ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Threats -->
+                        <div class="swot-quadrant threats-box">
+                            <div class="quadrant-header">
+                                <i class="fas fa-bolt"></i>
+                                <h3>Threats</h3>
+                            </div>
+                            <div class="swot-content">
+                                <ul id="threats-preview"><li>Intense competition</li><li>Regulatory changes</li><li>Economic uncertainty</li><li>Technology obsolescence</li><li>Talent shortage in tech</li></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Part of the Ashi Tools productivity suite for management students</p>
+        
+        <div class="social-links">
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+        </div>
+        
+        <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank">
+            Connect @ashish_singh_rajput_3
+        </a>
+        
+        <div class="copyright">
+            © 2025 Ashi Tools. Empowering tomorrow's management leaders.
+        </div>
+    </footer>
+    
+    <script>
+        // Template data
+        const templates = {
+            startup: {
+                title: "Tech Startup SWOT Analysis",
+                strengths: `Innovative technology solution
+Strong technical team
+Low operational costs
+Agile development process
+First-mover advantage`,
+                weaknesses: `Limited funding
+No established customer base
+Lack of brand recognition
+Dependence on key personnel
+Limited marketing budget`,
+                opportunities: `Growing market demand
+Partnership opportunities
+Government incentives for startups
+Emerging technology trends
+Remote work adoption`,
+                threats: `Intense competition
+Regulatory changes
+Economic uncertainty
+Technology obsolescence
+Talent shortage in tech`
+            },
+            restaurant: {
+                title: "Restaurant Business SWOT Analysis",
+                strengths: `Unique cuisine concept
+Prime location
+Experienced chef
+Strong local reputation
+Quality ingredients`,
+                weaknesses: `High operational costs
+Seasonal fluctuations
+Staff turnover
+Limited seating capacity
+Dependence on foot traffic`,
+                opportunities: `Food delivery expansion
+Catering services
+Social media marketing
+Corporate partnerships
+Weekend events`,
+                threats: `Economic downturn
+New competitors
+Rising food costs
+Health regulations
+Changing consumer preferences`
+            },
+            ecommerce: {
+                title: "E-commerce Store SWOT Analysis",
+                strengths: `24/7 availability
+Global reach potential
+Lower overhead costs
+Data analytics capabilities
+Scalable business model`,
+                weaknesses: `No physical presence
+Customer service challenges
+Shipping complications
+Website technical issues
+High competition online`,
+                opportunities: `Mobile commerce growth
+Social media integration
+International expansion
+AI-powered recommendations
+Subscription services`,
+                threats: `Platform dependency
+Cybersecurity risks
+Economic recession
+Shipping delays
+Brand reputation damage`
+            },
+            university: {
+                title: "University Program SWOT Analysis",
+                strengths: `Experienced faculty
+Modern facilities
+Industry partnerships
+Strong alumni network
+Accreditation status`,
+                weaknesses: `High tuition costs
+Limited practical exposure
+Outdated curriculum
+Large class sizes
+Bureaucratic processes`,
+                opportunities: `Online learning expansion
+Industry collaborations
+International partnerships
+Research grants
+Career services enhancement`,
+                threats: `Competition from other universities
+Government funding cuts
+Technology disruption
+Economic challenges
+Declining enrollment`
+            },
+            freelance: {
+                title: "Freelance Business SWOT Analysis",
+                strengths: `Specialized skills
+Flexible schedule
+Low startup costs
+Direct client relationships
+Location independence`,
+                weaknesses: `Irregular income
+No employee benefits
+Limited resources
+Administrative burden
+Isolation`,
+                opportunities: `Digital marketplace growth
+Remote work acceptance
+Skill development courses
+Network expansion
+Service diversification`,
+                threats: `Market saturation
+Economic uncertainty
+Platform dependency
+Client payment delays
+Technology changes`
+            },
+            manufacturing: {
+                title: "Manufacturing Company SWOT Analysis",
+                strengths: `Established production capacity
+Quality control systems
+Skilled workforce
+Cost-effective operations
+Strong supplier relationships`,
+                weaknesses: `High fixed costs
+Dependency on raw materials
+Environmental compliance issues
+Aging equipment
+Limited product diversification`,
+                opportunities: `Automation implementation
+Export market expansion
+Sustainable manufacturing
+Government incentives
+Industry 4.0 adoption`,
+                threats: `Rising raw material costs
+Environmental regulations
+Global competition
+Economic recession
+Supply chain disruptions`
+            },
+            nonprofit: {
+                title: "Non-Profit Organization SWOT Analysis",
+                strengths: `Strong mission alignment
+Dedicated volunteers
+Tax-exempt status
+Community support
+Grant funding access`,
+                weaknesses: `Limited funding sources
+Volunteer dependency
+Resource constraints
+Limited marketing budget
+Bureaucratic processes`,
+                opportunities: `Corporate partnerships
+Digital fundraising platforms
+Government grants
+Social media awareness
+Community collaboration`,
+                threats: `Funding competition
+Economic downturns
+Regulatory changes
+Volunteer burnout
+Public scrutiny`
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const analysisTitle = document.getElementById('analysis-title');
+            const strengths = document.getElementById('strengths');
+            const weaknesses = document.getElementById('weaknesses');
+            const opportunities = document.getElementById('opportunities');
+            const threats = document.getElementById('threats');
+            const generateBtn = document.getElementById('generate-swot');
+            const exportBtn = document.getElementById('export-pdf');
+            
+            // Preview elements
+            const previewTitle = document.getElementById('preview-title');
+            const strengthsPreview = document.getElementById('strengths-preview');
+            const weaknessesPreview = document.getElementById('weaknesses-preview');
+            const opportunitiesPreview = document.getElementById('opportunities-preview');
+            const threatsPreview = document.getElementById('threats-preview');
+            
+            // Load template function
+            window.loadTemplate = function(templateName) {
+                if (templateName === 'clear') {
+                    analysisTitle.value = '';
+                    strengths.value = '';
+                    weaknesses.value = '';
+                    opportunities.value = '';
+                    threats.value = '';
+                } else if (templates[templateName]) {
+                    const template = templates[templateName];
+                    analysisTitle.value = template.title;
+                    strengths.value = template.strengths;
+                    weaknesses.value = template.weaknesses;
+                    opportunities.value = template.opportunities;
+                    threats.value = template.threats;
+                }
+                generateSWOT();
+            };
+            
+            // Generate SWOT Analysis
+            function generateSWOT() {
+                previewTitle.textContent = analysisTitle.value || "SWOT Analysis";
+                
+                // Parse textareas to lists
+                const processText = text => {
+                    return text.split('\n')
+                        .filter(item => item.trim() !== '')
+                        .map(item => `<li>${item.trim()}</li>`)
+                        .join('');
+                };
+                
+                strengthsPreview.innerHTML = processText(strengths.value);
+                weaknessesPreview.innerHTML = processText(weaknesses.value);
+                opportunitiesPreview.innerHTML = processText(opportunities.value);
+                threatsPreview.innerHTML = processText(threats.value);
+            }
+            
+            // Enhanced PDF Export with better text colors and layout
+            function exportToPDF() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                
+                // Page dimensions
+                const pageWidth = 210;
+                const pageHeight = 297;
+                const margin = 20;
+                const contentWidth = pageWidth - (margin * 2);
+                
+                // Colors - Fixed for better visibility
+                const primaryColor = [0, 200, 180];
+                const darkBg = [8, 12, 20];
+                const lightBg = [248, 249, 250];
+                const darkText = [33, 37, 41];
+                
+                // Header with background
+                doc.setFillColor(...darkBg);
+                doc.rect(0, 0, pageWidth, 45, 'F');
+                
+                // Logo area
+                doc.setFillColor(...primaryColor);
+                doc.circle(30, 22, 10, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(14);
+                doc.text('', 30, 27, { align: 'center' });
+                
+                // Title
+                doc.setTextColor(...primaryColor);
+                doc.setFontSize(26);
+                doc.text('SWOT Analysis Report', 50, 30);
+                
+                // Subtitle
+                doc.setFontSize(11);
+                doc.setTextColor(200, 200, 200);
+                doc.text('Generated by Ashi Tools', pageWidth - 20, 18, { align: 'right' });
+                doc.text(new Date().toLocaleDateString(), pageWidth - 20, 28, { align: 'right' });
+                
+                // White background for main content
+                doc.setFillColor(...lightBg);
+                doc.rect(0, 45, pageWidth, pageHeight - 45, 'F');
+                
+                // Analysis title
+                doc.setTextColor(...darkText);
+                doc.setFontSize(22);
+                const title = previewTitle.textContent;
+                doc.text(title, pageWidth/2, 70, { align: 'center' });
+                
+                // Decorative line
+                doc.setDrawColor(...primaryColor);
+                doc.setLineWidth(2);
+                doc.line(margin, 80, pageWidth - margin, 80);
+                
+                // SWOT Matrix
+                const matrixStartY = 95;
+                const quadrantWidth = (contentWidth - 15) / 2;
+                const quadrantHeight = 85;
+                const gap = 15;
+                
+                // Get content arrays
+                const getContentArray = text => text.split('\n')
+                    .filter(item => item.trim() !== '')
+                    .map(item => item.trim());
+                
+                const strengthsList = getContentArray(strengths.value);
+                const weaknessesList = getContentArray(weaknesses.value);
+                const opportunitiesList = getContentArray(opportunities.value);
+                const threatsList = getContentArray(threats.value);
+                
+                // Draw SWOT quadrants with perfect visibility
+                drawProfessionalSWOTBox(doc, margin, matrixStartY, quadrantWidth, quadrantHeight, 'STRENGTHS', strengthsList, [40, 167, 69], [232, 245, 233]);
+                drawProfessionalSWOTBox(doc, margin + quadrantWidth + gap, matrixStartY, quadrantWidth, quadrantHeight, 'WEAKNESSES', weaknessesList, [220, 53, 69], [253, 237, 236]);
+                drawProfessionalSWOTBox(doc, margin, matrixStartY + quadrantHeight + gap, quadrantWidth, quadrantHeight, 'OPPORTUNITIES', opportunitiesList, [52, 144, 220], [227, 242, 253]);
+                drawProfessionalSWOTBox(doc, margin + quadrantWidth + gap, matrixStartY + quadrantHeight + gap, quadrantWidth, quadrantHeight, 'THREATS', threatsList, [255, 193, 7], [255, 249, 196]);
+                
+                // Analysis insights section
+                const insightsY = matrixStartY + (quadrantHeight * 2) + 35;
+                doc.setFontSize(16);
+                doc.setTextColor(...darkText);
+                doc.text('Key Insights', margin, insightsY);
+                
+                doc.setFontSize(10);
+                const insightsText = `This comprehensive SWOT analysis reveals critical internal and external factors affecting your organization. Leverage your strengths to capitalize on opportunities, address weaknesses systematically, and develop mitigation strategies for identified threats. Use this analysis as a foundation for strategic planning and decision-making.`;
+                
+                const splitInsights = doc.splitTextToSize(insightsText, contentWidth);
+                doc.text(splitInsights, margin, insightsY + 8);
+                
+                // Strategic recommendations
+                doc.setFontSize(12);
+                doc.text('Strategic Recommendations:', margin, insightsY + 30);
+                doc.setFontSize(9);
+                doc.text('• Build on your strengths to maximize competitive advantage', margin + 5, insightsY + 40);
+                doc.text('• Develop action plans to address critical weaknesses', margin + 5, insightsY + 47);
+                doc.text('• Create initiatives to capture identified opportunities', margin + 5, insightsY + 54);
+                doc.text('• Implement risk management strategies for potential threats', margin + 5, insightsY + 61);
+                
+                // Footer
+                doc.setFontSize(8);
+                doc.setTextColor(108, 117, 125);
+                doc.text(' ', pageWidth/2, pageHeight - 20, { align: 'center' });
+                doc.text('', pageWidth/2, pageHeight - 13, { align: 'center' });
+                
+                // Save the PDF
+                const fileName = `SWOT-Analysis-${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.pdf`;
+                doc.save(fileName);
+            }
+            
+            // Professional SWOT box drawing function with perfect text visibility
+            function drawProfessionalSWOTBox(doc, x, y, w, h, title, items, accentColor, bgColor) {
+                // Light background for excellent readability
+                doc.setFillColor(...bgColor);
+                doc.roundedRect(x, y, w, h, 4, 4, 'F');
+                
+                // Subtle border
+                doc.setDrawColor(...accentColor);
+                doc.setLineWidth(1.5);
+                doc.roundedRect(x, y, w, h, 4, 4, 'S');
+                
+                // Header section with accent color
+                doc.setFillColor(...accentColor);
+                doc.roundedRect(x + 2, y + 2, w - 4, 18, 3, 3, 'F');
+                
+                // Title - White text on colored background
+                doc.setFontSize(11);
+                doc.setTextColor(255, 255, 255);
+                doc.text(title, x + w/2, y + 14, { align: 'center' });
+                
+                // Content area with dark text for maximum readability
+                doc.setFontSize(9);
+                doc.setTextColor(33, 37, 41); // Very dark text for perfect contrast
+                
+                let itemY = y + 28;
+                const lineHeight = 7;
+                const maxItems = Math.floor((h - 35) / lineHeight);
+                
+                items.slice(0, maxItems).forEach((item, index) => {
+                    if (itemY < y + h - 8) {
+                        // Professional bullet point
+                        doc.setFillColor(...accentColor);
+                        doc.circle(x + 10, itemY - 2, 1.5, 'F');
+                        
+                        // Text with proper wrapping
+                        const maxWidth = w - 25;
+                        const wrappedText = doc.splitTextToSize(item, maxWidth);
+                        
+                        if (wrappedText.length > 0) {
+                            doc.text(wrappedText[0], x + 16, itemY);
+                        }
+                        
+                        itemY += lineHeight;
+                    }
+                });
+                
+                // Overflow indicator
+                if (items.length > maxItems) {
+                    doc.setFontSize(8);
+                    doc.setTextColor(108, 117, 125);
+                    doc.text(`+${items.length - maxItems} more items`, x + 10, y + h - 6);
+                }
+            }
+            
+            // Event listeners
+            generateBtn.addEventListener('click', generateSWOT);
+            exportBtn.addEventListener('click', exportToPDF);
+            
+            // Auto-update preview on input
+            [analysisTitle, strengths, weaknesses, opportunities, threats].forEach(element => {
+                element.addEventListener('input', generateSWOT);
+            });
+            
+            // Initialize with default template
+            loadTemplate('startup');
+        });
+    </script>
+
+
+            <script></script>
+        
+    
+</body>

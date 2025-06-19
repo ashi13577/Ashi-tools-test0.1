@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1240.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Life Cycle (PLC) Visual Tool - Ashi Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #00ffd5;
+      --secondary: #00b39e;
+      --dark-bg: #0e0e0e;
+      --card-bg: #1e1e1e;
+      --text-light: #cccccc;
+      --border: #333;
+      --success: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+      --stage-intro: #ffc107;
+      --stage-growth: #28a745;
+      --stage-maturity: #00ffd5;
+      --stage-decline: #dc3545;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background-color: var(--dark-bg);
+      color: #ffffff;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 30px;
+      text-align: center;
+      background: linear-gradient(135deg, #0e0e0e, #1e1e1e);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header h1 {
+      color: var(--primary);
+      margin: 0 0 10px 0;
+      font-size: 2.2em;
+      text-shadow: 0 0 10px rgba(0, 255, 213, 0.3);
+    }
+
+    .header p {
+      color: var(--text-light);
+      font-size: 1.1em;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .main-section {
+      padding: 30px;
+    }
+
+    .plc-form {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 30px;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .template-section {
+      margin-bottom: 25px;
+    }
+
+    .template-section h3 {
+      color: var(--primary);
+      margin-bottom: 15px;
+      font-size: 1.3em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .template-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      background-color: #222;
+      border: 1px solid var(--border);
+      color: white;
+      border-radius: 5px;
+      font-size: 1em;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 255, 213, 0.2);
+    }
+
+    .input-hint {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background-color: var(--primary);
+      color: var(--dark-bg);
+      border: none;
+      padding: 12px 25px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1em;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background-color: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 255, 213, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: #008f7a;
+    }
+
+    .btn-warning {
+      background-color: var(--warning);
+      color: var(--dark-bg);
+    }
+
+    .btn-warning:hover {
+      background-color: #e0a800;
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 0.85em;
+    }
+
+    .plc-table-section {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      margin: 25px 0;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 15px 20px;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 1.2em;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .plc-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .plc-table th,
+    .plc-table td {
+      padding: 12px 15px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .plc-table th {
+      background-color: #222;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .plc-table td {
+      color: var(--text-light);
+    }
+
+    .plc-table tr:hover {
+      background-color: rgba(0, 255, 213, 0.05);
+    }
+
+    .stage-tag {
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 0.85em;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .stage-introduction {
+      background-color: var(--stage-intro);
+      color: var(--dark-bg);
+    }
+
+    .stage-growth {
+      background-color: var(--stage-growth);
+      color: white;
+    }
+
+    .stage-maturity {
+      background-color: var(--stage-maturity);
+      color: var(--dark-bg);
+    }
+
+    .stage-decline {
+      background-color: var(--stage-decline);
+      color: white;
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 400px;
+      position: relative;
+      padding: 20px;
+      background-color: var(--card-bg);
+    }
+
+    .chart-legend {
+      padding: 15px 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .education-box {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 30px;
+      margin: 30px 0;
+      border: 1px solid var(--border);
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    .education-box h3,
+    .education-box h4 {
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .education-box h3 {
+      font-size: 1.4em;
+      text-shadow: 0 0 5px rgba(0, 255, 213, 0.2);
+    }
+
+    .feature-tag {
+      background-color: #222;
+      color: var(--primary);
+      font-size: 11px;
+      border-radius: 10px;
+      padding: 3px 10px;
+      margin-right: 8px;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    .formula {
+      background-color: #222;
+      color: var(--primary);
+      font-family: 'Courier New', monospace;
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin: 10px 0;
+      border: 1px solid var(--border);
+      display: inline-block;
+    }
+
+    .plc-characteristics-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+
+    .plc-characteristics-table th,
+    .plc-characteristics-table td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .plc-characteristics-table th {
+      background-color: #222;
+      font-weight: 600;
+    }
+
+    .plc-characteristics-table th:nth-child(1) {
+      color: var(--stage-intro);
+    }
+
+    .plc-characteristics-table th:nth-child(2) {
+      color: var(--stage-growth);
+    }
+
+    .plc-characteristics-table th:nth-child(3) {
+      color: var(--stage-maturity);
+    }
+
+    .plc-characteristics-table th:nth-child(4) {
+      color: var(--stage-decline);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--success);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 8px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+      z-index: 1000;
+      font-weight: 600;
+    }
+
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .toast.error {
+      background-color: var(--danger);
+    }
+
+    .toast.warning {
+      background-color: var(--warning);
+      color: var(--dark-bg);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: var(--text-light);
+      padding: 25px;
+      background-color: var(--dark-bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .insta-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .insta-link:hover {
+      text-decoration: underline;
+      text-shadow: 0 0 5px rgba(0, 255, 213, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .main-section {
+        padding: 20px 15px;
+      }
+
+      .template-buttons {
+        justify-content: center;
+      }
+
+      .form-actions {
+        justify-content: center;
+      }
+
+      .chart-container {
+        height: 300px;
+        padding: 15px;
+      }
+
+      .row {
+        flex-direction: column;
+      }
+    }
+  </style>
+
+
+  <div class="container">
+    <div class="header">
+      <h1><i class="fa-solid fa-chart-area"></i> Product Life Cycle (PLC) Visual Tool</h1>
+      <p>
+        Explore, visualize and analyze the classic Product Life Cycle. See where products stand, understand stage characteristics and guide strategy decisions!
+      </p>
+    </div>
+
+    <div class="main-section">
+      <!-- Quick Templates -->
+      <div class="plc-form">
+        <div class="template-section">
+          <h3><i class="fa-solid fa-rocket"></i> Quick Industry Templates</h3>
+          <div class="template-buttons">
+            <button class="btn btn-secondary" onclick="loadTemplate('smartphones')">
+              <i class="fa-solid fa-mobile"></i> Smartphones
+            </button>
+            <button class="btn btn-secondary" onclick="loadTemplate('cola')">
+              <i class="fa-solid fa-bottle-water"></i> Cola Beverages
+            </button>
+            <button class="btn btn-secondary" onclick="loadTemplate('electric_cars')">
+              <i class="fa-solid fa-car"></i> Electric Cars
+            </button>
+            <button class="btn btn-secondary" onclick="loadTemplate('streaming')">
+              <i class="fa-solid fa-tv"></i> Streaming Services
+            </button>
+            <button class="btn btn-secondary" onclick="loadTemplate('compact_discs')">
+              <i class="fa-solid fa-compact-disc"></i> Physical Media
+            </button>
+          </div>
+        </div>
+
+        <!-- Product Input Form -->
+        <div class="row">
+          <div class="form-group">
+            <label for="productName">Product Name</label>
+            <input type="text" id="productName" placeholder="e.g., iPhone 15, Spotify, Diet Coke">
+            <span class="input-hint">Enter the product or service name</span>
+          </div>
+          <div class="form-group">
+            <label for="plcStage">PLC Stage</label>
+            <select id="plcStage">
+              <option value="Introduction">Introduction</option>
+              <option value="Growth">Growth</option>
+              <option value="Maturity">Maturity</option>
+              <option value="Decline">Decline</option>
+            </select>
+            <span class="input-hint">Select the product's current PLC stage</span>
+          </div>
+          <div class="form-group">
+            <label for="unitsSold">Units Sold (Thousands)</label>
+            <input type="number" id="unitsSold" placeholder="e.g., 350" value="100" min="0">
+            <span class="input-hint">Sales volume in thousands for visualization</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn" onclick="addProduct()">
+            <i class="fa-solid fa-plus"></i> Add Product
+          </button>
+          <button class="btn" onclick="plotPLC()">
+            <i class="fa-solid fa-chart-line"></i> Generate PLC Chart
+          </button>
+          <button class="btn btn-secondary" onclick="exportTable()">
+            <i class="fa-solid fa-download"></i> Export Data
+          </button>
+          <button class="btn btn-warning" onclick="resetPLC()">
+            <i class="fa-solid fa-rotate-left"></i> Reset All
+          </button>
+        </div>
+      </div>
+
+      <!-- Product Table -->
+      <div class="plc-table-section">
+        <div class="section-header">
+          <i class="fa-solid fa-table-list"></i> Product Portfolio
+        </div>
+        <table class="plc-table" id="plcTable">
+          <tbody><tr>
+            <td colspan="5" style="color: var(--text-light); text-align: center; padding: 30px;">
+              No products added yet. Use templates or add your own products!
+            </td>
+          </tr>
+        </tbody></table>
+      </div>
+
+      <!-- PLC Chart -->
+      <div class="plc-table-section" id="plcChartSection" style="display: none;">
+        <div class="section-header">
+          <i class="fa-solid fa-chart-area"></i> Product Life Cycle Visualization
+        </div>
+        <div class="chart-container">
+          <canvas id="plcChart" style="box-sizing: border-box;" width="300"></canvas>
+        </div>
+        <div class="chart-legend">
+          <span class="stage-tag stage-introduction">Introduction</span>
+          <span class="stage-tag stage-growth">Growth</span>
+          <span class="stage-tag stage-maturity">Maturity</span>
+          <span class="stage-tag stage-decline">Decline</span>
+        </div>
+      </div>
+
+      <!-- Educational Content -->
+      <div class="education-box">
+        <h3><i class="fa-solid fa-graduation-cap"></i> Product Life Cycle (PLC) - Complete Learning Guide</h3>
+        
+        <div style="margin-bottom: 20px;">
+          <strong>Master the Product Life Cycle to understand product evolution, market dynamics, and strategic decision-making across different stages of a product's journey.</strong>
+        </div>
+
+        <h4>1. PLC Overview <span class="feature-tag">Foundation</span></h4>
+        <div>
+          The Product Life Cycle is a marketing concept that describes the progression of a product through four distinct stages from market introduction to eventual decline. Understanding PLC helps businesses:
+          <ul style="margin: 10px 0; padding-left: 20px;">
+            <li><strong>Strategic Planning:</strong> Allocate resources effectively across product portfolio</li>
+            <li><strong>Marketing Strategy:</strong> Adapt marketing mix for each stage</li>
+            <li><strong>Financial Planning:</strong> Predict cash flows and profitability patterns</li>
+            <li><strong>Innovation Management:</strong> Time new product development and launches</li>
+          </ul>
+        </div>
+
+        <h4>2. The Four Stages Explained <span class="feature-tag">Core Concepts</span></h4>
+        
+        <table class="plc-characteristics-table">
+          <tbody><tr>
+            <th>INTRODUCTION</th>
+            <th>GROWTH</th>
+            <th>MATURITY</th>
+            <th>DECLINE</th>
+          </tr>
+          <tr>
+            <td>
+              • Low sales volume<br>
+              • High marketing costs<br>
+              • Limited distribution<br>
+              • Few competitors<br>
+              • Product awareness building
+            </td>
+            <td>
+              • Rapid sales increase<br>
+              • Economies of scale<br>
+              • Expanding distribution<br>
+              • Growing competition<br>
+              • Brand preference building
+            </td>
+            <td>
+              • Peak sales levels<br>
+              • Market saturation<br>
+              • Intense competition<br>
+              • Price pressure<br>
+              • Market segmentation
+            </td>
+            <td>
+              • Declining sales<br>
+              • Reduced profits<br>
+              • Market consolidation<br>
+              • Product obsolescence<br>
+              • Exit strategies
+            </td>
+          </tr>
+        </tbody></table>
+
+        <h4>3. Strategic Implications by Stage <span class="feature-tag">Business Strategy</span></h4>
+        
+        <div style="margin: 15px 0;">
+          <strong>Introduction Stage Strategy:</strong>
+          <ul style="margin: 8px 0; padding-left: 20px;">
+            <li>Focus on product awareness and trial</li>
+            <li>Invest heavily in marketing and education</li>
+            <li>Price skimming or penetration strategies</li>
+            <li>Limited distribution channels initially</li>
+            <li>Product refinement based on early feedback</li>
+          </ul>
+        </div>
+
+        <div style="margin: 15px 0;">
+          <strong>Growth Stage Strategy:</strong>
+          <ul style="margin: 8px 0; padding-left: 20px;">
+            <li>Scale production and distribution</li>
+            <li>Build brand preference and loyalty</li>
+            <li>Expand market segments</li>
+            <li>Improve product features and quality</li>
+            <li>Prepare for competitive responses</li>
+          </ul>
+        </div>
+
+        <div style="margin: 15px 0;">
+          <strong>Maturity Stage Strategy:</strong>
+          <ul style="margin: 8px 0; padding-left: 20px;">
+            <li>Differentiate through innovation</li>
+            <li>Find new market segments or uses</li>
+            <li>Cost reduction and efficiency</li>
+            <li>Service enhancement</li>
+            <li>Strategic partnerships</li>
+          </ul>
+        </div>
+
+        <div style="margin: 15px 0;">
+          <strong>Decline Stage Strategy:</strong>
+          <ul style="margin: 8px 0; padding-left: 20px;">
+            <li>Harvest profits while possible</li>
+            <li>Reduce costs and rationalize</li>
+            <li>Exit gracefully or revitalize</li>
+            <li>Focus on loyal customer segments</li>
+            <li>Plan product replacement</li>
+          </ul>
+        </div>
+
+        <h4>4. PLC Curve Mathematics <span class="feature-tag">Analytics</span></h4>
+        <div>
+          The classic PLC follows an S-shaped curve that can be modeled mathematically:
+          <div class="formula">Sales(t) = K / (1 + ae^(-bt))</div>
+          Where: K = market potential, a = initial adoption resistance, b = growth rate, t = time
+        </div>
+
+        <h4>5. Real-World Applications <span class="feature-tag">Industry Examples</span></h4>
+        <div>
+          <strong>Technology Sector:</strong> Smartphones (iPhone in Growth/Maturity), VR headsets (Introduction), Desktop computers (Decline)
+          <br><br>
+          <strong>Automotive:</strong> Electric vehicles (Growth), Gasoline cars (Maturity), Manual transmissions (Decline)
+          <br><br>
+          <strong>Entertainment:</strong> Streaming services (Growth/Maturity), Physical media (Decline), Gaming subscriptions (Introduction/Growth)
+          <br><br>
+          <strong>Food &amp; Beverage:</strong> Plant-based meat (Introduction/Growth), Energy drinks (Growth/Maturity), Soda (Maturity)
+        </div>
+
+        <h4>6. PLC Limitations and Considerations <span class="feature-tag">Critical Thinking</span></h4>
+        <ul style="margin: 10px 0; padding-left: 20px;">
+          <li><strong>Not Universal:</strong> Some products skip stages or have extended lifecycles</li>
+          <li><strong>Variable Duration:</strong> Stage lengths vary significantly by industry and product</li>
+          <li><strong>Revival Possible:</strong> Products can be revitalized through innovation or repositioning</li>
+          <li><strong>Market Dependent:</strong> PLC varies across different geographic markets</li>
+          <li><strong>Category vs. Brand:</strong> Product categories and individual brands may have different lifecycles</li>
+        </ul>
+
+        <h4>7. Modern PLC Considerations <span class="feature-tag">Digital Age</span></h4>
+        <div>
+          <strong>Accelerated Cycles:</strong> Digital products often have shorter, more compressed lifecycles
+          <br><br>
+          <strong>Platform Effects:</strong> Network effects can extend maturity stages significantly
+          <br><br>
+          <strong>Continuous Innovation:</strong> Software products can reinvent themselves through updates
+          <br><br>
+          <strong>Data-Driven Decisions:</strong> Real-time analytics enable better stage identification and strategy adjustment
+        </div>
+
+        <h4>8. Portfolio Management with PLC <span class="feature-tag">Strategic Planning</span></h4>
+        <div>
+          Successful companies maintain a balanced portfolio across PLC stages:
+          <ul style="margin: 10px 0; padding-left: 20px;">
+            <li><strong>Cash Cows (Maturity):</strong> Generate cash to fund new development</li>
+            <li><strong>Stars (Growth):</strong> Invest for market leadership</li>
+            <li><strong>Question Marks (Introduction):</strong> Selectively invest based on potential</li>
+            <li><strong>Dogs (Decline):</strong> Harvest or divest resources</li>
+          </ul>
+        </div>
+
+        <h4>9. Measuring PLC Position <span class="feature-tag">Metrics</span></h4>
+        <div>
+          Key indicators for determining PLC stage:
+          <ul style="margin: 10px 0; padding-left: 20px;">
+            <li>Sales growth rate and volume trends</li>
+            <li>Market share evolution</li>
+            <li>Competitive landscape changes</li>
+            <li>Profit margin trends</li>
+            <li>Customer adoption patterns</li>
+            <li>Technology maturity indicators</li>
+          </ul>
+        </div>
+
+        <h4>10. Future of Product Lifecycles <span class="feature-tag">Trends</span></h4>
+        <div>
+          <strong>Sustainability Focus:</strong> Environmental considerations extending product lifecycles through circular economy principles
+          <br><br>
+          <strong>Service Integration:</strong> Products becoming service platforms (Product-as-a-Service)
+          <br><br>
+          <strong>AI and Personalization:</strong> Mass customization extending maturity stages through continuous adaptation
+          <br><br>
+          <strong>Global vs. Local:</strong> Different PLC stages in different markets requiring nuanced strategies
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast success show">All data reset successfully!</div>
+    
+    <div class="footer">
+      Built with ❤️ by <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank">Ashish Singh Rajput</a><br>
+      Empowering business education and strategic thinking
+    </div>
+  </div>
+
+  <script>
+    // Global variables
+    let products = [];
+    let plcChart = null;
+
+    // Stage colors matching the theme
+    const stageColors = {
+      Introduction: '#ffc107',
+      Growth: '#28a745', 
+      Maturity: '#00ffd5',
+      Decline: '#dc3545'
+    };
+
+    // Industry templates
+    const templates = {
+      smartphones: [
+        { name: "iPhone 15", stage: "Growth", units: 370 },
+        { name: "Google Pixel 8", stage: "Growth", units: 85 },
+        { name: "Nokia 3310", stage: "Decline", units: 2 },
+        { name: "Samsung Galaxy S24", stage: "Maturity", units: 340 },
+        { name: "OnePlus 12", stage: "Introduction", units: 95 },
+        { name: "Xiaomi 14", stage: "Growth", units: 210 }
+      ],
+      cola: [
+        { name: "Coca-Cola Classic", stage: "Maturity", units: 1900 },
+        { name: "Pepsi", stage: "Maturity", units: 1500 },
+        { name: "RC Cola", stage: "Decline", units: 45 },
+        { name: "Coke Zero", stage: "Growth", units: 480 },
+        { name: "Pepsi Max", stage: "Growth", units: 410 },
+        { name: "Zevia Cola", stage: "Introduction", units: 36 }
+      ],
+      electric_cars: [
+        { name: "Tesla Model 3", stage: "Growth", units: 95 },
+        { name: "Nissan Leaf", stage: "Maturity", units: 66 },
+        { name: "BYD Han EV", stage: "Growth", units: 73 },
+        { name: "Chevy Bolt", stage: "Decline", units: 25 },
+        { name: "Rivian R1T", stage: "Introduction", units: 12 },
+        { name: "Ford Mustang Mach-E", stage: "Growth", units: 58 }
+      ],
+      streaming: [
+        { name: "Netflix", stage: "Maturity", units: 240 },
+        { name: "Disney+", stage: "Growth", units: 130 },
+        { name: "Amazon Prime Video", stage: "Maturity", units: 200 },
+        { name: "Apple TV+", stage: "Introduction", units: 44 },
+        { name: "HBO Max", stage: "Growth", units: 95 },
+        { name: "Spotify", stage: "Maturity", units: 230 }
+      ],
+      compact_discs: [
+        { name: "Audio CD", stage: "Decline", units: 8 },
+        { name: "Vinyl Records", stage: "Growth", units: 45 },
+        { name: "DVD", stage: "Decline", units: 5 },
+        { name: "Blu-ray", stage: "Decline", units: 12 },
+        { name: "Digital Downloads", stage: "Decline", units: 30 }
+      ]
+    };
+
+    // Add product function
+    function addProduct() {
+      const name = document.getElementById('productName').value.trim();
+      const stage = document.getElementById('plcStage').value;
+      const units = parseFloat(document.getElementById('unitsSold').value);
+
+      if (!name || isNaN(units) || units < 0) {
+        showToast("Please enter a valid product name and units sold.", "error");
+        return;
+      }
+
+      if (products.find(p => p.name.toLowerCase() === name.toLowerCase())) {
+        showToast("Product already exists in the list!", "warning");
+        return;
+      }
+
+      products.push({ name, stage, units });
+      updateTable();
+      showToast("Product added successfully!", "success");
+      
+      // Clear form
+      document.getElementById('productName').value = "";
+      document.getElementById('unitsSold').value = 100;
+    }
+
+    // Remove product function
+    function removeProduct(index) {
+      const product = products[index];
+      products.splice(index, 1);
+      updateTable();
+      if (plcChart) {
+        plotPLC();
+      }
+      showToast(`${product.name} removed successfully!`, "success");
+    }
+
+    // Edit product function
+    function editProduct(index) {
+      const product = products[index];
+      document.getElementById('productName').value = product.name;
+      document.getElementById('plcStage').value = product.stage;
+      document.getElementById('unitsSold').value = product.units;
+      
+      // Remove from list temporarily
+      products.splice(index, 1);
+      updateTable();
+      showToast("Product loaded for editing. Click 'Add Product' to save changes.", "success");
+    }
+
+    // Load template function
+    function loadTemplate(templateName) {
+      const template = templates[templateName];
+      if (!template) return;
+
+      products = template.map(p => ({
+        name: p.name,
+        stage: p.stage,
+        units: p.units
+      }));
+
+      updateTable();
+      plotPLC();
+      showToast(`${templateName.replace('_', ' ').toUpperCase()} template loaded successfully!`, "success");
+    }
+
+    // Update product table
+    function updateTable() {
+      const table = document.getElementById('plcTable');
+      
+      if (products.length === 0) {
+        table.innerHTML = `
+          <tr>
+            <td colspan="5" style="color: var(--text-light); text-align: center; padding: 30px;">
+              No products added yet. Use templates or add your own products!
+            </td>
+          </tr>
+        `;
+        document.getElementById('plcChartSection').style.display = "none";
+        return;
+      }
+
+      const tableContent = `
+        <tr>
+          <th>#</th>
+          <th>Product Name</th>
+          <th>Units Sold (K)</th>
+          <th>PLC Stage</th>
+          <th>Actions</th>
+        </tr>
+        ${products.map((product, index) => `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${product.name}</td>
+            <td>${product.units.toLocaleString()}</td>
+            <td><span class="stage-tag stage-${product.stage.toLowerCase()}">${product.stage}</span></td>
+            <td>
+              <button class="btn btn-warning btn-small" onclick="editProduct(${index})">
+                <i class="fa-solid fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-danger btn-small" onclick="removeProduct(${index})">
+                <i class="fa-solid fa-trash"></i> Remove
+              </button>
+            </td>
+          </tr>
+        `).join('')}
+      `;
+      
+      table.innerHTML = tableContent;
+    }
+
+    // Plot PLC chart
+    function plotPLC() {
+      if (products.length === 0) {
+        showToast("No products to visualize! Add some products first.", "warning");
+        return;
+      }
+
+      document.getElementById('plcChartSection').style.display = "";
+      
+      // Prepare data for visualization
+      const stageOrder = ["Introduction", "Growth", "Maturity", "Decline"];
+      const stageTimeSpans = { Introduction: 2, Growth: 3, Maturity: 4, Decline: 2 };
+      
+      let plotData = [];
+      let currentTime = 0;
+
+      stageOrder.forEach(stage => {
+        const stageProducts = products.filter(p => p.stage === stage);
+        if (stageProducts.length > 0) {
+          stageProducts.forEach((product, index) => {
+            plotData.push({
+              x: currentTime + (index + 1) * stageTimeSpans[stage] / (stageProducts.length + 1),
+              y: product.units,
+              label: product.name,
+              stage: product.stage
+            });
+          });
+        }
+        currentTime += stageTimeSpans[stage];
+      });
+
+      // Create chart
+      const ctx = document.getElementById('plcChart').getContext('2d');
+      if (plcChart) plcChart.destroy();
+
+      plcChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: stageOrder.map(stage => ({
+            label: stage,
+            data: plotData.filter(d => d.stage === stage),
+            backgroundColor: stageColors[stage],
+            borderColor: stageColors[stage],
+            pointRadius: 12,
+            pointHoverRadius: 16,
+            showLine: false
+          }))
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Product Life Cycle Visualization',
+              color: '#00ffd5',
+              font: { size: 18, weight: 'bold' }
+            },
+            legend: {
+              labels: { 
+                color: '#cccccc',
+                font: { size: 14 },
+                usePointStyle: true,
+                pointStyle: 'circle'
+              },
+              position: 'top'
+            },
+            tooltip: {
+              backgroundColor: '#1e1e1e',
+              titleColor: '#00ffd5',
+              bodyColor: '#cccccc',
+              borderColor: '#333',
+              borderWidth: 1,
+              callbacks: {
+                label: function(context) {
+                  return `${context.raw.label}: ${context.raw.y}K units (${context.raw.stage})`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Time / Stage Progression →',
+                color: '#00ffd5',
+                font: { size: 16, weight: 'bold' }
+              },
+              ticks: { 
+                color: '#cccccc',
+                callback: function(value) {
+                  if (value <= 2) return 'Introduction';
+                  if (value <= 5) return 'Growth';
+                  if (value <= 9) return 'Maturity';
+                  return 'Decline';
+                }
+              },
+              grid: { color: '#333' },
+              min: 0,
+              max: 11
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Units Sold (Thousands) →',
+                color: '#00ffd5',
+                font: { size: 16, weight: 'bold' }
+              },
+              ticks: { 
+                color: '#cccccc',
+                callback: function(value) {
+                  return value.toLocaleString() + 'K';
+                }
+              },
+              grid: { color: '#333' },
+              beginAtZero: true
+            }
+          },
+          animation: {
+            duration: 1500,
+            easing: 'easeInOutCubic'
+          }
+        }
+      });
+
+      showToast("PLC chart generated successfully!", "success");
+    }
+
+    // Export to CSV
+    function exportTable() {
+      if (products.length === 0) {
+        showToast("No data to export! Add some products first.", "error");
+        return;
+      }
+
+      let csv = "Product Name,Units Sold (K),PLC Stage\n";
+      products.forEach(product => {
+        csv += `"${product.name}",${product.units},"${product.stage}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `plc_analysis_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      showToast("Data exported successfully!", "success");
+    }
+
+    // Reset all data
+    function resetPLC() {
+      if (!confirm("Are you sure you want to reset all products and clear the chart?")) {
+        return;
+      }
+
+      products = [];
+      updateTable();
+      
+      if (plcChart) {
+        plcChart.destroy();
+        plcChart = null;
+      }
+      
+      document.getElementById('plcChartSection').style.display = "none";
+      document.getElementById('productName').value = "";
+      document.getElementById('unitsSold').value = 100;
+      
+      showToast("All data reset successfully!", "success");
+    }
+
+    // Toast notification function
+    function showToast(message, type = "success") {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast ${type} show`;
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Initialize the application
+    document.addEventListener('DOMContentLoaded', function() {
+      updateTable();
+      
+      // Add Enter key support for product name input
+      document.getElementById('productName').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          addProduct();
+        }
+      });
+      
+      // Add Enter key support for units input
+      document.getElementById('unitsSold').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          addProduct();
+        }
+      });
+    });
+  </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

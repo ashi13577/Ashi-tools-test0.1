@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Break-Even Point Calculator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.4.0/mermaid.min.js"></script> <!-- mermaid js  -->
+  <style>
+    :root {
+      --primary: #00ffd5;
+      --secondary: #00b39e;
+      --dark-bg: #0e0e0e;
+      --card-bg: #1e1e1e;
+      --text-light: #cccccc;
+      --border: #333;
+      --success: #28a745;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background-color: var(--dark-bg);
+      color: #ffffff;
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 50px; /* Space for toast messages and footer */
+    }
+    
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    
+    /* Header Styles */
+    header {
+      text-align: center;
+      padding: 80px 20px 40px;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+    
+    header h1 {
+      font-size: 3.5rem;
+      margin-bottom: 15px;
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(0, 255, 213, 0.3);
+      position: relative;
+      z-index: 1;
+    }
+    
+    header p { /* header-sub */
+      font-size: 1.4rem;
+      color: var(--text-light);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    /* Main Content Section */
+    section {
+      max-width: 800px; /* Adjusted for calculator form */
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    section > h2 { 
+      text-align: center;
+      font-size: 2.2rem;
+      margin: 50px 0 30px;
+      color: var(--primary);
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    section > h2::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+
+    /* Calculator Specific Styles */
+    .calculator-container {
+        background-color: var(--card-bg);
+        padding: 30px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        margin-bottom: 40px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    /* Info Area*/
+    .info-area {
+      font-size: 1rem;
+      color: var(--text-light);
+      margin-bottom: 25px;
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-light);
+        font-weight: 600;
+    }
+
+    input[type="number"] {
+        width: 100%;
+        padding: 12px;
+        background-color: #222;
+        border: 1px solid var(--border);
+        color: white;
+        border-radius: 5px;
+        font-size: 1.1em;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input[type="number"]:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 255, 213, 0.2);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .action-buttons button {
+        background-color: var(--primary);
+        color: var(--dark-bg);
+        border: none;
+        padding: 12px 25px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1.1em;
+        transition: background-color 0.3s, transform 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .action-buttons button:hover {
+        background-color: var(--secondary);
+        transform: translateY(-2px);
+    }
+
+    .action-buttons button.secondary {
+        background-color: #333;
+        color: var(--primary);
+        border: 1px solid var(--primary);
+    }
+
+    .action-buttons button.secondary:hover {
+        background-color: #444;
+        color: var(--secondary);
+        border-color: var(--secondary);
+    }
+    /*Currency Button Style */
+    
+    .currency-options {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+    .currency-options label {
+            color: var(--text-light);
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+    .currency-options input[type="radio"] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            background-color: #222;
+            cursor: pointer;
+            position: relative;
+        }
+
+    .currency-options input[type="radio"]:checked {
+            border-color: var(--primary);
+        }
+
+    .currency-options input[type="radio"]:checked::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary);
+            border-radius: 50%;
+        }
+
+    .results-area {
+        background-color: #222;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px dashed var(--primary);
+        margin-top: 30px;
+        display: none; /* Hidden by default */
+        text-align: center;
+        transition: all 0.3s ease; /* Added for a smoother transition */
+    }
+
+    .results-area p {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        color: var(--text-light);
+    }
+
+    .results-area p strong {
+        color: var(--primary);
+        font-size: 1.3em;
+    }
+
+    /* Formula & Chart Toggle */
+    .toggle-area {
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    .toggle-button {
+      background-color: #333;
+      color: var(--primary);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    
+    .toggle-button:hover {
+      background-color: #444;
+      color: var(--secondary);
+    }
+    .formula-chart-area {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px dashed var(--border);
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+            color: var(--text-light);
+            font-size: 0.95em;
+            line-height: 1.5;
+            white-space: pre-wrap; /* For formula and chart layout */
+        }
+
+    /* Toast Message */
+    .toast-message {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--success);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+        z-index: 1000;
+    }
+
+    .toast-message.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Footer Styles */
+    footer {
+      text-align: center;
+      padding: 50px 10px 30px;
+      font-size: 1rem;
+      color: #666;
+      border-top: 1px solid #222;
+      margin-top: 50px;
+      background: rgba(10, 10, 10, 0.8);
+    }
+    
+    .insta-link {
+      color: var(--primary);
+      font-weight: bold;
+      position: relative;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    
+    .insta-link::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--primary);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    
+    .insta-link:hover::after {
+      transform: scaleX(1);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2.5rem;
+      }
+      header p {
+        font-size: 1.1rem;
+      }
+      section > h2 { 
+        font-size: 1.8rem;
+      }
+      .calculator-container {
+          padding: 20px;
+      }
+      .action-buttons button {
+          font-size: 1em;
+          padding: 10px 20px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      header {
+        padding: 60px 15px 30px;
+      }
+      header h1 {
+        font-size: 2rem;
+      }
+      .action-buttons {
+          flex-direction: column;
+      }
+    }
+  </style>
+
+
+            
+  <header>
+    <h1>Break-Even Point Calculator</h1>
+    <p>Determine the sales volume needed to cover your costs and start making a profit.</p>
+  </header>
+
+  <section>
+    <h2><i class="fas fa-calculator"></i> Calculate Your Break-Even Point</h2>
+        
+        <div class="info-area">
+          <h3>What is Break-Even Analysis?</h3>
+          <p>Break-even analysis helps you determine the point at which your total revenue equals your total costs. This means you're neither making a profit nor incurring a loss – you're simply "breaking even." It's a critical tool for business planning, pricing strategies, and financial forecasting.</p>
+          <h3>Why Use This Calculator?</h3>
+          <p>By understanding your break-even point, you can make informed decisions about pricing, production levels, and cost management. It helps you:</p>
+          <ul>
+            <li>Set realistic sales targets</li>
+            <li>Assess the viability of new products</li>
+            <li>Control costs and maximize profitability</li>
+            <li>Plan for sustainable growth</li>
+          </ul>
+        </div>
+
+    <div class="calculator-container">
+        <div class="form-group">
+            <label for="fixedCosts">Fixed Costs (e.g., Rent, Salaries, Insurance):</label>
+            <input type="number" id="fixedCosts" placeholder="e.g., 50000" min="0" step="0.01" required="" value="50000">
+        </div>
+        <div class="form-group">
+            <label for="variableCosts">Per-Unit Variable Costs (e.g., Raw Materials, Direct Labor):</label>
+            <input type="number" id="variableCosts" placeholder="e.g., 25" min="0" step="0.01" required="" value="25">
+        </div>
+        <div class="form-group">
+            <label for="sellingPrice">Per-Unit Selling Price:</label>
+            <input type="number" id="sellingPrice" placeholder="e.g., 75" min="0" step="0.01" required="" value="75">
+        </div>
+        
+        <div class="currency-options">
+            <label><input type="radio" name="currency" value="$" checked=""> Dollars ($)</label>
+            <label><input type="radio" name="currency" value="₹"> Rupees (₹)</label>
+        </div>
+
+        <div class="action-buttons">
+            <button onclick="calculateBreakEven()"><i class="fas fa-play"></i> Calculate</button>
+            <button type="button" class="secondary" onclick="clearForm()"><i class="fas fa-redo"></i> Clear Form</button>
+        </div>
+
+        <div id="resultsArea" class="results-area" style="display: block;">
+            <p>Break-Even Point in Units: <strong id="unitsResult">200.00</strong></p>
+            <p>Break-Even Point in Sales: <strong id="salesResult">₹100000.00</strong></p>
+        </div>
+    </div>
+    
+     <!-- Formula & Chart Toggle -->
+        <div class="toggle-area">
+            <button class="toggle-button" onclick="toggleFormulaChart()">Hide Formula &amp; Chart</button>
+        </div>
+         <div id="formulaChartArea" class="formula-chart-area" style="display: block;">
+            <h3>Break-Even Point Formula:</h3>
+            <code>Break-Even Point (Units) = Fixed Costs / (Selling Price Per Unit - Variable Costs Per Unit)</code>
+            <code>Break-Even Point (Sales ) = Fixed Costs / ((Selling Price Per Unit - Variable Costs Per Unit) / Selling Price Per Unit)</code>
+
+            <h3>Textual Chart Representation:</h3>
+            <p>Here's a simplified illustration:</p>
+            <pre>              Units    |  Total Cost   |  Total Revenue
+              ---------+---------------+---------------
+                  0    |    FC         |      0
+                 ...   |    FC + VC    |     ...
+            Break-Even |    Total Costs |    Total Revenue   &lt;-- BREAK-EVEN POINT
+                 ...   |      ...      |      ...
+            </pre>
+        </div>
+
+    <div id="toastMessage" class="toast-message" style="background-color: var(--success);">Break-Even Point calculated!</div>
+
+  </section>
+
+  <footer>
+    Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+    Connect with me: 
+    <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank">
+      @ashish_singh_rajput_3
+    </a>
+  </footer>
+
+  <script>
+      //mermaid.initialize({startOnLoad:true}); // initilize mermaide js
+        
+    // --- Utility Functions ---
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toastMessage');
+        toast.textContent = message;
+        toast.className = 'toast-message show'; // Reset classes and add 'show'
+
+        if (type === 'error') {
+            toast.style.backgroundColor = '#dc3545'; // Red for error
+        } else {
+            toast.style.backgroundColor = 'var(--success)'; // Green for success
+        }
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000); // Hide after 3 seconds
+    }
+
+    // --- Calculator Logic ---
+    function calculateBreakEven() {
+        const fixedCosts = parseFloat(document.getElementById('fixedCosts').value);
+        const variableCosts = parseFloat(document.getElementById('variableCosts').value);
+        const sellingPrice = parseFloat(document.getElementById('sellingPrice').value);
+        const currency = document.querySelector('input[name="currency"]:checked').value;
+        
+        const resultsArea = document.getElementById('resultsArea');
+        const unitsResult = document.getElementById('unitsResult');
+        const salesResult = document.getElementById('salesResult');
+
+        // Input Validation
+        if (isNaN(fixedCosts) || isNaN(variableCosts) || isNaN(sellingPrice)) {
+            showToast('Please enter valid numbers for all fields.', 'error');
+            resultsArea.style.display = 'none';
+            return;
+        }
+
+        if (fixedCosts < 0 || variableCosts < 0 || sellingPrice < 0) {
+            showToast('Costs and prices cannot be negative.', 'error');
+            resultsArea.style.display = 'none';
+            return;
+        }
+
+        const contributionMarginPerUnit = sellingPrice - variableCosts;
+
+        if (contributionMarginPerUnit <= 0) {
+            showToast('Selling Price must be greater than Variable Costs to break even.', 'error');
+            resultsArea.style.display = 'none';
+            return;
+        }
+
+        // Calculate Break-Even Point in Units
+        const bepUnits = fixedCosts / contributionMarginPerUnit;
+
+        // Calculate Break-Even Point in Sales 
+        const bepSales = bepUnits * sellingPrice; // Simpler calculation
+
+        // Display Results
+        unitsResult.textContent = bepUnits.toFixed(2);
+        salesResult.textContent = `${currency}${bepSales.toFixed(2)}`;
+        resultsArea.style.display = 'block';
+        showToast('Break-Even Point calculated!');
+    }
+
+    function clearForm() {
+        document.getElementById('fixedCosts').value = '';
+        document.getElementById('variableCosts').value = '';
+        document.getElementById('sellingPrice').value = '';
+        
+        document.getElementById('unitsResult').textContent = '--';
+        document.getElementById('salesResult').textContent = '--';
+        document.getElementById('resultsArea').style.display = 'none';
+        showToast('Form cleared!');
+    }
+    function toggleFormulaChart() {
+        const formulaChartArea = document.getElementById('formulaChartArea');
+        const btn = document.querySelector('.toggle-button');
+        if (formulaChartArea.style.display === 'none') {
+            formulaChartArea.style.display = 'block';
+            btn.textContent = 'Hide Formula & Chart';
+        } else {
+            formulaChartArea.style.display = 'none';
+            btn.textContent = 'Show Formula & Chart';
+        }
+    }
+
+    // --- Initial Load ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Optional: add a default value for demonstration if desired, or leave blank
+        document.getElementById('fixedCosts').value = '50000';
+        document.getElementById('variableCosts').value = '25';
+        document.getElementById('sellingPrice').value = '75';
+    });
+  </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

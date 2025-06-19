@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style>* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  background: #f5f7fa;
+  overflow: hidden;
+  position: relative;
+}
+
+header {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+  position: relative;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.controls select, .btn-primary, .btn-secondary {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: #10b981;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.3);
+  transform: translateY(-1px);
+}
+
+.controls select {
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+/* Floating Toolbar */
+.floating-toolbar {
+  position: fixed;
+  right: 20px;
+  top: 80px;
+  width: 280px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  padding: 16px;
+  z-index: 1000;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+}
+
+.floating-toolbar.hidden {
+  display: none;
+}
+
+.toolbar-section {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.toolbar-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.toolbar-section h4 {
+  margin: 0 0 12px 0;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tool-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.tool-group label {
+  font-size: 12px;
+  color: #6b7280;
+  min-width: 40px;
+}
+
+.tool-group input, .tool-group select {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.tool-btn {
+  width: 100%;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-bottom: 4px;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.tool-btn:hover {
+  background: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+.tool-btn.danger {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.tool-btn.danger:hover {
+  background: #fee2e2;
+}
+
+.toolbar-toggle {
+  position: fixed;
+  right: 20px;
+  top: 80px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  transition: all 0.2s;
+}
+
+.toolbar-toggle:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+/* Status Bar */
+.status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1f2937;
+  color: white;
+  padding: 8px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  z-index: 1000;
+}
+
+.status-controls {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+#crossRefStatus {
+  color: #fbbf24;
+  font-weight: bold;
+}
+
+#mindmapContainer {
+  position: relative;
+  width: 100vw;
+  height: calc(100vh - 120px);
+  overflow: hidden;
+  cursor: grab;
+  outline: none;
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f8fafc 100%);
+}
+
+#mindmapContainer:active {
+  cursor: grabbing;
+}
+
+#connectionSvg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#nodesContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.mindmap-node {
+  position: absolute;
+  min-width: 80px;
+  min-height: 32px;
+  padding: 10px 18px;
+  background: white;
+  border: 2px solid #3b82f6;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  user-select: none;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  z-index: 10;
+}
+
+.mindmap-node:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  border-width: 3px;
+}
+
+.mindmap-node.selected {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3);
+  transform: translateY(-3px);
+}
+
+.mindmap-node.root {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #5a67d8;
+  font-size: 16px;
+  font-weight: bold;
+  min-width: 140px;
+  padding: 12px 24px;
+}
+
+.mindmap-node.collapsed {
+  opacity: 0.8;
+  background: #f3f4f6;
+}
+
+.mindmap-node.collapsed::after {
+  content: '...';
+  margin-left: 6px;
+  opacity: 0.6;
+  font-weight: bold;
+}
+
+.mindmap-node input {
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: center;
+  font: inherit;
+  color: inherit;
+  width: 100%;
+  min-width: 60px;
+}
+
+.connection-line {
+  stroke: #6366f1;
+  stroke-width: 2;
+  fill: none;
+  opacity: 0.7;
+}
+
+.cross-reference-line {
+  stroke: #ef4444;
+  stroke-width: 2;
+  stroke-dasharray: 5,5;
+  fill: none;
+  cursor: pointer;
+  opacity: 0.8;
+  pointer-events: all;
+}
+
+.cross-reference-line:hover {
+  stroke-width: 3;
+  opacity: 1;
+}
+
+.cross-reference-line.selected {
+  stroke: #dc2626;
+  stroke-width: 3;
+  opacity: 1;
+}
+
+.cross-reference-handle {
+  fill: #ef4444;
+  cursor: ns-resize;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: all;
+}
+
+.cross-reference-line.selected + .cross-reference-handle {
+  opacity: 1;
+}
+
+.edge-label {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  pointer-events: none;
+}
+
+/* Context Menu */
+.context-menu {
+  position: absolute;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  padding: 4px 0;
+  z-index: 2000;
+  min-width: 180px;
+}
+
+.context-menu.hidden {
+  display: none;
+}
+
+.context-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.context-item:hover {
+  background: #f3f4f6;
+}
+
+.context-item.danger {
+  color: #dc2626;
+}
+
+.context-item.danger:hover {
+  background: #fef2f2;
+}
+
+.context-separator {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 4px 0;
+}
+
+.drag-preview {
+  opacity: 0.6;
+  transform: rotate(3deg) scale(1.05);
+}
+
+.drop-zone {
+  border: 3px dashed #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.1) !important;
+}
+
+.delete-zone {
+  border: 3px dashed #ef4444 !important;
+  background: rgba(239, 68, 68, 0.15) !important;
+  transform: rotate(-5deg) scale(0.9);
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  z-index: 3000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+
+.close:hover {
+  color: #374151;
+}
+
+.help-section {
+  margin-bottom: 24px;
+}
+
+.help-section h3 {
+  color: #374151;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.help-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.help-section li {
+  padding: 6px 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.help-section li:last-child {
+  border-bottom: none;
+}
+
+.help-section strong {
+  color: #1f2937;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@keyframes nodeAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.mindmap-node.new {
+  animation: nodeAppear 0.4s ease-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.mindmap-node.cross-ref-target {
+  animation: pulse 1s infinite;
+  border-color: #f59e0b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .floating-toolbar {
+    width: 250px;
+    right: 10px;
+    top: 70px;
+  }
+  
+  header {
+    padding: 8px 15px;
+  }
+  
+  .controls {
+    gap: 6px;
+  }
+  
+  .controls select, .btn-primary, .btn-secondary {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}</style>
+        </head>
+        <body style="cursor: crosshair;">
+            
+
+
+  <meta charset="UTF-8">
+  <title>Advanced Mind Map Maker</title>
+  <link rel="stylesheet" href="style.css">
+
+
+  <header>
+    <h1>🧠 Advanced Mind Map Maker</h1>
+    <div class="controls">
+      <select id="templateSelect">
+        <option value="hierarchy">🏢 Company Hierarchy</option>
+        <option value="decision">🎯 Decision Tree</option>
+        <option value="project">📋 Project Planning</option>
+        <option value="team">👥 Team Making</option>
+      </select>
+      <button onclick="loadTemplate()" class="btn-primary">📥 Load Template</button>
+      <button onclick="resetView()" class="btn-secondary">🔄 Reset View</button>
+      <button onclick="toggleLayout()" class="btn-secondary" id="layoutBtn" style="background: rgba(16, 185, 129, 0.2);">📐 Auto Layout: ON</button>
+      <button onclick="exportMindMap()" class="btn-secondary">💾 Export</button>
+    </div>
+  </header>
+  
+  <!-- Floating Toolbar -->
+  <div id="floatingToolbar" class="floating-toolbar">
+    <div class="toolbar-section">
+      <h4>🎨 Appearance</h4>
+      <div class="tool-group">
+        <label>Color:</label>
+        <input type="color" id="globalNodeColor" onchange="changeGlobalNodeColor()" value="#3b82f6">
+      </div>
+      <div class="tool-group">
+        <label>Icon:</label>
+        <select id="globalNodeIcon" onchange="changeGlobalNodeIcon()">
+          <option value="">No Icon</option>
+          <option value="💼">💼 Business</option>
+          <option value="⚡">⚡ Energy</option>
+          <option value="🎯">🎯 Target</option>
+          <option value="🔧">🔧 Tool</option>
+          <option value="📊">📊 Chart</option>
+          <option value="🌟">🌟 Star</option>
+          <option value="🏠">🏠 Home</option>
+          <option value="🚀">🚀 Rocket</option>
+          <option value="💡">💡 Idea</option>
+          <option value="❤️">❤️ Heart</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="toolbar-section">
+      <h4>🔗 Actions</h4>
+      <button onclick="addChildToSelected()" class="tool-btn" title="Add Child Node">
+        👶 Add Child
+      </button>
+      <button onclick="addSiblingToSelected()" class="tool-btn" title="Add Sibling Node">
+        👥 Add Sibling
+      </button>
+      <button onclick="startCrossReference()" class="tool-btn" title="Create Cross-Reference">
+        🔗 Cross-Reference
+      </button>
+      <button onclick="toggleCollapseSelected()" class="tool-btn" title="Collapse/Expand">
+        📁 Toggle Collapse
+      </button>
+      <button onclick="deleteSelectedNode()" class="tool-btn danger" title="Delete Node">
+        🗑️ Delete
+      </button>
+    </div>
+    
+    <div class="toolbar-section">
+      <h4>🔍 View</h4>
+      <button onclick="zoomIn()" class="tool-btn">🔍➕ Zoom In</button>
+      <button onclick="zoomOut()" class="tool-btn">🔍➖ Zoom Out</button>
+      <button onclick="fitToScreen()" class="tool-btn">📐 Fit Screen</button>
+      <button onclick="centerView()" class="tool-btn">🎯 Center</button>
+    </div>
+    
+    <div class="toolbar-section">
+      <h4>ℹ️ Help</h4>
+      <button onclick="showHelp()" class="tool-btn">❓ Show Help</button>
+      <button onclick="toggleToolbar()" class="tool-btn">👁️ Hide Toolbar</button>
+    </div>
+  </div>
+
+  <!-- Mini Toolbar Toggle -->
+  <button id="toolbarToggle" class="toolbar-toggle hidden" onclick="toggleToolbar()">
+    🛠️ Show Tools
+  </button>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="status-info">
+      <span id="selectedNodeInfo">Selected: "CEO" | Children: 3 | Expanded</span>
+    </div>
+    <div class="status-controls">
+      <span>Zoom: <span id="zoomLevel">100%</span></span>
+      <span id="crossRefStatus" class="">🔗 Cross-reference mode: Click target node</span>
+    </div>
+  </div>
+
+  <main>
+    <div id="mindmapContainer" tabindex="0">
+      <svg id="connectionSvg" style="transform: translate(0px, 0px) scale(1);"><path class="connection-line" d="M 440 120 C 440 185 320 185 320 250"></path><path class="connection-line" d="M 320 270 C 320 335 260 335 260 400"></path><path class="connection-line" d="M 320 270 C 320 335 380 335 380 400"></path><path class="connection-line" d="M 440 120 C 440 185 500 185 500 250"></path><path class="connection-line" d="M 500 270 C 500 335 500 335 500 400"></path><path class="connection-line" d="M 440 120 C 440 185 620 185 620 250"></path></svg>
+      <div id="nodesContainer" style="transform: translate(0px, 0px) scale(1);"><div class="mindmap-node root selected" data-id="node1" style="left: 400px; top: 100px; border-color: rgb(102, 126, 234);"><span>💼</span><span>CEO</span></div><div class="mindmap-node" data-id="node2" style="left: 280px; top: 250px; border-color: rgb(59, 130, 246);"><span>⚡</span><span>CTO</span></div><div class="mindmap-node" data-id="node3" style="left: 220px; top: 400px; border-color: rgb(16, 185, 129);"><span>🔧</span><span>Dev Team</span></div><div class="mindmap-node" data-id="node4" style="left: 340px; top: 400px; border-color: rgb(16, 185, 129);"><span>🎯</span><span>QA Team</span></div><div class="mindmap-node" data-id="node5" style="left: 460px; top: 250px; border-color: rgb(59, 130, 246);"><span>📊</span><span>CFO</span></div><div class="mindmap-node" data-id="node6" style="left: 460px; top: 400px; border-color: rgb(16, 185, 129);"><span>💼</span><span>Finance Team</span></div><div class="mindmap-node" data-id="node7" style="left: 580px; top: 250px; border-color: rgb(59, 130, 246);"><span>🌟</span><span>COO</span></div></div>
+      
+      <!-- Node Context Menu -->
+      <div id="contextMenu" class="context-menu hidden">
+        <div class="context-item" onclick="editSelectedNodeText()">
+          ✏️ Edit Text
+        </div>
+        <div class="context-item" onclick="addChildToSelected()">
+          👶 Add Child
+        </div>
+        <div class="context-item" onclick="addSiblingToSelected()">
+          👥 Add Sibling
+        </div>
+        <div class="context-item" onclick="startCrossReference()">
+          🔗 Cross-Reference
+        </div>
+        <div class="context-separator"></div>
+        <div class="context-item" onclick="duplicateSelectedNode()">
+          📋 Duplicate
+        </div>
+        <div class="context-item" onclick="toggleCollapseSelected()">
+          📁 Toggle Collapse
+        </div>
+        <div class="context-separator"></div>
+        <div class="context-item danger" onclick="deleteSelectedNode()">
+          🗑️ Delete
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Help Modal -->
+  <div id="helpModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close" onclick="closeHelp()">×</span>
+      <h2>🧠 Mind Map Maker - User Guide</h2>
+      
+      <div class="help-section">
+        <h3>🖱️ Mouse Controls</h3>
+        <ul>
+          <li><strong>Single Click:</strong> Select a node</li>
+          <li><strong>Double Click:</strong> Edit node text</li>
+          <li><strong>Right Click:</strong> Open context menu</li>
+          <li><strong>Drag Node:</strong> Move node around</li>
+          <li><strong>Drag Background:</strong> Pan the view</li>
+          <li><strong>Drag far away:</strong> Delete node</li>
+        </ul>
+      </div>
+      
+      <div class="help-section">
+        <h3>🛠️ Toolbar Functions</h3>
+        <ul>
+          <li><strong>Add Child:</strong> Create a child node under selected node</li>
+          <li><strong>Add Sibling:</strong> Create a sibling node next to selected</li>
+          <li><strong>Cross-Reference:</strong> Create connections between any nodes</li>
+          <li><strong>Toggle Collapse:</strong> Hide/show child nodes</li>
+          <li><strong>Zoom Controls:</strong> Zoom in/out and fit to screen</li>
+        </ul>
+      </div>
+      
+      <div class="help-section">
+        <h3>🎨 Customization</h3>
+        <ul>
+          <li>Use color picker to change node colors</li>
+          <li>Select icons from the dropdown</li>
+          <li>Right-click nodes for quick actions</li>
+          <li>Toggle auto-layout for organized positioning</li>
+        </ul>
+      </div>
+      
+      <div class="help-section">
+        <h3>💡 Tips</h3>
+        <ul>
+          <li>Use templates as starting points</li>
+          <li>Cross-references show relationships between distant nodes</li>
+          <li>Collapse large branches to focus on specific areas</li>
+          <li>Export your mind map when finished</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="mindmap.js"></script>
+
+
+            <script>// ========== TEMPLATES ==========
+const TEMPLATES = {
+  hierarchy: {
+    text: "CEO", x: 400, y: 100, color: "#667eea", icon: "💼",
+    children: [
+      { text: "CTO", x: 200, y: 250, color: "#3b82f6", icon: "⚡", 
+        children: [
+          {text: "Dev Team", x: 100, y: 400, color: "#10b981", icon: "🔧"},
+          {text: "QA Team", x: 300, y: 400, color: "#10b981", icon: "🎯"}
+        ]
+      },
+      { text: "CFO", x: 400, y: 250, color: "#3b82f6", icon: "📊",
+        children: [{text: "Finance Team", x: 400, y: 400, color: "#10b981", icon: "💼"}]
+      },
+      { text: "COO", x: 600, y: 250, color: "#3b82f6", icon: "🌟" }
+    ],
+  },
+  decision: {
+    text: "Problem", x: 400, y: 100, color: "#ef4444", icon: "🎯",
+    children: [
+      { text: "Option A", x: 250, y: 250, color: "#3b82f6", icon: "⚡",
+        children: [
+          { text: "Outcome 1", x: 150, y: 400, color: "#10b981" },
+          { text: "Outcome 2", x: 350, y: 400, color: "#f59e0b" }
+        ]
+      },
+      { text: "Option B", x: 550, y: 250, color: "#3b82f6", icon: "⚡",
+        children: [
+          { text: "Outcome 3", x: 450, y: 400, color: "#10b981" },
+          { text: "Outcome 4", x: 650, y: 400, color: "#f59e0b" }
+        ]
+      }
+    ]
+  },
+  project: {
+    text: "Project", x: 400, y: 100, color: "#8b5cf6", icon: "🎯",
+    children: [
+      { text: "Planning", x: 200, y: 250, color: "#3b82f6", icon: "📊" },
+      { text: "Design", x: 350, y: 250, color: "#3b82f6", icon: "🔧" },
+      { text: "Development", x: 500, y: 250, color: "#3b82f6", icon: "⚡" },
+      { text: "Testing", x: 650, y: 250, color: "#3b82f6", icon: "🎯" }
+    ]
+  },
+  team: {
+    text: "Team Lead", x: 400, y: 100, color: "#f59e0b", icon: "🌟",
+    children: [
+      { text: "Designer", x: 250, y: 250, color: "#3b82f6", icon: "🔧" },
+      { text: "Developer", x: 400, y: 250, color: "#3b82f6", icon: "⚡" },
+      { text: "Tester", x: 550, y: 250, color: "#3b82f6", icon: "🎯" }
+    ]
+  }
+};
+
+// ========== GLOBAL STATE ==========
+let mindMapRoot = null;
+let nodeIdCounter = 1;
+let selectedNode = null;
+let selectedEdge = null;
+let dragData = null;
+let panData = null;
+let viewTransform = { x: 0, y: 0, scale: 1 };
+let crossReferenceMode = false;
+let crossReferenceStart = null;
+let autoLayout = true;
+
+// ========== INITIALIZATION ==========
+function createNode({text, x, y, children, color, icon, collapsed}) {
+  return {
+    id: "node" + (nodeIdCounter++),
+    text: text || "New Node",
+    x: x || 400,
+    y: y || 200,
+    color: color || "#3b82f6",
+    icon: icon || "",
+    collapsed: collapsed || false,
+    children: (children || []).map(child => createNode(child)),
+    parent: null,
+    crossReferences: []
+  };
+}
+
+function assignParents(node, parent = null) {
+  node.parent = parent;
+  (node.children || []).forEach(child => assignParents(child, node));
+}
+
+function loadTemplate() {
+  const sel = document.getElementById('templateSelect').value;
+  nodeIdCounter = 1;
+  mindMapRoot = createNode(TEMPLATES[sel]);
+  assignParents(mindMapRoot);
+  selectedNode = mindMapRoot;
+  viewTransform = { x: 0, y: 0, scale: 1 };
+  if (autoLayout) calculateTreeLayout();
+  renderMindMap();
+  updateStatusBar();
+}
+
+// ========== TREE LAYOUT ALGORITHM ==========
+function calculateTreeLayout() {
+  if (!mindMapRoot) return;
+  
+  const LEVEL_HEIGHT = 150;
+  const MIN_SIBLING_DISTANCE = 120;
+  
+  function calculateSubtreeWidth(node) {
+    if (!node.children || node.children.length === 0 || node.collapsed) {
+      return MIN_SIBLING_DISTANCE;
+    }
+    
+    let totalWidth = 0;
+    for (let child of node.children) {
+      totalWidth += calculateSubtreeWidth(child);
+    }
+    return Math.max(totalWidth, MIN_SIBLING_DISTANCE);
+  }
+  
+  function positionNode(node, x, y, availableWidth) {
+    node.x = x;
+    node.y = y;
+    
+    if (!node.children || node.children.length === 0 || node.collapsed) {
+      return;
+    }
+    
+    let currentX = x - availableWidth / 2;
+    
+    for (let child of node.children) {
+      const childWidth = calculateSubtreeWidth(child);
+      positionNode(child, currentX + childWidth / 2, y + LEVEL_HEIGHT, childWidth);
+      currentX += childWidth;
+    }
+  }
+  
+  const totalWidth = calculateSubtreeWidth(mindMapRoot);
+  positionNode(mindMapRoot, 400, 100, totalWidth);
+}
+
+function toggleLayout() {
+  autoLayout = !autoLayout;
+  const btn = document.getElementById('layoutBtn');
+  btn.textContent = autoLayout ? '📐 Auto Layout: ON' : '📐 Auto Layout: OFF';
+  btn.style.background = autoLayout ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+  
+  if (autoLayout) {
+    calculateTreeLayout();
+    renderMindMap();
+  }
+}
+
+// ========== RENDERING ==========
+function renderMindMap() {
+  const container = document.getElementById('nodesContainer');
+  const svg = document.getElementById('connectionSvg');
+  
+  container.innerHTML = '';
+  svg.innerHTML = '';
+  
+  // Apply transform
+  container.style.transform = `translate(${viewTransform.x}px, ${viewTransform.y}px) scale(${viewTransform.scale})`;
+  svg.style.transform = `translate(${viewTransform.x}px, ${viewTransform.y}px) scale(${viewTransform.scale})`;
+  
+  function renderNode(node) {
+    // Create node element
+    const nodeEl = document.createElement('div');
+    nodeEl.className = 'mindmap-node';
+    if (node === mindMapRoot) nodeEl.classList.add('root');
+    if (node === selectedNode) nodeEl.classList.add('selected');
+    if (node.collapsed) nodeEl.classList.add('collapsed');
+    
+    nodeEl.style.left = node.x + 'px';
+    nodeEl.style.top = node.y + 'px';
+    nodeEl.style.borderColor = node.color;
+    nodeEl.setAttribute('data-id', node.id);
+    
+    // Node content
+    if (node.icon) {
+      const iconSpan = document.createElement('span');
+      iconSpan.textContent = node.icon;
+      nodeEl.appendChild(iconSpan);
+    }
+    
+    const textSpan = document.createElement('span');
+    textSpan.textContent = node.text;
+    nodeEl.appendChild(textSpan);
+    
+    // Event listeners
+    nodeEl.onclick = (e) => {
+      e.stopPropagation();
+      if (crossReferenceMode) {
+        finishCrossReference(node);
+        return;
+      }
+      selectNode(node);
+    };
+    
+    nodeEl.ondblclick = (e) => {
+      e.stopPropagation();
+      editNodeText(node);
+    };
+    
+    nodeEl.oncontextmenu = (e) => {
+      e.preventDefault();
+      selectNode(node);
+      showContextMenu(e.pageX, e.pageY);
+    };
+    
+    nodeEl.onmousedown = (e) => {
+      if (e.button === 0) { // Left mouse button
+        startDrag(e, node);
+      }
+    };
+    
+    container.appendChild(nodeEl);
+    
+    // Render connections and children
+    if (!node.collapsed && node.children) {
+      node.children.forEach(child => {
+        drawConnection(svg, node, child);
+        renderNode(child);
+      });
+    }
+    
+    // Render cross-references
+    node.crossReferences.forEach(ref => {
+      drawCrossReference(svg, ref);
+    });
+  }
+  
+  if (mindMapRoot) {
+    renderNode(mindMapRoot);
+  }
+  
+  updateStatusBar();
+}
+
+function drawConnection(svg, parent, child) {
+  const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  line.setAttribute('class', 'connection-line');
+  
+  const startX = parent.x + 40;
+  const startY = parent.y + 20;
+  const endX = child.x + 40;
+  const endY = child.y;
+  
+  const midY = (startY + endY) / 2;
+  
+  const path = `M ${startX} ${startY} C ${startX} ${midY} ${endX} ${midY} ${endX} ${endY}`;
+  line.setAttribute('d', path);
+  
+  svg.appendChild(line);
+}
+
+function drawCrossReference(svg, ref) {
+  const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  line.setAttribute('class', 'cross-reference-line');
+  if (ref === selectedEdge) line.classList.add('selected');
+  
+  const startX = ref.from.x + 40;
+  const startY = ref.from.y + 10;
+  const endX = ref.to.x + 40;
+  const endY = ref.to.y + 10;
+  
+  const height = ref.height || 0;
+  const midX = (startX + endX) / 2;
+  const midY = (startY + endY) / 2 + height;
+  
+  const path = `M ${startX} ${startY} Q ${midX} ${midY} ${endX} ${endY}`;
+  line.setAttribute('d', path);
+  
+  line.onclick = (e) => {
+    e.stopPropagation();
+    selectEdge(ref);
+  };
+  
+  line.ondblclick = (e) => {
+    e.stopPropagation();
+    editEdgeLabel(ref);
+  };
+  
+  svg.appendChild(line);
+  
+  // Height control handle
+  if (ref === selectedEdge) {
+    const handle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    handle.setAttribute('class', 'cross-reference-handle');
+    handle.setAttribute('cx', midX);
+    handle.setAttribute('cy', midY);
+    handle.setAttribute('r', 4);
+    
+    handle.onmousedown = (e) => {
+      e.stopPropagation();
+      startEdgeHeightDrag(e, ref);
+    };
+    
+    svg.appendChild(handle);
+  }
+  
+  // Label
+  if (ref.label) {
+    const labelEl = document.createElement('div');
+    labelEl.className = 'edge-label';
+    labelEl.style.position = 'absolute';
+    labelEl.style.left = (midX - 20) + 'px';
+    labelEl.style.top = (midY - 10) + 'px';
+    labelEl.textContent = ref.label;
+    document.getElementById('nodesContainer').appendChild(labelEl);
+  }
+}
+
+// ========== NODE OPERATIONS ==========
+function selectNode(node) {
+  selectedNode = node;
+  selectedEdge = null;
+  renderMindMap();
+  updateStatusBar();
+}
+
+function selectEdge(edge) {
+  selectedEdge = edge;
+  selectedNode = null;
+  renderMindMap();
+  updateStatusBar();
+}
+
+function addChildToSelected() {
+  if (!selectedNode) {
+    alert('Please select a node first');
+    return;
+  }
+  
+  const newNode = createNode({
+    text: "New Child",
+    x: selectedNode.x + 150,
+    y: selectedNode.y + 150,
+    color: selectedNode.color,
+    icon: document.getElementById('globalNodeIcon').value
+  });
+  
+  selectedNode.children = selectedNode.children || [];
+  newNode.parent = selectedNode;
+  selectedNode.children.push(newNode);
+  selectedNode.collapsed = false;
+  
+  if (autoLayout) calculateTreeLayout();
+  selectedNode = newNode;
+  renderMindMap();
+  editNodeText(newNode);
+}
+
+function addSiblingToSelected() {
+  if (!selectedNode || !selectedNode.parent) {
+    alert('Please select a node that has a parent');
+    return;
+  }
+  
+  const parent = selectedNode.parent;
+  const newNode = createNode({
+    text: "New Sibling",
+    x: selectedNode.x + 100,
+    y: selectedNode.y,
+    color: selectedNode.color,
+    icon: document.getElementById('globalNodeIcon').value
+  });
+  
+  newNode.parent = parent;
+  const index = parent.children.indexOf(selectedNode);
+  parent.children.splice(index + 1, 0, newNode);
+  
+  if (autoLayout) calculateTreeLayout();
+  selectedNode = newNode;
+  renderMindMap();
+  editNodeText(newNode);
+}
+
+function deleteSelectedNode() {
+  if (!selectedNode) {
+    alert('Please select a node first');
+    return;
+  }
+  
+  if (selectedNode === mindMapRoot) {
+    alert('Cannot delete the root node');
+    return;
+  }
+  
+  if (!confirm('Are you sure you want to delete this node and all its children?')) {
+    return;
+  }
+  
+  const parent = selectedNode.parent;
+  const index = parent.children.indexOf(selectedNode);
+  parent.children.splice(index, 1);
+  
+  // Remove cross-references
+  removeNodeCrossReferences(selectedNode);
+  
+  if (autoLayout) calculateTreeLayout();
+  selectedNode = parent;
+  renderMindMap();
+}
+
+function toggleCollapseSelected() {
+  if (!selectedNode) {
+    alert('Please select a node first');
+    return;
+  }
+  
+  if (!selectedNode.children || selectedNode.children.length === 0) {
+    alert('This node has no children to collapse');
+    return;
+  }
+  
+  selectedNode.collapsed = !selectedNode.collapsed;
+  if (autoLayout) calculateTreeLayout();
+  renderMindMap();
+}
+
+function duplicateSelectedNode() {
+  if (!selectedNode || !selectedNode.parent) {
+    alert('Please select a node that has a parent');
+    return;
+  }
+  
+  const parent = selectedNode.parent;
+  const duplicateData = JSON.parse(JSON.stringify({
+    text: selectedNode.text + " (Copy)",
+    x: selectedNode.x + 50,
+    y: selectedNode.y + 50,
+    color: selectedNode.color,
+    icon: selectedNode.icon,
+    children: selectedNode.children
+  }));
+  
+  const newNode = createNode(duplicateData);
+  assignParents(newNode, parent);
+  
+  const index = parent.children.indexOf(selectedNode);
+  parent.children.splice(index + 1, 0, newNode);
+  
+  if (autoLayout) calculateTreeLayout();
+  selectedNode = newNode;
+  renderMindMap();
+}
+
+function editSelectedNodeText() {
+  if (!selectedNode) {
+    alert('Please select a node first');
+    return;
+  }
+  editNodeText(selectedNode);
+}
+
+function editNodeText(node) {
+  const nodeEl = document.querySelector(`[data-id="${node.id}"]`);
+  if (!nodeEl) return;
+  
+  const textSpan = nodeEl.querySelector('span:last-child');
+  const originalText = textSpan.textContent;
+  
+  const input = document.createElement('input');
+  input.value = originalText;
+  input.style.width = Math.max(80, originalText.length * 8) + 'px';
+  
+  textSpan.replaceWith(input);
+  input.focus();
+  input.select();
+  
+  function finishEdit() {
+    const newText = input.value.trim() || originalText;
+    node.text = newText;
+    renderMindMap();
+  }
+  
+  input.onblur = finishEdit;
+  input.onkeydown = (e) => {
+    if (e.key === 'Enter') finishEdit();
+    if (e.key === 'Escape') {
+      node.text = originalText;
+      renderMindMap();
+    }
+  };
+}
+
+// ========== CROSS-REFERENCES ==========
+function startCrossReference() {
+  if (!selectedNode) {
+    alert('Please select a starting node first');
+    return;
+  }
+  
+  crossReferenceMode = true;
+  crossReferenceStart = selectedNode;
+  document.body.style.cursor = 'crosshair';
+  
+  // Update status
+  document.getElementById('crossRefStatus').classList.remove('hidden');
+  
+  // Add visual indicators
+  const allNodes = document.querySelectorAll('.mindmap-node');
+  allNodes.forEach(node => {
+    if (node.getAttribute('data-id') !== selectedNode.id) {
+      node.classList.add('cross-ref-target');
+    }
+  });
+  
+  hideContextMenu();
+}
+
+function finishCrossReference(targetNode) {
+  if (!crossReferenceStart || targetNode === crossReferenceStart) {
+    cancelCrossReference();
+    return;
+  }
+  
+  const ref = {
+    id: "ref" + Date.now(),
+    from: crossReferenceStart,
+    to: targetNode,
+    height: -50,
+    label: ""
+  };
+  
+  crossReferenceStart.crossReferences = crossReferenceStart.crossReferences || [];
+  crossReferenceStart.crossReferences.push(ref);
+  
+  cancelCrossReference();
+  renderMindMap();
+  
+  // Ask for label
+  setTimeout(() => {
+    const label = prompt('Enter a label for this connection (optional):');
+    if (label) {
+      ref.label = label;
+      renderMindMap();
+    }
+  }, 100);
+}
+
+function cancelCrossReference() {
+  crossReferenceMode = false;
+  crossReferenceStart = null;
+  document.body.style.cursor = 'default';
+  document.getElementById('crossRefStatus').classList.add('hidden');
+  
+  // Remove visual indicators
+  const allNodes = document.querySelectorAll('.mindmap-node');
+  allNodes.forEach(node => {
+    node.classList.remove('cross-ref-target');
+  });
+}
+
+function removeNodeCrossReferences(node) {
+  // Remove outgoing references
+  node.crossReferences = [];
+  
+  // Remove incoming references
+  function removeIncoming(n) {
+    if (n.crossReferences) {
+      n.crossReferences = n.crossReferences.filter(ref => ref.to !== node);
+    }
+    if (n.children) {
+      n.children.forEach(removeIncoming);
+    }
+  }
+  
+  if (mindMapRoot) removeIncoming(mindMapRoot);
+}
+
+// ========== CONTEXT MENU ==========
+function showContextMenu(x, y) {
+  const menu = document.getElementById('contextMenu');
+  menu.style.left = x + 'px';
+  menu.style.top = y + 'px';
+  menu.classList.remove('hidden');
+  
+  // Hide menu when clicking elsewhere
+  setTimeout(() => {
+    document.addEventListener('click', hideContextMenu, { once: true });
+  }, 10);
+}
+
+function hideContextMenu() {
+  document.getElementById('contextMenu').classList.add('hidden');
+}
+
+// ========== VIEW CONTROLS ==========
+function zoomIn() {
+  viewTransform.scale = Math.min(viewTransform.scale * 1.2, 3);
+  renderMindMap();
+}
+
+function zoomOut() {
+  viewTransform.scale = Math.max(viewTransform.scale * 0.8, 0.3);
+  renderMindMap();
+}
+
+function resetView() {
+  viewTransform = { x: 0, y: 0, scale: 1 };
+  renderMindMap();
+}
+
+function centerView() {
+  if (!mindMapRoot) return;
+  
+  const container = document.getElementById('mindmapContainer');
+  const centerX = container.offsetWidth / 2 - mindMapRoot.x * viewTransform.scale;
+  const centerY = container.offsetHeight / 2 - mindMapRoot.y * viewTransform.scale;
+  
+  viewTransform.x = centerX;
+  viewTransform.y = centerY;
+  renderMindMap();
+}
+
+function fitToScreen() {
+  if (!mindMapRoot) return;
+  
+  // Calculate bounds of all nodes
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  
+  function findBounds(node) {
+    minX = Math.min(minX, node.x);
+    maxX = Math.max(maxX, node.x + 100); // approximate node width
+    minY = Math.min(minY, node.y);
+    maxY = Math.max(maxY, node.y + 40); // approximate node height
+    
+    if (node.children && !node.collapsed) {
+      node.children.forEach(findBounds);
+    }
+  }
+  
+  findBounds(mindMapRoot);
+  
+  const container = document.getElementById('mindmapContainer');
+  const padding = 50;
+  const contentWidth = maxX - minX;
+  const contentHeight = maxY - minY;
+  const containerWidth = container.offsetWidth - padding * 2;
+  const containerHeight = container.offsetHeight - padding * 2;
+  
+  const scaleX = containerWidth / contentWidth;
+  const scaleY = containerHeight / contentHeight;
+  const scale = Math.min(scaleX, scaleY, 1); // Don't zoom in beyond 100%
+  
+  viewTransform.scale = scale;
+  viewTransform.x = (container.offsetWidth - (minX + contentWidth / 2) * scale) / 2;
+  viewTransform.y = (container.offsetHeight - (minY + contentHeight / 2) * scale) / 2;
+  
+  renderMindMap();
+}
+
+// ========== GLOBAL CONTROLS ==========
+function changeGlobalNodeColor() {
+  if (selectedNode) {
+    selectedNode.color = document.getElementById('globalNodeColor').value;
+    renderMindMap();
+  }
+}
+
+function changeGlobalNodeIcon() {
+  if (selectedNode) {
+    selectedNode.icon = document.getElementById('globalNodeIcon').value;
+    renderMindMap();
+  }
+}
+
+// ========== UI CONTROLS ==========
+function toggleToolbar() {
+  const toolbar = document.getElementById('floatingToolbar');
+  const toggle = document.getElementById('toolbarToggle');
+  
+  if (toolbar.classList.contains('hidden')) {
+    toolbar.classList.remove('hidden');
+    toggle.classList.add('hidden');
+  } else {
+    toolbar.classList.add('hidden');
+    toggle.classList.remove('hidden');
+  }
+}
+
+function updateStatusBar() {
+  const infoEl = document.getElementById('selectedNodeInfo');
+  const zoomEl = document.getElementById('zoomLevel');
+  
+  if (selectedNode) {
+    infoEl.textContent = `Selected: "${selectedNode.text}" | Children: ${selectedNode.children ? selectedNode.children.length : 0} | ${selectedNode.collapsed ? 'Collapsed' : 'Expanded'}`;
+  } else if (selectedEdge) {
+    infoEl.textContent = `Selected: Cross-reference from "${selectedEdge.from.text}" to "${selectedEdge.to.text}"`;
+  } else {
+    infoEl.textContent = 'Select a node to see details';
+  }
+  
+  zoomEl.textContent = Math.round(viewTransform.scale * 100) + '%';
+}
+
+function showHelp() {
+  document.getElementById('helpModal').classList.remove('hidden');
+}
+
+function closeHelp() {
+  document.getElementById('helpModal').classList.add('hidden');
+}
+
+function exportMindMap() {
+  const data = {
+    mindMap: mindMapRoot,
+    version: "1.0",
+    exported: new Date().toISOString()
+  };
+  
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'mindmap_' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  alert('Mind map exported successfully!');
+}
+
+// ========== DRAG AND DROP ==========
+function startDrag(e, node) {
+  if (crossReferenceMode) return;
+  
+  dragData = {
+    node: node,
+    startX: e.clientX,
+    startY: e.clientY,
+    offsetX: e.clientX - (node.x * viewTransform.scale + viewTransform.x),
+    offsetY: e.clientY - (node.y * viewTransform.scale + viewTransform.y),
+    moved: false
+  };
+  
+  e.preventDefault();
+}
+
+function startEdgeHeightDrag(e, ref) {
+  dragData = {
+    edge: ref,
+    startY: e.clientY,
+    startHeight: ref.height || 0
+  };
+  e.preventDefault();
+}
+
+function startPan(e) {
+  if (dragData) return;
+  
+  panData = {
+    startX: e.clientX - viewTransform.x,
+    startY: e.clientY - viewTransform.y
+  };
+}
+
+// ========== MOUSE HANDLERS ==========
+function setupMouseHandlers() {
+  const container = document.getElementById('mindmapContainer');
+  
+  container.addEventListener('mousedown', (e) => {
+    if (e.target === container) {
+      startPan(e);
+    }
+  });
+  
+  document.addEventListener('mousemove', (e) => {
+    if (dragData) {
+      if (dragData.node) {
+        // Node dragging
+        dragData.moved = true;
+        
+        const newX = (e.clientX - dragData.offsetX - viewTransform.x) / viewTransform.scale;
+        const newY = (e.clientY - dragData.offsetY - viewTransform.y) / viewTransform.scale;
+        
+        // Check for parent change or deletion
+        const distance = Math.sqrt(
+          Math.pow(e.clientX - dragData.startX, 2) + 
+          Math.pow(e.clientY - dragData.startY, 2)
+        );
+        
+        if (distance > 200) {
+          // Far from original position - potential delete
+          dragData.node.x = newX;
+          dragData.node.y = newY;
+          document.querySelector(`[data-id="${dragData.node.id}"]`).classList.add('delete-zone');
+        } else {
+          // Normal positioning
+          dragData.node.x = newX;
+          dragData.node.y = newY;
+          document.querySelector(`[data-id="${dragData.node.id}"]`).classList.remove('delete-zone');
+        }
+        
+        renderMindMap();
+      } else if (dragData.edge) {
+        // Edge height dragging
+        const deltaY = (e.clientY - dragData.startY) / viewTransform.scale;
+        dragData.edge.height = dragData.startHeight + deltaY;
+        renderMindMap();
+      }
+    } else if (panData) {
+      // Panning
+      viewTransform.x = e.clientX - panData.startX;
+      viewTransform.y = e.clientY - panData.startY;
+      renderMindMap();
+    }
+  });
+  
+  document.addEventListener('mouseup', (e) => {
+    if (dragData && dragData.node && dragData.moved) {
+      const distance = Math.sqrt(
+        Math.pow(e.clientX - dragData.startX, 2) + 
+        Math.pow(e.clientY - dragData.startY, 2)
+      );
+      
+      if (distance > 200 && dragData.node !== mindMapRoot) {
+        // Delete node
+        if (confirm('Delete this node and all its children?')) {
+          const parent = dragData.node.parent;
+          const index = parent.children.indexOf(dragData.node);
+          parent.children.splice(index, 1);
+          removeNodeCrossReferences(dragData.node);
+          selectedNode = parent;
+        }
+      }
+      
+      if (autoLayout && dragData.node === mindMapRoot) {
+        calculateTreeLayout();
+      }
+      renderMindMap();
+    }
+    
+    dragData = null;
+    panData = null;
+  });
+  
+  document.addEventListener('contextmenu', (e) => {
+    if (crossReferenceMode) {
+      e.preventDefault();
+      cancelCrossReference();
+    }
+  });
+  
+  // Click outside to deselect
+  container.addEventListener('click', (e) => {
+    if (e.target === container) {
+      selectedNode = null;
+      selectedEdge = null;
+      if (crossReferenceMode) {
+        cancelCrossReference();
+      }
+      hideContextMenu();
+      renderMindMap();
+    }
+  });
+  
+  // Wheel zoom
+  container.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+    const newScale = Math.max(0.3, Math.min(3, viewTransform.scale * zoomFactor));
+    
+    // Zoom towards mouse position
+    const rect = container.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    const deltaX = (mouseX - viewTransform.x) * (1 - zoomFactor);
+    const deltaY = (mouseY - viewTransform.y) * (1 - zoomFactor);
+    
+    viewTransform.scale = newScale;
+    viewTransform.x += deltaX;
+    viewTransform.y += deltaY;
+    
+    renderMindMap();
+  });
+}
+
+// ========== EDGE OPERATIONS ==========
+function editEdgeLabel(edge) {
+  const label = prompt('Enter edge label:', edge.label || '');
+  if (label !== null) {
+    edge.label = label;
+    renderMindMap();
+  }
+}
+
+function deleteSelectedEdge() {
+  if (!selectedEdge) return;
+  
+  if (!confirm('Delete this cross-reference?')) return;
+  
+  // Find and remove the edge
+  function removeEdge(node) {
+    if (node.crossReferences) {
+      const index = node.crossReferences.indexOf(selectedEdge);
+      if (index > -1) {
+        node.crossReferences.splice(index, 1);
+        return true;
+      }
+    }
+    if (node.children) {
+      for (let child of node.children) {
+        if (removeEdge(child)) return true;
+      }
+    }
+    return false;
+  }
+  
+  removeEdge(mindMapRoot);
+  selectedEdge = null;
+  renderMindMap();
+}
+
+// ========== KEYBOARD SUPPORT (Optional) ==========
+function setupKeyboardHandlers() {
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+    
+    switch(e.key) {
+      case 'Escape':
+        if (crossReferenceMode) {
+          cancelCrossReference();
+        }
+        selectedNode = null;
+        selectedEdge = null;
+        hideContextMenu();
+        renderMindMap();
+        break;
+      case 'Delete':
+        if (selectedEdge) {
+          deleteSelectedEdge();
+        } else if (selectedNode && selectedNode !== mindMapRoot) {
+          deleteSelectedNode();
+        }
+        e.preventDefault();
+        break;
+      case 'F2':
+        if (selectedNode) {
+          editNodeText(selectedNode);
+        } else if (selectedEdge) {
+          editEdgeLabel(selectedEdge);
+        }
+        e.preventDefault();
+        break;
+      case 'F1':
+        showHelp();
+        e.preventDefault();
+        break;
+    }
+  });
+}
+
+// ========== INITIALIZATION ==========
+window.onload = function() {
+  loadTemplate();
+  setupMouseHandlers();
+  setupKeyboardHandlers();
+  
+  // Focus container for keyboard events
+  document.getElementById('mindmapContainer').focus();
+  
+  // Initialize UI
+  updateStatusBar();
+};</script>
+        
+    
+</body>

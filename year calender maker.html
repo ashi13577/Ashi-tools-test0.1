@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style data-fullcalendar=""></style><style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="" style="">
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Calendar Maker - Ashi Tools</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Add libraries for PDF and Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: #f3f4f6;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #1f2937, #111827);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 1px solid #374151;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid #374151;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            color: white;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 30px;
+            background: linear-gradient(145deg, #1f2937, #111827);
+            border-bottom: 1px solid #374151;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 2px solid #4b5563;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #374151;
+            color: #f3f4f6;
+        }
+
+        .search-input:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            font-family: Roboto, sans-serif;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-success {
+            background: #059669;
+            color: white;
+        }
+
+        .btn-info {
+            background: #0891b2;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #d97706;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .export-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: #1f2937;
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);
+            z-index: 1000;
+            border-radius: 8px;
+            overflow: hidden;
+            top: 100%;
+            left: 0;
+            border: 1px solid #374151;
+        }
+
+        .dropdown-content button {
+            background: transparent;
+            color: #f3f4f6;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 0;
+        }
+
+        .dropdown-content button:hover {
+            background: #374151;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .export-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .calendar-container {
+            padding: 30px;
+            background: linear-gradient(145deg, #1f2937, #111827);
+        }
+
+        #calendar {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: #374151;
+        }
+
+        /* FullCalendar Dark Theme */
+        .fc {
+            background: #374151;
+            color: #f3f4f6;
+        }
+
+        .fc-theme-standard .fc-scrollgrid {
+            border-color: #4b5563;
+        }
+
+        .fc-theme-standard td, .fc-theme-standard th {
+            border-color: #4b5563;
+        }
+
+        .fc .fc-button-primary {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .fc .fc-button-primary:hover {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .fc-theme-standard .fc-scrollgrid {
+            background: #374151;
+        }
+
+        .fc-col-header-cell {
+            background: #4b5563;
+            color: #f3f4f6;
+        }
+
+        .fc-daygrid-day {
+            background: #374151;
+        }
+
+        .fc-daygrid-day:hover {
+            background: #4b5563;
+        }
+
+        .fc-day-today {
+            background: rgba(59, 130, 246, 0.1) !important;
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(145deg, #374151, #4b5563);
+            border-radius: 10px;
+            border: 1px solid #4b5563;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: #1f2937;
+            border-radius: 5px;
+            font-size: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            border: 1px solid #374151;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: #1f2937;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            animation: modalSlideIn 0.3s ease;
+            border: 1px solid #374151;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #4b5563;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #374151;
+            color: #f3f4f6;
+        }
+
+        .form-input:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #4b5563;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #374151;
+            color: #f3f4f6;
+            cursor: pointer;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        .custom-category-input {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .session-info {
+            background: linear-gradient(145deg, #1e40af, #3b82f6);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #3b82f6;
+            color: white;
+        }
+
+        .year-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .year-selector input {
+            width: 100px;
+            padding: 8px 12px;
+            border: 2px solid #60a5fa;
+            border-radius: 5px;
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .year-selector input:focus {
+            border-color: white;
+            outline: none;
+        }
+
+        .template-section {
+            background: linear-gradient(145deg, #374151, #4b5563);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #4b5563;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .template-card {
+            background: #1f2937;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #374151;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
+        }
+
+        .template-card h4 {
+            color: #3b82f6;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .template-card p {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .template-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .feature-tag {
+            background: #374151;
+            color: #d1d5db;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+
+        @media (max-width: 768px) {
+            .control-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-container {
+                min-width: 100%;
+            }
+
+            .legend {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+
+            .template-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .year-selector {
+                justify-content: center;
+            }
+        }
+
+        .alert {
+            padding: 12px 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+
+        .alert-success {
+            background: rgba(5, 150, 105, 0.2);
+            border-color: #059669;
+            color: #10b981;
+        }
+
+        .alert-error {
+            background: rgba(220, 38, 38, 0.2);
+            border-color: #dc2626;
+            color: #f87171;
+        }
+
+        .fc-event {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 4px !important;
+        }
+
+        .fc-event:hover {
+            transform: scale(1.02);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #9ca3af;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #059669;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #10b981;
+        }
+
+        footer {
+            text-align: center;
+            color: #6b7280;
+            margin-top: 40px;
+            padding: 30px;
+            line-height: 1.6;
+            background: linear-gradient(145deg, #1f2937, #111827);
+            border-top: 1px solid #374151;
+        }
+
+        .insta-link {
+            color: #e1306c;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .insta-link:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 8px rgba(225, 48, 108, 0.5);
+        }
+    </style>
+
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fa-solid fa-calendar-alt"></i> College Calendar Maker</h1>
+            <p>Create and manage your academic year calendar with beautiful templates and smart features</p>
+        </div>
+
+        <div class="controls">
+            <div class="session-info">
+                <h3><i class="fa-solid fa-graduation-cap"></i> Academic Session Configuration</h3>
+                <div class="year-selector">
+                    <label>Start Year:</label>
+                    <input type="number" id="startYear" value="2024" min="2020" max="2030">
+                    <label>End Year:</label>
+                    <input type="number" id="endYear" value="2025" min="2020" max="2030">
+                    <button class="btn btn-info" onclick="updateCalendarYear()">
+                        <i class="fa-solid fa-sync"></i> Update Calendar
+                    </button>
+                </div>
+            </div>
+
+            <div class="template-section">
+                <h3><i class="fa-solid fa-magic"></i> Quick Start Templates</h3>
+                <p>Load pre-configured templates with holidays and common academic events</p>
+                <div class="template-grid">
+                    <div class="template-card" onclick="loadTemplate('indian_academic')">
+                        <h4><i class="fa-solid fa-university"></i> Indian Academic Year</h4>
+                        <p>Complete Indian academic calendar with all major festivals and holidays</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Indian Festivals</span>
+                            <span class="feature-tag">National Holidays</span>
+                            <span class="feature-tag">Academic Events</span>
+                        </div>
+                    </div>
+                    
+                    <div class="template-card" onclick="loadTemplate('engineering_college')">
+                        <h4><i class="fa-solid fa-cogs"></i> Engineering College</h4>
+                        <p>Tailored for engineering colleges with technical events and fests</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Technical Fests</span>
+                            <span class="feature-tag">Project Reviews</span>
+                            <span class="feature-tag">Industry Visits</span>
+                        </div>
+                    </div>
+                    
+                    <div class="template-card" onclick="loadTemplate('business_school')">
+                        <h4><i class="fa-solid fa-chart-line"></i> Business School</h4>
+                        <p>Perfect for MBA and business schools with corporate events</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Corporate Events</span>
+                            <span class="feature-tag">Alumni Talks</span>
+                            <span class="feature-tag">Case Competitions</span>
+                        </div>
+                    </div>
+                    
+                    <div class="template-card" onclick="loadTemplate('basic_college')">
+                        <h4><i class="fa-solid fa-school"></i> Basic College</h4>
+                        <p>Simple template with essential holidays and academic milestones</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Major Holidays</span>
+                            <span class="feature-tag">Exam Schedules</span>
+                            <span class="feature-tag">Cultural Events</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search events by name, category, or month...">
+                    <span class="search-icon"><i class="fa-solid fa-search"></i></span>
+                </div>
+                <button class="btn btn-primary" onclick="openAddEventModal()">
+                    <i class="fa-solid fa-plus"></i> Add Event
+                </button>
+            </div>
+
+            <div class="control-row">
+                <div class="export-dropdown">
+                    <button class="btn btn-success">
+                        <i class="fa-solid fa-download"></i> Export Calendar ▼
+                    </button>
+                    <div class="dropdown-content">
+                        <button onclick="downloadCalendar()">
+                            <i class="fa-solid fa-file-code"></i> Download JSON
+                        </button>
+                        <button onclick="exportToPDF()">
+                            <i class="fa-solid fa-file-pdf"></i> Export to PDF
+                        </button>
+                        <button onclick="exportToExcel()">
+                            <i class="fa-solid fa-file-excel"></i> Export to Excel
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="file-input-wrapper">
+                    <input type="file" id="fileInput" accept=".json" onchange="uploadCalendar(event)">
+                    <label for="fileInput" class="btn btn-info">
+                        <i class="fa-solid fa-upload"></i> Upload Calendar
+                    </label>
+                </div>
+                
+                <button class="btn btn-secondary" onclick="clearCalendar()">
+                    <i class="fa-solid fa-trash"></i> Clear All
+                </button>
+            </div>
+
+            <div class="loading" id="loadingIndicator" style="display: none;">
+                <p><i class="fa-solid fa-spinner fa-spin"></i> Processing... Please wait</p>
+            </div>
+        </div>
+
+        <div class="calendar-container">
+            <div id="calendar" class="fc fc-media-screen fc-direction-ltr fc-theme-standard" style="height: 600px;"><div class="fc-header-toolbar fc-toolbar fc-toolbar-ltr"><div class="fc-toolbar-chunk"><div class="fc-button-group"><button type="button" title="Previous month" aria-pressed="false" class="fc-prev-button fc-button fc-button-primary" disabled=""><span class="fc-icon fc-icon-chevron-left"></span></button><button type="button" title="Next month" aria-pressed="false" class="fc-next-button fc-button fc-button-primary"><span class="fc-icon fc-icon-chevron-right"></span></button></div><button type="button" title="This month" aria-pressed="false" class="fc-today-button fc-button fc-button-primary" disabled="">today</button></div><div class="fc-toolbar-chunk"><h2 class="fc-toolbar-title" id="fc-dom-1">June 2025</h2></div><div class="fc-toolbar-chunk"><div class="fc-button-group"><button type="button" title="month view" aria-pressed="true" class="fc-dayGridMonth-button fc-button fc-button-primary fc-button-active">month</button><button type="button" title="week view" aria-pressed="false" class="fc-timeGridWeek-button fc-button fc-button-primary">week</button><button type="button" title="list view" aria-pressed="false" class="fc-listMonth-button fc-button fc-button-primary">list</button></div></div></div><div aria-labelledby="fc-dom-1" class="fc-view-harness fc-view-harness-active"><div class="fc-dayGridMonth-view fc-view fc-daygrid"><table role="grid" class="fc-scrollgrid  fc-scrollgrid-liquid"><thead role="rowgroup"><tr role="presentation" class="fc-scrollgrid-section fc-scrollgrid-section-header "><th role="presentation"><div class="fc-scroller-harness"><div class="fc-scroller" style="overflow: hidden;"><table role="presentation" class="fc-col-header " style="width: 1333px;"><colgroup></colgroup><thead role="presentation"><tr role="row"><th role="columnheader" class="fc-col-header-cell fc-day fc-day-sun"><div class="fc-scrollgrid-sync-inner"><a aria-label="Sunday" class="fc-col-header-cell-cushion">Sun</a></div></th><th role="columnheader" class="fc-col-header-cell fc-day fc-day-mon"><div class="fc-scrollgrid-sync-inner"><a aria-label="Monday" class="fc-col-header-cell-cushion">Mon</a></div></th><th role="columnheader" class="fc-col-header-cell fc-day fc-day-tue"><div class="fc-scrollgrid-sync-inner"><a aria-label="Tuesday" class="fc-col-header-cell-cushion">Tue</a></div></th><th role="columnheader" class="fc-col-header-cell fc-day fc-day-wed"><div class="fc-scrollgrid-sync-inner"><a aria-label="Wednesday" class="fc-col-header-cell-cushion">Wed</a></div></th><th role="columnheader" class="fc-col-header-cell fc-day fc-day-thu"><div class="fc-scrollgrid-sync-inner"><a aria-label="Thursday" class="fc-col-header-cell-cushion">Thu</a></div></th><th role="columnheader" class="fc-col-header-cell fc-day fc-day-fri"><div class="fc-scrollgrid-sync-inner"><a aria-label="Friday" class="fc-col-header-cell-cushion">Fri</a></div></th><th role="columnheader" class="fc-col-header-cell fc-day fc-day-sat"><div class="fc-scrollgrid-sync-inner"><a aria-label="Saturday" class="fc-col-header-cell-cushion">Sat</a></div></th></tr></thead></table></div></div></th></tr></thead><tbody role="rowgroup"><tr role="presentation" class="fc-scrollgrid-section fc-scrollgrid-section-body  fc-scrollgrid-section-liquid"><td role="presentation"><div class="fc-scroller-harness fc-scroller-harness-liquid"><div class="fc-scroller fc-scroller-liquid-absolute" style="overflow: hidden auto;"><div class="fc-daygrid-body fc-daygrid-body-unbalanced " style="width: 1333px;"><table role="presentation" class="fc-scrollgrid-sync-table" style="width: 1333px; height: 507px;"><colgroup></colgroup><tbody role="presentation"><tr role="row"><td aria-labelledby="fc-dom-3700" role="gridcell" data-date="2025-06-01" class="fc-day fc-day-sun fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 1, 2025" id="fc-dom-3700" class="fc-daygrid-day-number">1</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-event-harness" style="margin-top: 0px;"><a tabindex="0" class="fc-event fc-event-start fc-event-end fc-event-past fc-daygrid-event fc-daygrid-block-event fc-h-event" title="sdasdasd
+Category: asdasda
+Description: wdsdad" style="border-color: rgb(116, 125, 140); background-color: rgb(116, 125, 140);"><div class="fc-event-main"><div class="fc-event-main-frame"><div class="fc-event-title-container"><div class="fc-event-title fc-sticky">sdasdasd</div></div></div></div></a></div><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3702" role="gridcell" data-date="2025-06-02" class="fc-day fc-day-mon fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 2, 2025" id="fc-dom-3702" class="fc-daygrid-day-number">2</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3704" role="gridcell" data-date="2025-06-03" class="fc-day fc-day-tue fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 3, 2025" id="fc-dom-3704" class="fc-daygrid-day-number">3</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3706" role="gridcell" data-date="2025-06-04" class="fc-day fc-day-wed fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 4, 2025" id="fc-dom-3706" class="fc-daygrid-day-number">4</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3708" role="gridcell" data-date="2025-06-05" class="fc-day fc-day-thu fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 5, 2025" id="fc-dom-3708" class="fc-daygrid-day-number">5</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3710" role="gridcell" data-date="2025-06-06" class="fc-day fc-day-fri fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 6, 2025" id="fc-dom-3710" class="fc-daygrid-day-number">6</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3712" role="gridcell" data-date="2025-06-07" class="fc-day fc-day-sat fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 7, 2025" id="fc-dom-3712" class="fc-daygrid-day-number">7</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td></tr><tr role="row"><td aria-labelledby="fc-dom-3714" role="gridcell" data-date="2025-06-08" class="fc-day fc-day-sun fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 8, 2025" id="fc-dom-3714" class="fc-daygrid-day-number">8</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3716" role="gridcell" data-date="2025-06-09" class="fc-day fc-day-mon fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 9, 2025" id="fc-dom-3716" class="fc-daygrid-day-number">9</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3718" role="gridcell" data-date="2025-06-10" class="fc-day fc-day-tue fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 10, 2025" id="fc-dom-3718" class="fc-daygrid-day-number">10</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3720" role="gridcell" data-date="2025-06-11" class="fc-day fc-day-wed fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 11, 2025" id="fc-dom-3720" class="fc-daygrid-day-number">11</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3722" role="gridcell" data-date="2025-06-12" class="fc-day fc-day-thu fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 12, 2025" id="fc-dom-3722" class="fc-daygrid-day-number">12</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3724" role="gridcell" data-date="2025-06-13" class="fc-day fc-day-fri fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 13, 2025" id="fc-dom-3724" class="fc-daygrid-day-number">13</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3726" role="gridcell" data-date="2025-06-14" class="fc-day fc-day-sat fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 14, 2025" id="fc-dom-3726" class="fc-daygrid-day-number">14</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td></tr><tr role="row"><td aria-labelledby="fc-dom-3728" role="gridcell" data-date="2025-06-15" class="fc-day fc-day-sun fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 15, 2025" id="fc-dom-3728" class="fc-daygrid-day-number">15</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3730" role="gridcell" data-date="2025-06-16" class="fc-day fc-day-mon fc-day-today fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 16, 2025" id="fc-dom-3730" class="fc-daygrid-day-number">16</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3732" role="gridcell" data-date="2025-06-17" class="fc-day fc-day-tue fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 17, 2025" id="fc-dom-3732" class="fc-daygrid-day-number">17</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3734" role="gridcell" data-date="2025-06-18" class="fc-day fc-day-wed fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 18, 2025" id="fc-dom-3734" class="fc-daygrid-day-number">18</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3736" role="gridcell" data-date="2025-06-19" class="fc-day fc-day-thu fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 19, 2025" id="fc-dom-3736" class="fc-daygrid-day-number">19</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3738" role="gridcell" data-date="2025-06-20" class="fc-day fc-day-fri fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 20, 2025" id="fc-dom-3738" class="fc-daygrid-day-number">20</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3740" role="gridcell" data-date="2025-06-21" class="fc-day fc-day-sat fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 21, 2025" id="fc-dom-3740" class="fc-daygrid-day-number">21</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td></tr><tr role="row"><td aria-labelledby="fc-dom-3742" role="gridcell" data-date="2025-06-22" class="fc-day fc-day-sun fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 22, 2025" id="fc-dom-3742" class="fc-daygrid-day-number">22</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3744" role="gridcell" data-date="2025-06-23" class="fc-day fc-day-mon fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 23, 2025" id="fc-dom-3744" class="fc-daygrid-day-number">23</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3746" role="gridcell" data-date="2025-06-24" class="fc-day fc-day-tue fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 24, 2025" id="fc-dom-3746" class="fc-daygrid-day-number">24</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3748" role="gridcell" data-date="2025-06-25" class="fc-day fc-day-wed fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 25, 2025" id="fc-dom-3748" class="fc-daygrid-day-number">25</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3750" role="gridcell" data-date="2025-06-26" class="fc-day fc-day-thu fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 26, 2025" id="fc-dom-3750" class="fc-daygrid-day-number">26</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3752" role="gridcell" data-date="2025-06-27" class="fc-day fc-day-fri fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 27, 2025" id="fc-dom-3752" class="fc-daygrid-day-number">27</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3754" role="gridcell" data-date="2025-06-28" class="fc-day fc-day-sat fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 28, 2025" id="fc-dom-3754" class="fc-daygrid-day-number">28</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td></tr><tr role="row"><td aria-labelledby="fc-dom-3616" role="gridcell" data-date="2025-06-29" class="fc-day fc-day-sun fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 29, 2025" id="fc-dom-3616" class="fc-daygrid-day-number">29</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3618" role="gridcell" data-date="2025-06-30" class="fc-day fc-day-mon fc-day-future fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="June 30, 2025" id="fc-dom-3618" class="fc-daygrid-day-number">30</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3620" role="gridcell" data-date="2025-07-01" class="fc-day fc-day-tue fc-day-future fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="July 1, 2025" id="fc-dom-3620" class="fc-daygrid-day-number">1</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3622" role="gridcell" data-date="2025-07-02" class="fc-day fc-day-wed fc-day-future fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="July 2, 2025" id="fc-dom-3622" class="fc-daygrid-day-number">2</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3624" role="gridcell" data-date="2025-07-03" class="fc-day fc-day-thu fc-day-future fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="July 3, 2025" id="fc-dom-3624" class="fc-daygrid-day-number">3</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3626" role="gridcell" data-date="2025-07-04" class="fc-day fc-day-fri fc-day-future fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="July 4, 2025" id="fc-dom-3626" class="fc-daygrid-day-number">4</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3628" role="gridcell" data-date="2025-07-05" class="fc-day fc-day-sat fc-day-future fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="July 5, 2025" id="fc-dom-3628" class="fc-daygrid-day-number">5</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td></tr><tr role="row"><td aria-labelledby="fc-dom-3630" role="gridcell" data-date="2025-07-06" class="fc-day fc-day-sun fc-day-future fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="July 6, 2025" id="fc-dom-3630" class="fc-daygrid-day-number">6</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3632" role="gridcell" data-date="2025-07-07" class="fc-day fc-day-mon fc-day-future fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="July 7, 2025" id="fc-dom-3632" class="fc-daygrid-day-number">7</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3634" role="gridcell" data-date="2025-07-08" class="fc-day fc-day-tue fc-day-future fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="July 8, 2025" id="fc-dom-3634" class="fc-daygrid-day-number">8</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3636" role="gridcell" data-date="2025-07-09" class="fc-day fc-day-wed fc-day-future fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="July 9, 2025" id="fc-dom-3636" class="fc-daygrid-day-number">9</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3638" role="gridcell" data-date="2025-07-10" class="fc-day fc-day-thu fc-day-future fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="July 10, 2025" id="fc-dom-3638" class="fc-daygrid-day-number">10</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3640" role="gridcell" data-date="2025-07-11" class="fc-day fc-day-fri fc-day-future fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="July 11, 2025" id="fc-dom-3640" class="fc-daygrid-day-number">11</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td aria-labelledby="fc-dom-3642" role="gridcell" data-date="2025-07-12" class="fc-day fc-day-sat fc-day-future fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="July 12, 2025" id="fc-dom-3642" class="fc-daygrid-day-number">12</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td></tr></tbody></table></div></div></div></td></tr></tbody></table></div></div></div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ff6b6b;"></div>
+                    <span>Indian Festivals</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #4ecdc4;"></div>
+                    <span>IT Club</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #45b7d1;"></div>
+                    <span>HR Club</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f9ca24;"></div>
+                    <span>Finance Club</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f0932b;"></div>
+                    <span>Marketing Club</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #eb4d4b;"></div>
+                    <span>Pitch Finder Club</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #6ab04c;"></div>
+                    <span>Green Club</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e056fd;"></div>
+                    <span>Fitness Club</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #3742fa;"></div>
+                    <span>Cultural Club</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #2f3542;"></div>
+                    <span>Alumni Club</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ff4757;"></div>
+                    <span>DMRC Club</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #5f27cd;"></div>
+                    <span>Entrepreneurship Club</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #00d2d3;"></div>
+                    <span>Leadership Talk</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ff6348;"></div>
+                    <span>Alumni Talk</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #2ed573;"></div>
+                    <span>Industrial Visit</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ffa502;"></div>
+                    <span>Mid Term Exam</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ff3742;"></div>
+                    <span>End Term Exam</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #747d8c;"></div>
+                    <span>Others</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Event Modal -->
+    <div id="eventModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"><i class="fa-solid fa-plus"></i> Add New Event</h2>
+                <span class="close" onclick="closeModal()">×</span>
+            </div>
+            <div class="modal-body">
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fa-solid fa-calendar"></i> Event Date</label>
+                        <input type="date" id="eventDate" class="form-input" required="">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fa-solid fa-tag"></i> Event Name</label>
+                        <input type="text" id="eventName" class="form-input" placeholder="Enter event name" required="">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fa-solid fa-list"></i> Category</label>
+                        <select id="eventCategory" class="form-select" onchange="toggleCustomCategory()" required="">
+                            <option value="">Select Category</option>
+                            <option value="Indian Festivals">Indian Festivals</option>
+                            <option value="IT Club">IT Club</option>
+                            <option value="HR Club">HR Club</option>
+                            <option value="Finance Club">Finance Club</option>
+                            <option value="Marketing Club">Marketing Club</option>
+                            <option value="Pitch Finder Club">Pitch Finder Club</option>
+                            <option value="Green Club">Green Club</option>
+                            <option value="Fitness Club">Fitness Club</option>
+                            <option value="Cultural Club">Cultural Club</option>
+                            <option value="Alumni Club">Alumni Club</option>
+                            <option value="DMRC Club">DMRC Club</option>
+                            <option value="Entrepreneurship Club">Entrepreneurship Club</option>
+                            <option value="Leadership Talk">Leadership Talk</option>
+                            <option value="Alumni Talk">Alumni Talk</option>
+                            <option value="Industrial Visit">Industrial Visit</option>
+                            <option value="Mid Term Exam">Mid Term Exam</option>
+                            <option value="End Term Exam">End Term Exam</option>
+                            <option value="custom">Add Custom Category</option>
+                        </select>
+                        <input type="text" id="customCategory" class="form-input custom-category-input" placeholder="Enter custom category" style="display: none;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fa-solid fa-align-left"></i> Description (Optional)</label>
+                        <textarea id="eventDescription" class="form-input" rows="3" placeholder="Enter event description"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fa-solid fa-save"></i> Save Event
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()" style="width: 100%; margin-top: 10px;">
+                            <i class="fa-solid fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast" style="background: rgb(5, 150, 105); border-color: rgb(16, 185, 129); display: none;">Calendar uploaded successfully! 1 events loaded.</div>
+
+    <footer>
+        Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+        Connect with me: 
+        <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank">
+            @ashish_singh_rajput_3
+        </a>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script>
+        let calendar;
+        let currentEvents = [];
+        let editingEventId = null;
+        
+        const categoryColors = {
+            'Indian Festivals': '#ff6b6b',
+            'IT Club': '#4ecdc4',
+            'HR Club': '#45b7d1',
+            'Finance Club': '#f9ca24',
+            'Marketing Club': '#f0932b',
+            'Pitch Finder Club': '#eb4d4b',
+            'Green Club': '#6ab04c',
+            'Fitness Club': '#e056fd',
+            'Cultural Club': '#3742fa',
+            'Alumni Club': '#2f3542',
+            'DMRC Club': '#ff4757',
+            'Entrepreneurship Club': '#5f27cd',
+            'Leadership Talk': '#00d2d3',
+            'Alumni Talk': '#ff6348',
+            'Industrial Visit': '#2ed573',
+            'Mid Term Exam': '#ffa502',
+            'End Term Exam': '#ff3742',
+            'Others': '#747d8c'
+        };
+
+        // Pre-defined templates with events
+        const templates = {
+            indian_academic: [
+                // Major Indian Festivals 2024-2025
+                { title: 'Independence Day', start: '2024-08-15', category: 'Indian Festivals', description: 'National Holiday - Independence Day celebration' },
+                { title: 'Janmashtami', start: '2024-08-26', category: 'Indian Festivals', description: 'Lord Krishna\'s birthday celebration' },
+                { title: 'Ganesh Chaturthi', start: '2024-09-07', category: 'Indian Festivals', description: 'Lord Ganesha festival' },
+                { title: 'Gandhi Jayanti', start: '2024-10-02', category: 'Indian Festivals', description: 'Mahatma Gandhi\'s birthday' },
+                { title: 'Dussehra', start: '2024-10-12', category: 'Indian Festivals', description: 'Victory of good over evil' },
+                { title: 'Diwali', start: '2024-11-01', category: 'Indian Festivals', description: 'Festival of lights' },
+                { title: 'Guru Nanak Jayanti', start: '2024-11-15', category: 'Indian Festivals', description: 'Guru Nanak\'s birthday' },
+                { title: 'Republic Day', start: '2025-01-26', category: 'Indian Festivals', description: 'National Holiday - Republic Day' },
+                { title: 'Maha Shivratri', start: '2025-02-26', category: 'Indian Festivals', description: 'Lord Shiva festival' },
+                { title: 'Holi', start: '2025-03-14', category: 'Indian Festivals', description: 'Festival of colors' },
+                
+                // Academic Events
+                { title: 'Mid Term Exams Begin', start: '2024-09-15', category: 'Mid Term Exam', description: 'First semester mid-term examinations' },
+                { title: 'Mid Term Exams End', start: '2024-09-25', category: 'Mid Term Exam', description: 'First semester mid-term examinations conclude' },
+                { title: 'End Term Exams Begin', start: '2024-12-01', category: 'End Term Exam', description: 'First semester final examinations' },
+                { title: 'End Term Exams End', start: '2024-12-15', category: 'End Term Exam', description: 'First semester final examinations conclude' },
+                { title: 'Winter Break Begins', start: '2024-12-20', category: 'Others', description: 'Winter vacation starts' },
+                { title: 'Classes Resume', start: '2025-01-08', category: 'Others', description: 'Second semester begins' },
+                { title: 'Mid Term Exams Begin', start: '2025-03-01', category: 'Mid Term Exam', description: 'Second semester mid-term examinations' },
+                { title: 'Mid Term Exams End', start: '2025-03-10', category: 'Mid Term Exam', description: 'Second semester mid-term examinations conclude' },
+                { title: 'End Term Exams Begin', start: '2025-05-01', category: 'End Term Exam', description: 'Second semester final examinations' },
+                { title: 'End Term Exams End', start: '2025-05-15', category: 'End Term Exam', description: 'Second semester final examinations conclude' }
+            ],
+            
+            engineering_college: [
+                // Technical Events
+                { title: 'Orientation Program', start: '2024-08-01', category: 'Others', description: 'Welcome new students to the college' },
+                { title: 'TechFest Planning Meeting', start: '2024-08-15', category: 'IT Club', description: 'Annual technical festival planning' },
+                { title: 'Coding Competition', start: '2024-09-05', category: 'IT Club', description: 'Inter-college programming contest' },
+                { title: 'Industrial Visit - IT Company', start: '2024-09-20', category: 'Industrial Visit', description: 'Visit to major tech company' },
+                { title: 'Robotics Workshop', start: '2024-10-10', category: 'IT Club', description: 'Hands-on robotics workshop' },
+                { title: 'TechFest 2024', start: '2024-11-15', category: 'Cultural Club', description: 'Annual technical festival' },
+                { title: 'Alumni Talk - Tech Industry', start: '2024-12-05', category: 'Alumni Talk', description: 'Industry insights from alumni' },
+                { title: 'Project Exhibition', start: '2025-01-25', category: 'Others', description: 'Student project showcase' },
+                { title: 'Hackathon 24hrs', start: '2025-02-15', category: 'IT Club', description: '24-hour coding marathon' },
+                { title: 'Industry Internship Fair', start: '2025-03-20', category: 'Others', description: 'Internship opportunities showcase' },
+                { title: 'Final Year Project Defense', start: '2025-04-10', category: 'Others', description: 'Final year project presentations' },
+                { title: 'Tech Symposium', start: '2025-05-05', category: 'IT Club', description: 'Technical paper presentations' }
+            ],
+            
+            business_school: [
+                // Business Events
+                { title: 'MBA Orientation', start: '2024-07-15', category: 'Others', description: 'Welcome new MBA students' },
+                { title: 'Corporate Etiquette Workshop', start: '2024-08-10', category: 'HR Club', description: 'Professional skills development' },
+                { title: 'Case Study Competition', start: '2024-09-12', category: 'Finance Club', description: 'Inter-college case competition' },
+                { title: 'Leadership Summit', start: '2024-10-05', category: 'Leadership Talk', description: 'Leadership development program' },
+                { title: 'Alumni Panel - Finance', start: '2024-10-25', category: 'Alumni Talk', description: 'Finance industry insights' },
+                { title: 'Marketing Conclave', start: '2024-11-08', category: 'Marketing Club', description: 'Marketing strategy summit' },
+                { title: 'Corporate Visit - Bank', start: '2024-11-22', category: 'Industrial Visit', description: 'Banking sector exposure' },
+                { title: 'Entrepreneurship Bootcamp', start: '2024-12-10', category: 'Entrepreneurship Club', description: 'Startup development program' },
+                { title: 'Business Plan Competition', start: '2025-01-15', category: 'Entrepreneurship Club', description: 'Pitch your business idea' },
+                { title: 'HR Conclave', start: '2025-02-08', category: 'HR Club', description: 'Human resources summit' },
+                { title: 'Finance Workshop', start: '2025-03-05', category: 'Finance Club', description: 'Financial modeling workshop' },
+                { title: 'Placement Preparation', start: '2025-04-01', category: 'Others', description: 'Campus placement readiness' }
+            ],
+            
+            basic_college: [
+                // Essential College Events
+                { title: 'College Reopening', start: '2024-07-01', category: 'Others', description: 'New academic year begins' },
+                { title: 'Freshers Welcome', start: '2024-07-15', category: 'Cultural Club', description: 'Welcome party for new students' },
+                { title: 'Teachers Day Celebration', start: '2024-09-05', category: 'Cultural Club', description: 'Honoring our teachers' },
+                { title: 'Annual Sports Meet', start: '2024-10-15', category: 'Fitness Club', description: 'Inter-departmental sports competition' },
+                { title: 'Cultural Festival', start: '2024-11-20', category: 'Cultural Club', description: 'Annual cultural celebration' },
+                { title: 'Annual Day Celebration', start: '2025-01-30', category: 'Cultural Club', description: 'College annual day function' },
+                { title: 'Science Exhibition', start: '2025-02-20', category: 'Others', description: 'Student science project display' },
+                { title: 'Career Guidance Session', start: '2025-03-15', category: 'Others', description: 'Career counseling for students' },
+                { title: 'Farewell Party', start: '2025-04-25', category: 'Cultural Club', description: 'Farewell for graduating students' },
+                { title: 'Summer Vacation Begins', start: '2025-05-20', category: 'Others', description: 'Summer break starts' }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCalendar();
+            loadEventsFromStorage();
+            setupEventListeners();
+        });
+
+        function initializeCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            const startYear = document.getElementById('startYear').value;
+            const endYear = document.getElementById('endYear').value;
+            
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                validRange: {
+                    start: `${startYear}-06-01`,
+                    end: `${endYear}-06-01`
+                },
+                height: 600,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,listMonth'
+                },
+                events: currentEvents,
+                eventClick: function(info) {
+                    editEvent(info.event);
+                },
+                dateClick: function(info) {
+                    openAddEventModal(info.dateStr);
+                },
+                eventDidMount: function(info) {
+                    info.el.title = `${info.event.title}\nCategory: ${info.event.extendedProps.category}\nDescription: ${info.event.extendedProps.description || 'No description'}`;
+                }
+            });
+            
+            calendar.render();
+        }
+
+        function loadTemplate(templateName) {
+            if (!templates[templateName]) {
+                showToast('Template not found!', 'error');
+                return;
+            }
+
+            const confirmMessage = currentEvents.length > 0 
+                ? 'This will replace all existing events. Do you want to continue?' 
+                : 'Load this template?';
+
+            if (confirm(confirmMessage)) {
+                showLoading(true);
+                
+                setTimeout(() => {
+                    currentEvents = [];
+                    calendar.removeAllEvents();
+                    
+                    const templateEvents = templates[templateName].map(event => ({
+                        id: generateEventId(),
+                        title: event.title,
+                        start: event.start,
+                        backgroundColor: categoryColors[event.category] || categoryColors['Others'],
+                        borderColor: categoryColors[event.category] || categoryColors['Others'],
+                        extendedProps: {
+                            category: event.category,
+                            description: event.description
+                        }
+                    }));
+                    
+                    currentEvents = templateEvents;
+                    calendar.addEventSource(currentEvents);
+                    saveEventsToStorage();
+                    
+                    showLoading(false);
+                    showToast(`${templateName.replace('_', ' ').toUpperCase()} template loaded successfully! ${templateEvents.length} events added.`, 'success');
+                }, 500);
+            }
+        }
+
+        function setupEventListeners() {
+            document.getElementById('eventForm').addEventListener('submit', handleEventSubmit);
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('eventModal');
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        }
+
+        function updateCalendarYear() {
+            const startYear = document.getElementById('startYear').value;
+            const endYear = document.getElementById('endYear').value;
+            
+            if (parseInt(endYear) <= parseInt(startYear)) {
+                showToast('End year must be greater than start year!', 'error');
+                return;
+            }
+            
+            calendar.setOption('validRange', {
+                start: `${startYear}-06-01`,
+                end: `${endYear}-06-01`
+            });
+            
+            calendar.today();
+            showToast('Calendar year updated successfully!', 'success');
+        }
+
+        function openAddEventModal(date = '') {
+            editingEventId = null;
+            document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-plus"></i> Add New Event';
+            document.getElementById('eventForm').reset();
+            
+            if (date) {
+                document.getElementById('eventDate').value = date;
+            }
+            
+            document.getElementById('eventModal').style.display = 'block';
+        }
+
+        function editEvent(event) {
+            editingEventId = event.id;
+            document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-edit"></i> Edit Event';
+            
+            document.getElementById('eventDate').value = event.startStr.split('T')[0];
+            document.getElementById('eventName').value = event.title;
+            document.getElementById('eventCategory').value = event.extendedProps.category;
+            document.getElementById('eventDescription').value = event.extendedProps.description || '';
+            
+            document.getElementById('eventModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('eventModal').style.display = 'none';
+            document.getElementById('customCategory').style.display = 'none';
+            editingEventId = null;
+        }
+
+        function toggleCustomCategory() {
+            const category = document.getElementById('eventCategory').value;
+            const customInput = document.getElementById('customCategory');
+            
+            if (category === 'custom') {
+                customInput.style.display = 'block';
+                customInput.required = true;
+            } else {
+                customInput.style.display = 'none';
+                customInput.required = false;
+                customInput.value = '';
+            }
+        }
+
+        function handleEventSubmit(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('eventDate').value;
+            const name = document.getElementById('eventName').value;
+            let category = document.getElementById('eventCategory').value;
+            const description = document.getElementById('eventDescription').value;
+            
+            if (category === 'custom') {
+                category = document.getElementById('customCategory').value;
+                if (!category) {
+                    showToast('Please enter a custom category name!', 'error');
+                    return;
+                }
+            }
+            
+            const eventData = {
+                id: editingEventId || generateEventId(),
+                title: name,
+                start: date,
+                backgroundColor: categoryColors[category] || categoryColors['Others'],
+                borderColor: categoryColors[category] || categoryColors['Others'],
+                extendedProps: {
+                    category: category,
+                    description: description
+                }
+            };
+            
+            if (editingEventId) {
+                // Update existing event
+                const eventIndex = currentEvents.findIndex(e => e.id === editingEventId);
+                if (eventIndex !== -1) {
+                    currentEvents[eventIndex] = eventData;
+                    calendar.getEventById(editingEventId).remove();
+                }
+            } else {
+                // Add new event
+                currentEvents.push(eventData);
+            }
+            
+            calendar.addEvent(eventData);
+            saveEventsToStorage();
+            closeModal();
+            
+            showToast(editingEventId ? 'Event updated successfully!' : 'Event added successfully!', 'success');
+        }
+
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                calendar.removeAllEvents();
+                calendar.addEventSource(currentEvents);
+                return;
+            }
+            
+            const filteredEvents = currentEvents.filter(event => {
+                const eventDate = new Date(event.start);
+                const monthName = eventDate.toLocaleString('default', { month: 'long' }).toLowerCase();
+                
+                return event.title.toLowerCase().includes(searchTerm) ||
+                       event.extendedProps.category.toLowerCase().includes(searchTerm) ||
+                       monthName.includes(searchTerm) ||
+                       (event.extendedProps.description && event.extendedProps.description.toLowerCase().includes(searchTerm));
+            });
+            
+            calendar.removeAllEvents();
+            calendar.addEventSource(filteredEvents);
+        }
+
+        function downloadCalendar() {
+            if (currentEvents.length === 0) {
+                showToast('No events to download!', 'error');
+                return;
+            }
+            
+            const startYear = document.getElementById('startYear').value;
+            const endYear = document.getElementById('endYear').value;
+            
+            const calendarData = {
+                academicYear: `${startYear}-${endYear}`,
+                events: currentEvents,
+                exportDate: new Date().toISOString(),
+                generatedBy: 'Ashi Tools - College Calendar Maker'
+            };
+            
+            const dataStr = JSON.stringify(calendarData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `college_calendar_${startYear}_${endYear}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showToast('Calendar downloaded successfully!', 'success');
+        }
+
+        function uploadCalendar(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            showLoading(true);
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const calendarData = JSON.parse(e.target.result);
+                    
+                    if (calendarData.events && Array.isArray(calendarData.events)) {
+                        currentEvents = calendarData.events;
+                        
+                        calendar.removeAllEvents();
+                        calendar.addEventSource(currentEvents);
+                        
+                        saveEventsToStorage();
+                        
+                        if (calendarData.academicYear) {
+                            const years = calendarData.academicYear.split('-');
+                            if (years.length === 2) {
+                                document.getElementById('startYear').value = years[0];
+                                document.getElementById('endYear').value = years[1];
+                                updateCalendarYear();
+                            }
+                        }
+                        
+                        showToast(`Calendar uploaded successfully! ${currentEvents.length} events loaded.`, 'success');
+                    } else {
+                        showToast('Invalid calendar file format!', 'error');
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    showToast('Error reading calendar file! Please ensure it\'s a valid JSON file.', 'error');
+                } finally {
+                    showLoading(false);
+                }
+            };
+            
+            reader.onerror = function() {
+                showToast('Error reading file!', 'error');
+                showLoading(false);
+            };
+            
+            reader.readAsText(file);
+            
+            // Reset file input
+            event.target.value = '';
+        }
+
+        function exportToPDF() {
+            if (currentEvents.length === 0) {
+                showToast('No events to export!', 'error');
+                return;
+            }
+
+            showLoading(true);
+            
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                const startYear = document.getElementById('startYear').value;
+                const endYear = document.getElementById('endYear').value;
+                
+                // Title
+                doc.setFontSize(20);
+                doc.setTextColor(59, 130, 246);
+                doc.text('College Academic Calendar', 20, 20);
+                doc.setFontSize(14);
+                doc.setTextColor(75, 85, 99);
+                doc.text(`Academic Year: ${startYear}-${endYear}`, 20, 30);
+                doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 40);
+                doc.text('Generated by: Ashi Tools - College Calendar Maker', 20, 50);
+                
+                // Sort events by date
+                const sortedEvents = [...currentEvents].sort((a, b) => new Date(a.start) - new Date(b.start));
+                
+                let yPosition = 70;
+                const pageHeight = doc.internal.pageSize.height;
+                
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text('Event Schedule:', 20, 60);
+                
+                sortedEvents.forEach((event, index) => {
+                    if (yPosition > pageHeight - 30) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    
+                    const eventDate = new Date(event.start).toLocaleDateString();
+                    const eventText = `${eventDate} - ${event.title} (${event.extendedProps.category})`;
+                    
+                    doc.setFontSize(11);
+                    doc.text(eventText, 20, yPosition);
+                    
+                    if (event.extendedProps.description) {
+                        yPosition += 6;
+                        doc.setFontSize(9);
+                        doc.setTextColor(128, 128, 128);
+                        const wrappedText = doc.splitTextToSize(`   ${event.extendedProps.description}`, 170);
+                        doc.text(wrappedText, 20, yPosition);
+                        yPosition += wrappedText.length * 4;
+                        doc.setTextColor(0, 0, 0);
+                    }
+                    
+                    yPosition += 8;
+                });
+                
+                // Footer
+                const pageCount = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(8);
+                    doc.setTextColor(156, 163, 175);
+                    doc.text(`Page ${i} of ${pageCount} | Generated by Ashi Tools`, 20, 285);
+                }
+                
+                doc.save(`college_calendar_${startYear}_${endYear}.pdf`);
+                showToast('PDF exported successfully!', 'success');
+            } catch (error) {
+                console.error('PDF export error:', error);
+                showToast('Error exporting PDF!', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function exportToExcel() {
+            if (currentEvents.length === 0) {
+                showToast('No events to export!', 'error');
+                return;
+            }
+
+            showLoading(true);
+            
+            try {
+                // Prepare data for Excel
+                const excelData = currentEvents.map(event => ({
+                    'Date': new Date(event.start).toLocaleDateString(),
+                    'Event Name': event.title,
+                    'Category': event.extendedProps.category,
+                    'Description': event.extendedProps.description || '',
+                    'Month': new Date(event.start).toLocaleString('default', { month: 'long' }),
+                    'Year': new Date(event.start).getFullYear(),
+                    'Day of Week': new Date(event.start).toLocaleString('default', { weekday: 'long' })
+                }));
+                
+                // Sort by date
+                excelData.sort((a, b) => new Date(a.Date) - new Date(b.Date));
+                
+                // Create workbook
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(excelData);
+                
+                // Auto-size columns
+                const colWidths = [
+                    { wch: 12 }, // Date
+                    { wch: 35 }, // Event Name
+                    { wch: 20 }, // Category
+                    { wch: 50 }, // Description
+                    { wch: 12 }, // Month
+                    { wch: 8 },  // Year
+                    { wch: 12 }  // Day of Week
+                ];
+                ws['!cols'] = colWidths;
+                
+                // Add worksheet to workbook
+                XLSX.utils.book_append_sheet(wb, ws, 'Calendar Events');
+                
+                // Create summary sheet
+                const categoryCount = {};
+                const monthCount = {};
+                
+                currentEvents.forEach(event => {
+                    const category = event.extendedProps.category;
+                    const month = new Date(event.start).toLocaleString('default', { month: 'long' });
+                    
+                    categoryCount[category] = (categoryCount[category] || 0) + 1;
+                    monthCount[month] = (monthCount[month] || 0) + 1;
+                });
+                
+                const summaryData = [
+                    { 'Summary Type': 'Total Events', 'Count': currentEvents.length },
+                    { 'Summary Type': '', 'Count': '' },
+                    { 'Summary Type': 'Category Breakdown', 'Count': '' },
+                    ...Object.entries(categoryCount).map(([category, count]) => ({
+                        'Summary Type': category,
+                        'Count': count
+                    })),
+                    { 'Summary Type': '', 'Count': '' },
+                    { 'Summary Type': 'Month Breakdown', 'Count': '' },
+                    ...Object.entries(monthCount).map(([month, count]) => ({
+                        'Summary Type': month,
+                        'Count': count
+                    }))
+                ];
+                
+                const summaryWs = XLSX.utils.json_to_sheet(summaryData);
+                summaryWs['!cols'] = [{ wch: 25 }, { wch: 15 }];
+                XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
+                
+                const startYear = document.getElementById('startYear').value;
+                const endYear = document.getElementById('endYear').value;
+                
+                // Save file
+                XLSX.writeFile(wb, `college_calendar_${startYear}_${endYear}.xlsx`);
+                showToast('Excel file exported successfully!', 'success');
+            } catch (error) {
+                console.error('Excel export error:', error);
+                showToast('Error exporting Excel file!', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function clearCalendar() {
+            if (confirm('Are you sure you want to delete all events? This action cannot be undone.')) {
+                currentEvents = [];
+                calendar.removeAllEvents();
+                saveEventsToStorage();
+                showToast('All events cleared successfully!', 'success');
+            }
+        }
+
+        function generateEventId() {
+            return 'event_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+        }
+
+        function saveEventsToStorage() {
+            localStorage.setItem('collegeCalendarEvents', JSON.stringify(currentEvents));
+        }
+
+        function loadEventsFromStorage() {
+            const savedEvents = localStorage.getItem('collegeCalendarEvents');
+            if (savedEvents) {
+                try {
+                    currentEvents = JSON.parse(savedEvents);
+                    calendar.addEventSource(currentEvents);
+                } catch (error) {
+                    console.error('Error loading saved events:', error);
+                    currentEvents = [];
+                }
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast';
+            if (type === 'error') {
+                toast.style.background = '#dc2626';
+                toast.style.borderColor = '#f87171';
+            } else {
+                toast.style.background = '#059669';
+                toast.style.borderColor = '#10b981';
+            }
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 4000);
+        }
+
+        function showLoading(show) {
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            loadingIndicator.style.display = show ? 'block' : 'none';
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                downloadCalendar();
+            }
+            
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

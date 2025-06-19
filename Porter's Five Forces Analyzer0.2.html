@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        <style type="text/css">.lf-progress {
+  -webkit-appearance: none;
+  -moz-apperance: none;
+  width: 100%;
+  /* margin: 0 10px; */
+  height: 4px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.lf-progress:focus {
+  outline: none;
+  border: none;
+}
+.lf-progress::-moz-range-track {
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+}
+.lf-progress::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress::-moz-range-thumb {
+  -moz-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress::-ms-track {
+  width: 100%;
+  height: 3px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.lf-progress::-ms-fill-lower {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lf-progress::-ms-fill-upper {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lf-progress::-ms-thumb {
+  border: 0;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress:focus::-ms-fill-lower {
+  background: #ccc;
+}
+.lf-progress:focus::-ms-fill-upper {
+  background: #ccc;
+}
+.lf-player-container :focus {
+  outline: 0;
+}
+.lf-popover {
+  position: relative;
+}
+
+.lf-popover-content {
+  display: inline-block;
+  position: absolute;
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+}
+
+.lf-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lf-player-btn-container {
+  display: flex;
+  align-items: center;
+}
+.lf-player-btn {
+  cursor: pointer;
+  fill: #999;
+  width: 14px;
+}
+
+.lf-player-btn.active {
+  fill: #555;
+}
+
+.lf-popover {
+  position: relative;
+}
+
+.lf-popover-content {
+  display: inline-block;
+  position: absolute;
+  background-color: #ffffff;
+  opacity: 1;
+
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+  padding: 10px;
+}
+
+.lf-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lf-arrow {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  bottom: -9px;
+  border-style: solid;
+  border-width: 10px 10px 0px 10px;
+}
+
+.lf-left-align,
+.lf-left-align .lfarrow {
+  left: 0;
+  right: unset;
+}
+
+.lf-right-align,
+.lf-right-align .lf-arrow {
+  right: 0;
+  left: unset;
+}
+
+.lf-text-input {
+  border: 1px #ccc solid;
+  border-radius: 5px;
+  padding: 3px;
+  width: 60px;
+  margin: 0;
+}
+
+.lf-color-picker {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 90px;
+}
+
+.lf-color-selectors {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lf-color-component {
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.lf-color-component strong {
+  width: 40px;
+}
+
+.lf-color-component input[type='range'] {
+  margin: 0 0 0 10px;
+}
+
+.lf-color-component input[type='number'] {
+  width: 50px;
+  margin: 0 0 0 10px;
+}
+
+.lf-color-preview {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 5px;
+}
+
+.lf-preview {
+  height: 60px;
+  width: 60px;
+}
+
+.lf-popover-snapshot {
+  width: 150px;
+}
+.lf-popover-snapshot h5 {
+  margin: 5px 0 10px 0;
+  font-size: 0.75rem;
+}
+.lf-popover-snapshot a {
+  display: block;
+  text-decoration: none;
+}
+.lf-popover-snapshot a:before {
+  content: '⥼';
+  margin-right: 5px;
+}
+.lf-popover-snapshot .lf-note {
+  display: block;
+  margin-top: 10px;
+  color: #999;
+}
+.lf-player-controls > div {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.lf-player-controls > div:first-child {
+  margin-left: 0px;
+}
+.lf-player-controls > div:last-child {
+  margin-right: 0px;
+}
+</style></head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1239.0">
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Porter's Five Forces – Ashi Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+    :root {
+      --primary: #2980b9; /* Porter's Five Forces blue theme from example */
+      --primary-dark: #20639b;
+      --secondary: #f39c12; /* Orange accent from example */
+      --dark-bg: #1e272e; /* Dark background from example */
+      --card-bg: #2c3e50; /* Card background from example */
+      --text-light: #ecf0f1;
+      --border-light: rgba(236,240,241,0.2);
+      --input-bg: rgba(236,240,241,0.05);
+      --transition: all 0.3s ease;
+      /* Ashi Tools specific overrides if needed, or blend */
+      --ashi-primary: #00ffd5;
+      --ashi-secondary: #00b39e;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
+    body {
+      background: var(--dark-bg);
+      color: var(--text-light);
+      min-height:100vh;
+      display:flex; flex-direction:column;
+      line-height:1.6;
+    }
+    header {
+      text-align:center;
+      padding:30px 20px;
+      border-bottom:1px solid var(--border-light);
+      background: linear-gradient(135deg, #0a0a0a 0%, var(--dark-bg) 100%);
+      flex-shrink:0;
+    }
+    .logo-container {
+      display:flex; align-items:center; justify-content:center; gap:15px; margin-bottom:10px;
+    }
+    .logo-icon {
+      background:var(--ashi-primary); 
+      color:var(--dark-bg); width:60px; height:60px;
+      border-radius:50%; display:flex; align-items:center; justify-content:center;
+      font-size:2rem;
+    }
+    h1 { font-size:2.2rem; color:var(--ashi-primary); text-shadow: 0 0 8px rgba(0, 255, 213, 0.3); }
+    .header-sub {
+      font-size:1rem; color:#bdc3c7;
+      max-width:700px; margin:10px auto 0;
+    }
+    .controls-panel {
+      padding:15px 20px;
+      background:var(--dark-bg);
+      border-bottom:1px solid var(--card-bg);
+      display:flex; justify-content:center; align-items: center; gap:15px; flex-wrap:wrap;
+      flex-shrink:0;
+      position: sticky; 
+      top: 0;
+      z-index: 100;
+    }
+    .controls-panel input[type="text"] {
+      flex-grow:1; max-width:400px;
+      padding:10px; border-radius:6px; border:1px solid var(--border-light);
+      background:var(--input-bg); color:var(--text-light);
+      font-size: 0.95rem;
+    }
+    .controls-panel input[type="text"]:focus {
+        border-color: var(--ashi-primary);
+        box-shadow: 0 0 0 2px rgba(0, 255, 213, 0.2);
+    }
+    .btn {
+      padding:10px 25px; border:none; border-radius:6px;
+      font-size:1rem; font-weight:600; cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--ashi-primary); 
+      color:var(--dark-bg);
+      transition:var(--transition);
+    }
+    .btn:hover { background:var(--ashi-secondary); transform: translateY(-1px); }
+    .btn i { margin-right:5px; }
+
+    .canvas-wrapper {
+      flex-grow:1; 
+      overflow:auto; 
+      padding:20px;
+      display: flex; 
+      justify-content: center;
+      align-items: flex-start; 
+      width: 100%;
+    }
+    #porters-canvas {
+      display:grid;
+      grid-template-columns:repeat(3, minmax(280px, 1fr)); 
+      grid-template-rows:repeat(3, minmax(200px, 1fr));   
+      gap:25px; 
+      width:100%;
+      max-width:1200px; 
+      padding:25px; 
+      background:var(--dark-bg);
+      border:2px solid var(--primary); 
+      border-radius:12px;
+    }
+    .force-block {
+      background:var(--card-bg);
+      border:1px solid var(--border-light);
+      border-radius:8px; padding:20px;
+      display:flex; flex-direction:column;
+      position:relative;
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    .force-block:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+    }
+
+    .force-block.empty { background:transparent; border:none; box-shadow:none; }
+    #threat-of-new-entrants { grid-area: 1 / 2 / 2 / 3; }
+    #bargaining-power-of-suppliers { grid-area: 2 / 1 / 3 / 2; }
+    #competitive-rivalry {
+        grid-area: 2 / 2 / 3 / 3;
+        background:var(--primary-dark); 
+        border:2px solid var(--secondary); 
+    }
+    #bargaining-power-of-buyers { grid-area: 2 / 3 / 3 / 4; }
+    #threat-of-substitutes { grid-area: 3 / 2 / 4 / 3; }
+
+    .force-block h3 {
+      font-size:1.1rem; 
+      color:var(--text-light);
+      margin-bottom:12px; padding-bottom:10px;
+      border-bottom:1px solid var(--border-light);
+      display:flex;align-items:center;gap:10px;
+    }
+    .force-block#competitive-rivalry h3 { color: var(--secondary); } 
+    .force-block h3 i { font-size:1em; color: var(--primary); } 
+    .force-block#competitive-rivalry h3 i { color: var(--secondary); }
+
+
+    .force-content {
+      flex-grow:1;
+      background:var(--input-bg);
+      color:var(--text-light);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:6px;
+      padding:12px;
+      font-size:0.9rem; 
+      overflow-y:auto;
+      min-height:100px; 
+      line-height: 1.5;
+      white-space: pre-wrap; 
+    }
+    .force-content[contenteditable="true"].is-placeholder::before { 
+        content: attr(data-placeholder);
+        color: #777; 
+        font-style: italic;
+        pointer-events: none; 
+        display: block; 
+    }
+    .force-content:focus {
+      outline:none; border-color:var(--ashi-primary); 
+      box-shadow:0 0 0 2px rgba(0, 255, 213, 0.3);
+    }
+    footer {
+      text-align:center; padding:20px 0; 
+      background:var(--dark-bg);
+      border-top:1px solid var(--card-bg);
+      flex-shrink:0;
+      font-size:0.9rem;
+    }
+    .insta-link { color:var(--ashi-primary); text-decoration:none; font-weight:bold; }
+    .insta-link:hover { text-decoration:underline; color: var(--ashi-secondary); }
+
+    /* Toast */
+    .toast {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--success);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .toast.show {
+        opacity: 1;
+        visibility: visible;
+    }
+    .toast.error {
+        background: var(--danger);
+    }
+
+
+    @media(max-width:992px){ 
+      #porters-canvas{
+        grid-template-columns:1fr 1fr;
+        grid-template-rows: auto auto auto; 
+        min-height: auto; 
+      }
+      #threat-of-new-entrants { grid-area: 1 / 1 / 2 / 3; } 
+      #bargaining-power-of-suppliers { grid-area: 2 / 1 / 3 / 2; }
+      #competitive-rivalry { grid-area: 2 / 2 / 3 / 3; }
+      #bargaining-power-of-buyers { grid-area: 3 / 1 / 4 / 2; }
+      #threat-of-substitutes { grid-area: 3 / 2 / 4 / 3; }
+      .force-block.empty { display:none; } 
+    }
+
+    @media(max-width:768px){
+      body {
+          overflow-y: auto; 
+      }
+      .canvas-wrapper {
+          align-items: stretch; 
+          padding: 10px;
+      }
+      #porters-canvas{
+        grid-template-columns:1fr;
+        grid-template-rows:repeat(5,auto);
+        gap: 15px;
+        padding: 15px;
+      }
+      .force-block { min-height: 180px; padding: 15px; } 
+      .force-content { min-height: 80px; font-size: 0.85rem; }
+      h1 { font-size: 1.8rem; }
+      .header-sub { font-size: 0.9rem; }
+      .controls-panel input[type="text"] { max-width: none; }
+      .controls-panel {
+          position: static; 
+      }
+    }
+  </style>
+
+
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon"><i class="fas fa-sitemap"></i></div>
+      <div class="logo-text"><h1>Porter's Five Forces Analyzer</h1></div>
+    </div>
+    <p class="header-sub">
+      Visually analyze industry competition: new entrants, suppliers, buyers, substitutes, and existing rivalry.
+    </p>
+  </header>
+
+  <div class="controls-panel">
+    <input type="text" id="canvasTitle" placeholder="Canvas Title (e.g. My Industry Analysis)">
+    <button class="btn" id="exportPdfBtn"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    <button class="btn" id="saveCanvasBtn"><i class="fas fa-save"></i> Save Canvas</button>
+    <button class="btn" id="loadCanvasBtn"><i class="fas fa-upload"></i> Load Canvas</button>
+    <button class="btn" id="clearCanvasBtn" style="background-color: #e74c3c;"><i class="fas fa-trash"></i> Clear Canvas</button>
+  </div>
+
+  <div class="canvas-wrapper">
+    <div id="porters-canvas">
+      <div class="force-block empty"></div>
+      <div class="force-block" id="threat-of-new-entrants" data-force-id="newEntrants">
+        <h3><i class="fas fa-door-open"></i> Threat of New Entrants</h3>
+        <div class="force-content is-placeholder" contenteditable="true" data-placeholder="e.g., Barriers to entry, capital requirements, brand loyalty, government policies, switching costs..."></div>
+      </div>
+      <div class="force-block empty"></div>
+      <div class="force-block" id="bargaining-power-of-suppliers" data-force-id="supplierPower">
+        <h3><i class="fas fa-truck-loading"></i> Bargaining Power of Suppliers</h3>
+        <div class="force-content is-placeholder" contenteditable="true" data-placeholder="e.g., Number of suppliers, uniqueness of inputs, supplier concentration, switching costs to change suppliers..." data-qb-tmp-id="lt-125288" spellcheck="false" data-gramm="false"></div>
+      </div>
+      <div class="force-block" id="competitive-rivalry" data-force-id="rivalry">
+        <h3><i class="fas fa-fist-raised"></i> Competitive Rivalry</h3>
+        <div class="force-content is-placeholder" contenteditable="true" data-placeholder="e.g., Number of competitors, industry growth, product differentiation, exit barriers, diversity of rivals..."></div>
+      </div>
+      <div class="force-block" id="bargaining-power-of-buyers" data-force-id="buyerPower">
+        <h3><i class="fas fa-users"></i> Bargaining Power of Buyers</h3>
+        <div class="force-content is-placeholder" contenteditable="true" data-placeholder="e.g., Number of buyers, buyer concentration, availability of substitutes, switching costs for buyers, price sensitivity..."></div>
+      </div>
+      <div class="force-block empty"></div>
+      <div class="force-block" id="threat-of-substitutes" data-force-id="substitutes">
+        <h3><i class="fas fa-random"></i> Threat of Substitute Products</h3>
+        <div class="force-content is-placeholder" contenteditable="true" data-placeholder="e.g., Availability of alternatives, price/performance of substitutes, customer loyalty to existing products..."></div>
+      </div>
+      <div class="force-block empty"></div>
+    </div>
+  </div>
+  
+  <div class="toast" id="toast">Canvas cleared!</div>
+
+  <footer>
+    <p>
+      Porter's Five Forces – Ashi Tools | Connect 
+      <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="insta-link">
+        @ashish_singh_rajput_3
+      </a>
+    </p>
+  </footer>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const contentDivs = document.querySelectorAll('.force-content');
+    const canvasTitleInput = document.getElementById('canvasTitle');
+    const toastEl = document.getElementById('toast');
+
+    function showToast(message, type = 'success') {
+        toastEl.textContent = message;
+        toastEl.className = `toast show ${type === 'error' ? 'error' : ''}`;
+        setTimeout(() => {
+            toastEl.classList.remove('show');
+        }, 3000);
+    }
+
+    // Placeholder logic for contenteditable
+    contentDivs.forEach(div => {
+      const placeholder = div.dataset.placeholder;
+      if (!div.textContent.trim() && placeholder) {
+        div.innerHTML = ''; 
+        div.classList.add('is-placeholder');
+      } else if (div.textContent.trim() && div.classList.contains('is-placeholder')) {
+          div.classList.remove('is-placeholder');
+      }
+
+      div.onfocus = () => {
+        if (div.classList.contains('is-placeholder')) {
+          div.classList.remove('is-placeholder');
+        }
+      };
+      div.onblur = () => {
+        if (!div.textContent.trim() && placeholder) {
+          div.classList.add('is-placeholder');
+          div.innerHTML = ''; 
+        }
+      };
+    });
+
+    // Save Canvas
+    document.getElementById('saveCanvasBtn').addEventListener('click', () => {
+        const canvasData = {
+            title: canvasTitleInput.value.trim(),
+            forces: {}
+        };
+        contentDivs.forEach(div => {
+            const forceId = div.closest('.force-block').dataset.forceId;
+            if (forceId) {
+                canvasData.forces[forceId] = div.classList.contains('is-placeholder') ? '' : div.innerHTML; 
+            }
+        });
+        localStorage.setItem('portersFiveForcesCanvas', JSON.stringify(canvasData));
+        showToast('Canvas saved successfully!');
+    });
+
+    // Load Canvas
+    function loadCanvasData() {
+        const savedData = localStorage.getItem('portersFiveForcesCanvas');
+        if (savedData) {
+            try {
+                const canvasData = JSON.parse(savedData);
+                canvasTitleInput.value = canvasData.title || '';
+                contentDivs.forEach(div => {
+                    const forceId = div.closest('.force-block').dataset.forceId;
+                    if (forceId && canvasData.forces[forceId] && canvasData.forces[forceId].trim() !== "") {
+                        div.innerHTML = canvasData.forces[forceId]; 
+                        div.classList.remove('is-placeholder');
+                    } else {
+                        div.innerHTML = ''; 
+                        div.classList.add('is-placeholder');
+                    }
+                });
+                return true; 
+            } catch (e) {
+                console.error("Error loading canvas from localStorage:", e);
+                localStorage.removeItem('portersFiveForcesCanvas');
+                return false;
+            }
+        }
+        return false; 
+    }
+    
+    document.getElementById('loadCanvasBtn').addEventListener('click', () => {
+        if (confirm('Load saved canvas? Current content will be overwritten.')) {
+            if (loadCanvasData()) {
+                showToast('Canvas loaded successfully!');
+            } else {
+                showToast('No saved canvas found.', 'error');
+            }
+        }
+    });
+    
+    // Clear Canvas
+    document.getElementById('clearCanvasBtn').addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear the canvas? This cannot be undone.')) {
+            canvasTitleInput.value = '';
+            contentDivs.forEach(div => {
+                div.innerHTML = ''; 
+                div.classList.add('is-placeholder');
+            });
+            localStorage.removeItem('portersFiveForcesCanvas');
+            showToast('Canvas cleared!');
+        }
+    });
+
+
+    // PDF export - Refined for better layout and overlap prevention
+    document.getElementById('exportPdfBtn').addEventListener('click', () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('landscape','pt','a4');
+      const margin = 30; // More generous margin
+      const pageW = doc.internal.pageSize.getWidth();
+      const pageH = doc.internal.pageSize.getHeight();
+      
+      const contentAreaW = pageW - margin*2;
+      const contentAreaH = pageH - margin*2 - 70; // Increased space for title/footer
+
+      // White background for PDF
+      doc.setFillColor(255,255,255);
+      doc.rect(0,0,pageW,pageH,'F');
+
+      // Main Title
+      doc.setFont('helvetica','bold').setFontSize(22).setTextColor(0);
+      const mainTitle = canvasTitleInput.value.trim() || "Porter's Five Forces Analysis";
+      doc.text(mainTitle, pageW/2, margin + 18, {align:'center'}); // Adjusted Y
+      doc.setFont('helvetica','normal').setFontSize(10).setTextColor(100);
+      doc.text('Generated by Ashi Tools', pageW/2, margin+33, {align:'center'}); // Adjusted Y
+      doc.setLineWidth(0.5).setDrawColor(200);
+      doc.line(margin, margin+42, pageW-margin, margin+42); // Adjusted Y
+
+
+      // Define block dimensions and positions for PDF - more conservative
+      const colW = contentAreaW / 3;
+      const rowH = contentAreaH / 3;
+      const gap = 25; // Increased gap for PDF
+
+      // Calculate actual block sizes considering gaps
+      const blockW = colW - gap; // Simplified, ensures gap between blocks
+      const blockH = rowH - gap;
+      
+      const centralBlockW = blockW * 1.1; 
+      const centralBlockH = blockH * 1.1;
+
+      const yOffsetForTitle = margin + 60; // Start Y position for blocks after title
+
+      // Define positions for each block carefully
+      const xCol1 = margin;
+      const xCol2 = margin + colW;
+      const xCol3 = margin + colW * 2;
+
+      const yRow1 = yOffsetForTitle;
+      const yRow2 = yOffsetForTitle + rowH;
+      const yRow3 = yOffsetForTitle + rowH * 2;
+
+
+      const pdfBlocks = [
+        { id: 'competitive-rivalry', title: 'Competitive Rivalry',
+          x: xCol2 + (colW - centralBlockW) / 2, y: yRow2 + (rowH - centralBlockH) / 2,
+          w: centralBlockW, h: centralBlockH, titleColor:[32,99,155], titleTextColor:[255,255,255], contentBgColor:[240,240,240] },
+          
+        { id: 'threat-of-new-entrants', title: 'Threat of New Entrants',
+          x: xCol2 + (colW - blockW) / 2, y: yRow1,
+          w: blockW, h: blockH, titleColor:[41,128,185], titleTextColor:[255,255,255], contentBgColor:[230,230,230]},
+
+        { id: 'bargaining-power-of-suppliers', title: 'Bargaining Power of Suppliers',
+          x: xCol1, y: yRow2 + (rowH - blockH) / 2,
+          w: blockW, h: blockH, titleColor:[41,128,185], titleTextColor:[255,255,255], contentBgColor:[230,230,230]},
+
+        { id: 'bargaining-power-of-buyers', title: 'Bargaining Power of Buyers',
+          x: xCol3, y: yRow2 + (rowH - blockH) / 2,
+          w: blockW, h: blockH, titleColor:[41,128,185], titleTextColor:[255,255,255], contentBgColor:[230,230,230]},
+
+        { id: 'threat-of-substitutes', title: 'Threat of Substitute Products',
+          x: xCol2 + (colW - blockW) / 2, y: yRow3,
+          w: blockW, h: blockH, titleColor:[41,128,185], titleTextColor:[255,255,255], contentBgColor:[230,230,230]}
+      ];
+
+      doc.setLineWidth(0.8).setDrawColor(180); 
+
+      pdfBlocks.forEach(b => {
+        // Draw content background first
+        doc.setFillColor(...b.contentBgColor);
+        doc.rect(b.x, b.y + 22, b.w, b.h - 22, 'F'); 
+
+        // Draw title bar
+        doc.setFillColor(...b.titleColor);
+        doc.rect(b.x,b.y,b.w,22,'F'); 
+        doc.setFont('helvetica','bold').setFontSize(10).setTextColor(...b.titleTextColor);
+        
+        let titleTextToDraw = b.title;
+        const titleWidth = doc.getTextWidth(titleTextToDraw);
+        if (titleWidth > b.w - 10) { // 5pt padding each side
+            titleTextToDraw = doc.splitTextToSize(b.title, b.w - 12)[0]; // Truncate if too long
+            if (doc.getTextWidth(titleTextToDraw + "...") < b.w -10 && b.title.length > titleTextToDraw.length) {
+                titleTextToDraw += "...";
+            }
+        }
+        doc.text(titleTextToDraw, b.x + (b.w-doc.getTextWidth(titleTextToDraw))/2, b.y+15); // Centered vertically
+
+        // Draw border around the whole block
+        doc.rect(b.x,b.y,b.w,b.h, 'S');
+
+        // Content
+        const div = document.getElementById(b.id)?.querySelector('.force-content');
+        if(div){
+          let txt = div.classList.contains('is-placeholder') ? "" : div.innerHTML.replace(/<br\s*[\/]?>/gi, "\n").replace(/<div[^>]*>/g, "\n").replace(/<\/div>/g, "").replace(/<p[^>]*>/g, "").replace(/<\/p>/g, "\n\n").replace(/<[^>]+>/g, '');
+          txt = txt.trim();
+
+          if(txt){
+            doc.setFont('helvetica','normal').setFontSize(8).setTextColor(50); 
+            const lines = doc.splitTextToSize(txt, b.w - 10); // Content width with padding
+            let textY = b.y + 22 + 12; // Start below title bar + internal padding
+            const lineHeight = 9.5; // Slightly increased line height for 8pt font
+            const contentMaxHeight = b.h - 22 - 10; // Max height for content area
+
+            lines.forEach(line=>{
+              if(textY + lineHeight <= b.y + b.h - 5){ // Check if line fits within the block
+                doc.text(line, b.x+5, textY);
+                textY += lineHeight;
+              }
+            });
+          }
+        }
+      });
+
+      // Footer
+      doc.setFontSize(8).setTextColor(120);
+      doc.text(
+        'Ashi Tools – Porter\'s Five Forces Analyzer | @ashish_singh_rajput_3',
+        pageW/2, pageH-15, {align:'center'}
+      );
+      
+      const finalTitle = canvasTitleInput.value.trim() || "Porters_Five_Forces";
+      doc.save(`${finalTitle.replace(/\s+/g,'_')}_AshiTools.pdf`);
+      showToast('PDF exported successfully!');
+    });
+
+    // Auto-load on page start
+    if(!loadCanvasData()) {
+        contentDivs.forEach(div => {
+            if (div.classList.contains('is-placeholder') && !div.textContent.trim()) {
+                // Let CSS handle placeholder via ::before
+                div.innerHTML = '';
+            }
+        });
+    }
+  });
+  </script>
+
+
+            <script></script>
+        
+    
+<qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 423px; position: absolute !important; top: 613px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

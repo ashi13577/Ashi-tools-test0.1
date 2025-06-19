@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1240.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Capacity Planning Tool - Ashi Tools</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --secondary: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark-bg: #1e293b;
+      --card-bg: #1f2937;
+      --text-light: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --border-light: rgba(156, 163, 175, 0.2);
+      --success: #22c55e;
+      --purple: #8b5cf6;
+      --orange: #f97316;
+    }
+    body {
+      font-family: Roboto, sans-serif;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: var(--text-light);
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 30px auto 0 auto;
+      background: linear-gradient(145deg, #1f2937, #111827);
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.32);
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+    .header {
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .header h1 {
+      font-size: 2.2em;
+      margin: 0 0 5px 0;
+      color: #fff;
+    }
+    .header p {
+      margin: 0 auto;
+      font-size: 1.1em;
+      color: #e0e7ef;
+      max-width: 800px;
+    }
+    .main-section {
+      padding: 36px 28px 32px 28px;
+      min-height: 350px;
+    }
+    .planning-form {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 36px;
+      box-shadow: 0 3px 18px rgba(0,0,0,.21);
+      border: 1px solid var(--border-light);
+    }
+    .planning-form .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 8px;
+    }
+    .form-group label {
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--purple);
+      letter-spacing: .01em;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 10px 12px;
+      border-radius: 7px;
+      border: 2px solid var(--border-light);
+      background: rgba(55,65,80,0.30);
+      color: var(--text-light);
+      font-size: 1em;
+      margin-bottom: 2px;
+      font-family: inherit;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--purple);
+    }
+    .form-actions {
+      display: flex;
+      gap: 18px;
+      margin: 10px 0 0 0;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 11px 24px;
+      border: none;
+      border-radius: 22px;
+      background: var(--purple);
+      color: #fff;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .23s, transform .13s;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn:hover { background: #7c3aed; transform: translateY(-2px);}
+    .btn-secondary { background: var(--secondary);}
+    .btn-secondary:hover { background: #047857;}
+    .btn-warning { background: var(--warning);}
+    .btn-warning:hover { background: #ca8a04;}
+    .btn-danger { background: var(--danger);}
+    .btn-danger:hover { background: #dc2626;}
+    .btn-orange { background: var(--orange);}
+    .btn-orange:hover { background: #ea580c;}
+    .btn i { font-size: 1.09em;}
+    .input-hint { font-size: 12px; color: var(--text-secondary);}
+    
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 24px 0;
+    }
+    .result-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border-light);
+      text-align: center;
+    }
+    .result-card.critical {
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+    }
+    .result-card.warning {
+      border-color: var(--warning);
+      background: rgba(245, 158, 11, 0.1);
+    }
+    .result-card.healthy {
+      border-color: var(--success);
+      background: rgba(34, 197, 94, 0.1);
+    }
+    .result-value {
+      font-size: 2.2em;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .result-card.critical .result-value { color: var(--danger); }
+    .result-card.warning .result-value { color: var(--warning); }
+    .result-card.healthy .result-value { color: var(--success); }
+    .result-card .result-value { color: var(--purple); }
+    
+    .result-label {
+      color: var(--text-secondary);
+      font-size: 0.9em;
+      margin-bottom: 4px;
+    }
+    .result-sublabel {
+      color: var(--text-secondary);
+      font-size: 0.8em;
+    }
+    
+    .capacity-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 14px;
+      font-size: 15px;
+    }
+    .capacity-table th, .capacity-table td {
+      border-bottom: 1px solid #283447;
+      padding: 12px 10px;
+      text-align: center;
+    }
+    .capacity-table th {
+      background: #232d3b;
+      color: var(--purple);
+      font-weight: 500;
+    }
+    .capacity-table td {
+      color: var(--text-light);
+      background: var(--card-bg);
+    }
+    .chart-container {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 22px 16px 20px 16px;
+      margin: 20px 0;
+      border: 1px solid var(--border-light);
+      min-height: 400px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0 16px 0;
+      color: var(--purple);
+      font-size: 1.3em;
+      font-weight: 600;
+    }
+    .feature-tag {
+      background: #22304c;
+      color: #93c5fd;
+      font-size: 11px;
+      border-radius: 11px;
+      padding: 4px 12px;
+      margin-right: 6px;
+      font-weight: 500;
+    }
+    .scenario-section {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+      border: 1px solid var(--border-light);
+    }
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .scenario-card {
+      background: rgba(55,65,80,0.30);
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid var(--border-light);
+    }
+    .scenario-title {
+      font-weight: 600;
+      color: var(--purple);
+      margin-bottom: 8px;
+    }
+    .education-box {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 25px 18px;
+      margin-bottom: 26px;
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+    }
+    .education-box h3, .education-box h4 {
+      color: var(--purple); 
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .formula {
+      padding: 10px 16px;
+      font-family: 'Courier New', monospace;
+      border-radius: 8px; 
+      background: #22304c;
+      margin: 12px 0; 
+      color: #a7d2fe;
+      font-size: 1.1em;
+      display: inline-block;
+    }
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--secondary);
+      color: #fff;
+      padding: 16px 30px;
+      border-radius: 10px;
+      display: none;
+      z-index: 1102;
+      font-size: 1em;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.19);
+    }
+    .toast.success { background: var(--secondary);}
+    .toast.error { background: var(--danger);}
+    .toast.warning { background: var(--warning);}
+    .resource-planning {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+      border: 1px solid var(--border-light);
+    }
+    .resource-input {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .resource-item {
+      background: rgba(55,65,80,0.20);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+    .resource-item label {
+      font-size: 0.9em;
+      color: var(--purple);
+      font-weight: 500;
+    }
+    .bottleneck {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: var(--danger);
+    }
+    footer {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-top: 40px;
+      padding: 30px;
+      line-height: 1.6;
+      background: linear-gradient(145deg, #1f2937, #111827);
+      border-top: 1px solid var(--border-light);
+    }
+    .insta-link {
+      color: #e1306c;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    @media (max-width:800px) {
+      .main-section { padding:19px 5vw;}
+      .chart-container, .education-box, .planning-form {padding: 14px 5vw;}
+      .results-grid { grid-template-columns: 1fr;}
+      .resource-input { grid-template-columns: 1fr;}
+    }
+  </style>
+
+
+  <div class="container">
+    <div class="header">
+      <h1><i class="fa-solid fa-industry"></i> Advanced Capacity Planning Tool</h1>
+      <p>
+        Comprehensive capacity analysis with demand forecasting, resource optimization, and scenario planning.<br>
+        Calculate capacity requirements, identify bottlenecks, and optimize resource allocation for maximum efficiency.
+      </p>
+    </div>
+    <div class="main-section">
+
+      <!-- Main Planning Form -->
+      <div class="planning-form">
+        <div style="display: flex; align-items: center; gap:15px; margin-bottom:16px; flex-wrap: wrap;">
+          <h3 style="color:var(--purple);margin-bottom:0;"><i class="fa-solid fa-rocket"></i> Quick Start Templates</h3>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="loadTemplate('manufacturing')">
+              <i class="fa-solid fa-cogs"></i> Manufacturing
+            </button>
+            <button class="btn btn-secondary" onclick="loadTemplate('restaurant')">
+              <i class="fa-solid fa-utensils"></i> Restaurant
+            </button>
+            <button class="btn btn-secondary" onclick="loadTemplate('callcenter')">
+              <i class="fa-solid fa-headset"></i> Call Center
+            </button>
+            <button class="btn btn-secondary" onclick="loadTemplate('warehouse')">
+              <i class="fa-solid fa-warehouse"></i> Warehouse
+            </button>
+            <button class="btn btn-secondary" onclick="loadTemplate('hospital')">
+              <i class="fa-solid fa-hospital"></i> Healthcare
+            </button>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="form-group">
+            <label>Business Type</label>
+            <select id="businessType">
+              <option value="manufacturing">Manufacturing</option>
+              <option value="service">Service Operations</option>
+              <option value="retail">Retail/Warehouse</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="hospitality">Hospitality</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Planning Period</label>
+            <select id="planningPeriod">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="annual">Annual</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Planning Horizon (Periods)</label>
+            <input id="planningHorizon" type="number" value="12" min="4" max="60">
+            <span class="input-hint">Number of periods to plan ahead</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group" style="flex:2">
+            <label>Expected Demand (per period, comma separated):</label>
+            <textarea id="demandData" rows="2" placeholder="e.g., 1500, 1650, 1800, 1900, 2100, 2200, 2000, 1850, 1700, 1600, 1550, 1500"></textarea>
+            <span class="input-hint">Enter projected demand for each period in chronological order</span>
+          </div>
+          <div class="form-group">
+            <label>Current Capacity (units/period)</label>
+            <input id="currentCapacity" type="number" value="2000" min="1">
+            <span class="input-hint">Current production/service capacity</span>
+          </div>
+        </div>
+
+        <!-- Resource Planning Section -->
+        <div class="resource-planning">
+          <h4 style="color: var(--purple); margin-bottom: 16px;"><i class="fa-solid fa-users-cog"></i> Resource Planning</h4>
+          <div class="resource-input">
+            <div class="resource-item">
+              <label>Labor Hours/Unit</label>
+              <input id="laborHours" type="number" value="2" step="0.1" min="0">
+            </div>
+            <div class="resource-item">
+              <label>Available Workers</label>
+              <input id="availableWorkers" type="number" value="50" min="1">
+            </div>
+            <div class="resource-item">
+              <label>Hours/Worker/Period</label>
+              <input id="hoursPerWorker" type="number" value="40" min="1">
+            </div>
+            <div class="resource-item">
+              <label>Machine Hours/Unit</label>
+              <input id="machineHours" type="number" value="1.5" step="0.1" min="0">
+            </div>
+            <div class="resource-item">
+              <label>Available Machines</label>
+              <input id="availableMachines" type="number" value="20" min="1">
+            </div>
+            <div class="resource-item">
+              <label>Hours/Machine/Period</label>
+              <input id="hoursPerMachine" type="number" value="160" min="1">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group">
+            <label>Capacity Utilization Target (%)</label>
+            <input id="utilizationTarget" type="number" value="85" min="50" max="100">
+            <span class="input-hint">Optimal utilization rate (typically 80-90%)</span>
+          </div>
+          <div class="form-group">
+            <label>Lead Time (periods)</label>
+            <input id="leadTime" type="number" value="2" min="0" max="12">
+            <span class="input-hint">Time needed for capacity adjustments</span>
+          </div>
+          <div class="form-group">
+            <label>Seasonal Factor</label>
+            <input id="seasonalFactor" type="number" value="1.2" step="0.1" min="0.5" max="3">
+            <span class="input-hint">Peak season demand multiplier</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn" onclick="calculateCapacity()">
+            <i class="fa-solid fa-calculator"></i> Calculate Capacity Plan
+          </button>
+          <button class="btn btn-orange" onclick="runScenarioAnalysis()">
+            <i class="fa-solid fa-chart-line"></i> Scenario Analysis
+          </button>
+          <button class="btn btn-secondary" onclick="exportPlan()">
+            <i class="fa-solid fa-download"></i> Export Plan
+          </button>
+          <button class="btn btn-warning" onclick="resetForm()">
+            <i class="fa-solid fa-rotate-left"></i> Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div id="resultsSection" style="">
+        
+        <!-- Key Metrics -->
+        <div class="section-header">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Capacity Analysis Results</span>
+        </div>
+        <div class="results-grid" id="metricsGrid">
+        <div class="result-card warning">
+          <div class="result-value">95.8%</div>
+          <div class="result-label">Average Utilization</div>
+          <div class="result-sublabel">Target: 80%</div>
+        </div>
+        <div class="result-card critical">
+          <div class="result-value">120.0%</div>
+          <div class="result-label">Peak Utilization</div>
+          <div class="result-sublabel">Maximum period load</div>
+        </div>
+        <div class="result-card warning">
+          <div class="result-value">+625</div>
+          <div class="result-label">Capacity Gap</div>
+          <div class="result-sublabel">Additional capacity needed</div>
+        </div>
+        <div class="result-card critical">
+          <div class="result-value">3</div>
+          <div class="result-label">Critical Periods</div>
+          <div class="result-sublabel">Periods with &gt;100% utilization</div>
+        </div>
+      </div>
+
+        <!-- Capacity Chart -->
+        <div class="chart-container">
+          <canvas id="capacityChart" style="box-sizing: border-box; display: block; height: 399px; width: 799px;" width="532" height="266"></canvas>
+        </div>
+
+        <!-- Resource Analysis -->
+        <div class="section-header">
+          <i class="fa-solid fa-cogs"></i>
+          <span>Resource Bottleneck Analysis</span>
+        </div>
+        <div class="resource-planning" id="bottleneckAnalysis">
+        <div class="resource-input">
+          <div class="resource-item ">
+            <label>Labor Capacity</label>
+            <div style="font-size: 1.4em; font-weight: 600; color: var(--purple); margin-top: 4px;">
+              1750 units/period
+            </div>
+            <div style="font-size: 0.8em; color: var(--text-secondary);">
+              ✅ Adequate
+            </div>
+          </div>
+          <div class="resource-item ">
+            <label>Machine Capacity</label>
+            <div style="font-size: 1.4em; font-weight: 600; color: var(--purple); margin-top: 4px;">
+              5000 units/period
+            </div>
+            <div style="font-size: 0.8em; color: var(--text-secondary);">
+              ✅ Adequate
+            </div>
+          </div>
+          <div class="resource-item">
+            <label>System Capacity</label>
+            <div style="font-size: 1.4em; font-weight: 600; color: var(--purple); margin-top: 4px;">
+              1000 units/period
+            </div>
+            <div style="font-size: 0.8em; color: var(--text-secondary);">
+              Limited by constraining resource
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <!-- Detailed Capacity Table -->
+        <div class="section-header">
+          <i class="fa-solid fa-table"></i>
+          <span>Detailed Capacity Plan</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="capacity-table" id="capacityTable">
+        <tbody><tr>
+          <th>Period</th>
+          <th>Demand</th>
+          <th>Current Capacity</th>
+          <th>Required Capacity</th>
+          <th>Capacity Gap</th>
+          <th>Utilization</th>
+          <th>Status</th>
+        </tr>
+      
+          <tr class="healthy">
+            <td>1</td>
+            <td>800</td>
+            <td>1000</td>
+            <td>1300</td>
+            <td style="color: var(--danger)">
+              +300
+            </td>
+            <td style="color: var(--success)">
+              80.0%
+            </td>
+            <td>🟢 Healthy</td>
+          </tr>
+        
+          <tr class="warning">
+            <td>2</td>
+            <td>850</td>
+            <td>1000</td>
+            <td>1063</td>
+            <td style="color: var(--danger)">
+              +63
+            </td>
+            <td style="color: var(--success)">
+              85.0%
+            </td>
+            <td>🟡 High Load</td>
+          </tr>
+        
+          <tr class="warning">
+            <td>3</td>
+            <td>900</td>
+            <td>1000</td>
+            <td>1125</td>
+            <td style="color: var(--danger)">
+              +125
+            </td>
+            <td style="color: var(--warning)">
+              90.0%
+            </td>
+            <td>🟡 High Load</td>
+          </tr>
+        
+          <tr class="warning">
+            <td>4</td>
+            <td>950</td>
+            <td>1000</td>
+            <td>1188</td>
+            <td style="color: var(--danger)">
+              +188
+            </td>
+            <td style="color: var(--warning)">
+              95.0%
+            </td>
+            <td>🟡 High Load</td>
+          </tr>
+        
+          <tr class="warning">
+            <td>5</td>
+            <td>1000</td>
+            <td>1000</td>
+            <td>1625</td>
+            <td style="color: var(--danger)">
+              +625
+            </td>
+            <td style="color: var(--warning)">
+              100.0%
+            </td>
+            <td>🟡 High Load</td>
+          </tr>
+        
+          <tr class="critical">
+            <td>6</td>
+            <td>1100</td>
+            <td>1000</td>
+            <td>1375</td>
+            <td style="color: var(--danger)">
+              +375
+            </td>
+            <td style="color: var(--danger)">
+              110.0%
+            </td>
+            <td>🔴 Over Capacity</td>
+          </tr>
+        
+          <tr class="critical">
+            <td>7</td>
+            <td>1200</td>
+            <td>1000</td>
+            <td>1500</td>
+            <td style="color: var(--danger)">
+              +500
+            </td>
+            <td style="color: var(--danger)">
+              120.0%
+            </td>
+            <td>🔴 Over Capacity</td>
+          </tr>
+        
+          <tr class="critical">
+            <td>8</td>
+            <td>1150</td>
+            <td>1000</td>
+            <td>1438</td>
+            <td style="color: var(--danger)">
+              +438
+            </td>
+            <td style="color: var(--danger)">
+              115.0%
+            </td>
+            <td>🔴 Over Capacity</td>
+          </tr>
+        
+          <tr class="warning">
+            <td>9</td>
+            <td>1000</td>
+            <td>1000</td>
+            <td>1625</td>
+            <td style="color: var(--danger)">
+              +625
+            </td>
+            <td style="color: var(--warning)">
+              100.0%
+            </td>
+            <td>🟡 High Load</td>
+          </tr>
+        
+          <tr class="warning">
+            <td>10</td>
+            <td>900</td>
+            <td>1000</td>
+            <td>1125</td>
+            <td style="color: var(--danger)">
+              +125
+            </td>
+            <td style="color: var(--warning)">
+              90.0%
+            </td>
+            <td>🟡 High Load</td>
+          </tr>
+        
+          <tr class="warning">
+            <td>11</td>
+            <td>850</td>
+            <td>1000</td>
+            <td>1063</td>
+            <td style="color: var(--danger)">
+              +63
+            </td>
+            <td style="color: var(--success)">
+              85.0%
+            </td>
+            <td>🟡 High Load</td>
+          </tr>
+        
+          <tr class="healthy">
+            <td>12</td>
+            <td>800</td>
+            <td>1000</td>
+            <td>1000</td>
+            <td style="color: var(--success)">
+              0
+            </td>
+            <td style="color: var(--success)">
+              80.0%
+            </td>
+            <td>🟢 Healthy</td>
+          </tr>
+        </tbody></table>
+        </div>
+      </div>
+
+      <!-- Scenario Analysis Section -->
+      <div class="scenario-section" id="scenarioSection" style="">
+        <h3 style="color: var(--purple);"><i class="fa-solid fa-project-diagram"></i> Scenario Analysis</h3>
+        <div class="scenario-grid" id="scenarioGrid">
+        <div class="scenario-card">
+          <div class="scenario-title">Optimistic (+20% demand)</div>
+          <div><strong>Avg Utilization:</strong> 115.0%</div>
+          <div><strong>Peak Utilization:</strong> 144.0%</div>
+          <div><strong>Critical Periods:</strong> 10</div>
+          <div style="margin-top: 8px;">
+            <div style="height: 4px; background: #ef4444; border-radius: 2px; width: 100%;"></div>
+          </div>
+        </div>
+      
+        <div class="scenario-card">
+          <div class="scenario-title">Current Forecast</div>
+          <div><strong>Avg Utilization:</strong> 95.8%</div>
+          <div><strong>Peak Utilization:</strong> 120.0%</div>
+          <div><strong>Critical Periods:</strong> 3</div>
+          <div style="margin-top: 8px;">
+            <div style="height: 4px; background: #8b5cf6; border-radius: 2px; width: 95.83333333333333%;"></div>
+          </div>
+        </div>
+      
+        <div class="scenario-card">
+          <div class="scenario-title">Conservative (-10% demand)</div>
+          <div><strong>Avg Utilization:</strong> 86.3%</div>
+          <div><strong>Peak Utilization:</strong> 108.0%</div>
+          <div><strong>Critical Periods:</strong> 2</div>
+          <div style="margin-top: 8px;">
+            <div style="height: 4px; background: #10b981; border-radius: 2px; width: 86.25%;"></div>
+          </div>
+        </div>
+      
+        <div class="scenario-card">
+          <div class="scenario-title">+50% Capacity</div>
+          <div><strong>Avg Utilization:</strong> 63.9%</div>
+          <div><strong>Peak Utilization:</strong> 80.0%</div>
+          <div><strong>Critical Periods:</strong> 0</div>
+          <div style="margin-top: 8px;">
+            <div style="height: 4px; background: #f59e0b; border-radius: 2px; width: 63.888888888888886%;"></div>
+          </div>
+        </div>
+      </div>
+        <div class="chart-container">
+          <canvas id="scenarioChart" style="box-sizing: border-box; display: block; height: 528px; width: 1056px;" width="704" height="352"></canvas>
+        </div>
+      </div>
+
+      <!-- Learning Panel -->
+      <div class="education-box">
+        <h3><i class="fa-solid fa-graduation-cap"></i> Capacity Planning - Strategic Framework</h3>
+        <div style="margin-bottom:12px;">
+          <b>Master capacity planning to optimize resources, minimize costs, and ensure service levels while maintaining operational flexibility.</b>
+        </div>
+        
+        <h4>1. Capacity Utilization <span class="feature-tag">Efficiency</span><span class="feature-tag">Core KPI</span></h4>
+        <div class="formula">Utilization = (Actual Output / Maximum Capacity) × 100</div>
+        <div>Measures how effectively you're using available capacity. Optimal range: 80-90% for most operations.</div>
+        
+        <h4>2. Capacity Gap Analysis <span class="feature-tag">Planning</span><span class="feature-tag">Strategic</span></h4>
+        <div class="formula">Capacity Gap = Required Capacity - Available Capacity</div>
+        <div>Identifies shortfalls and surpluses. Positive gap indicates need for expansion; negative indicates excess capacity.</div>
+        
+        <h4>3. Resource Bottleneck <span class="feature-tag">Constraints</span><span class="feature-tag">Optimization</span></h4>
+        <div class="formula">Bottleneck Capacity = min(Labor Capacity, Machine Capacity, ...)</div>
+        <div>The constraining resource that limits overall system capacity. Focus improvement efforts here first.</div>
+        
+        <h4>4. Lead Time Considerations <span class="feature-tag">Timing</span><span class="feature-tag">Risk</span></h4>
+        <div class="formula">Planning Start = Demand Period - Lead Time</div>
+        <div>Account for time needed to acquire/deploy resources. Longer lead times require earlier planning decisions.</div>
+        
+        <h4>Strategic Capacity Decisions</h4>
+        <ul>
+          <li><b>Capacity Timing:</b> When to add capacity (leading, lagging, or tracking demand)</li>
+          <li><b>Capacity Sizing:</b> How much capacity to add (incremental vs. large chunks)</li>
+          <li><b>Capacity Type:</b> Flexible vs. dedicated capacity, permanent vs. temporary</li>
+          <li><b>Capacity Location:</b> Centralized vs. distributed, proximity to markets</li>
+          <li><b>Make vs. Buy:</b> Internal capacity expansion vs. outsourcing/partnerships</li>
+        </ul>
+        
+        <h4>Industry Applications</h4>
+        <ul>
+          <li><b>Manufacturing:</b> Production lines, equipment, skilled workforce planning</li>
+          <li><b>Services:</b> Staff scheduling, facility sizing, service delivery optimization</li>
+          <li><b>Healthcare:</b> Bed capacity, staff ratios, equipment utilization</li>
+          <li><b>Technology:</b> Server capacity, bandwidth planning, system scalability</li>
+          <li><b>Retail:</b> Store capacity, inventory space, checkout optimization</li>
+        </ul>
+        
+        <h4>Capacity Planning Benefits</h4>
+        <ul>
+          <li>Improved customer service levels and satisfaction</li>
+          <li>Optimized resource utilization and cost efficiency</li>
+          <li>Better financial planning and investment decisions</li>
+          <li>Enhanced competitive advantage and market responsiveness</li>
+          <li>Risk mitigation through scenario planning</li>
+        </ul>
+      </div>
+
+    </div><!-- main-section -->
+
+    <!-- Toast -->
+    <div class="toast success" id="toast" style="display: none;">Capacity analysis completed!</div>
+    <footer>
+      Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+      Connect: 
+      <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank">@ashish_singh_rajput_3</a>
+    </footer>
+  </div>
+
+  <script>
+    // --- TEMPLATE DATA ---
+    const templates = {
+      manufacturing: {
+        demandData: "1500, 1650, 1800, 1900, 2100, 2200, 2000, 1850, 1700, 1600, 1550, 1500",
+        currentCapacity: 2000,
+        laborHours: 2,
+        availableWorkers: 50,
+        hoursPerWorker: 40,
+        machineHours: 1.5,
+        availableMachines: 20,
+        hoursPerMachine: 160,
+        utilizationTarget: 85,
+        leadTime: 3,
+        seasonalFactor: 1.2
+      },
+      restaurant: {
+        demandData: "800, 850, 900, 950, 1000, 1100, 1200, 1150, 1000, 900, 850, 800",
+        currentCapacity: 1000,
+        laborHours: 0.5,
+        availableWorkers: 25,
+        hoursPerWorker: 35,
+        machineHours: 0.2,
+        availableMachines: 10,
+        hoursPerMachine: 100,
+        utilizationTarget: 80,
+        leadTime: 1,
+        seasonalFactor: 1.3
+      },
+      callcenter: {
+        demandData: "5000, 5200, 5500, 5800, 6000, 6200, 5800, 5500, 5200, 5000, 4800, 4900",
+        currentCapacity: 6000,
+        laborHours: 0.25,
+        availableWorkers: 100,
+        hoursPerWorker: 40,
+        machineHours: 0.1,
+        availableMachines: 50,
+        hoursPerMachine: 168,
+        utilizationTarget: 90,
+        leadTime: 2,
+        seasonalFactor: 1.15
+      },
+      warehouse: {
+        demandData: "12000, 13000, 14000, 15000, 16000, 17000, 16500, 15500, 14500, 13500, 12500, 12000",
+        currentCapacity: 15000,
+        laborHours: 0.1,
+        availableWorkers: 80,
+        hoursPerWorker: 40,
+        machineHours: 0.05,
+        availableMachines: 30,
+        hoursPerMachine: 150,
+        utilizationTarget: 85,
+        leadTime: 2,
+        seasonalFactor: 1.25
+      },
+      hospital: {
+        demandData: "300, 320, 340, 360, 380, 400, 390, 370, 350, 330, 310, 300",
+        currentCapacity: 400,
+        laborHours: 8,
+        availableWorkers: 120,
+        hoursPerWorker: 36,
+        machineHours: 2,
+        availableMachines: 15,
+        hoursPerMachine: 168,
+        utilizationTarget: 75,
+        leadTime: 4,
+        seasonalFactor: 1.1
+      }
+    };
+
+    function loadTemplate(type) {
+      const template = templates[type];
+      if (!template) return;
+      
+      Object.keys(template).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+          element.value = template[key];
+        }
+      });
+      
+      // Set business type
+      document.getElementById('businessType').value = type === 'callcenter' ? 'service' : 
+                                                     type === 'hospital' ? 'healthcare' :
+                                                     type === 'restaurant' ? 'hospitality' :
+                                                     type === 'warehouse' ? 'retail' : 'manufacturing';
+      
+      showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} template loaded!`, 'success');
+    }
+
+    // --- CAPACITY CALCULATION FUNCTIONS ---
+    
+    function calculateCapacity() {
+      // Get input values
+      const demandStr = document.getElementById('demandData').value
+        .replace(/[, ]+/g, ',').replace(/,+/g, ',').replace(/,$/, '');
+      const demand = demandStr.split(',').map(x => parseFloat(x)).filter(x => !isNaN(x));
+      
+      if (demand.length < 4) {
+        showToast('Please enter at least 4 periods of demand data!', 'error');
+        return;
+      }
+
+      const currentCapacity = parseFloat(document.getElementById('currentCapacity').value) || 0;
+      const laborHours = parseFloat(document.getElementById('laborHours').value) || 0;
+      const availableWorkers = parseFloat(document.getElementById('availableWorkers').value) || 0;
+      const hoursPerWorker = parseFloat(document.getElementById('hoursPerWorker').value) || 0;
+      const machineHours = parseFloat(document.getElementById('machineHours').value) || 0;
+      const availableMachines = parseFloat(document.getElementById('availableMachines').value) || 0;
+      const hoursPerMachine = parseFloat(document.getElementById('hoursPerMachine').value) || 0;
+      const utilizationTarget = parseFloat(document.getElementById('utilizationTarget').value) || 85;
+      const leadTime = parseFloat(document.getElementById('leadTime').value) || 0;
+      const seasonalFactor = parseFloat(document.getElementById('seasonalFactor').value) || 1;
+
+      // Calculate resource capacities
+      const laborCapacity = (availableWorkers * hoursPerWorker) / laborHours;
+      const machineCapacity = (availableMachines * hoursPerMachine) / machineHours;
+      const bottleneckCapacity = Math.min(laborCapacity, machineCapacity, currentCapacity);
+      
+      // Calculate metrics for each period
+      const results = demand.map((demandValue, index) => {
+        const adjustedDemand = demandValue * (index % 4 === 0 ? seasonalFactor : 1); // Seasonal adjustment
+        const requiredCapacity = adjustedDemand / (utilizationTarget / 100);
+        const capacityGap = requiredCapacity - currentCapacity;
+        const utilization = (demandValue / currentCapacity) * 100;
+        const laborUtilization = (demandValue * laborHours) / (availableWorkers * hoursPerWorker) * 100;
+        const machineUtilization = (demandValue * machineHours) / (availableMachines * hoursPerMachine) * 100;
+        
+        return {
+          period: index + 1,
+          demand: demandValue,
+          adjustedDemand: adjustedDemand,
+          currentCapacity: currentCapacity,
+          requiredCapacity: requiredCapacity,
+          capacityGap: capacityGap,
+          utilization: utilization,
+          laborUtilization: laborUtilization,
+          machineUtilization: machineUtilization,
+          status: utilization > 100 ? 'critical' : utilization > utilizationTarget ? 'warning' : 'healthy'
+        };
+      });
+
+      // Calculate summary metrics
+      const avgUtilization = results.reduce((sum, r) => sum + r.utilization, 0) / results.length;
+      const maxUtilization = Math.max(...results.map(r => r.utilization));
+      const totalCapacityGap = Math.max(...results.map(r => r.capacityGap));
+      const criticalPeriods = results.filter(r => r.status === 'critical').length;
+      
+      // Display results
+      displayResults(results, {
+        avgUtilization,
+        maxUtilization,
+        totalCapacityGap,
+        criticalPeriods,
+        laborCapacity,
+        machineCapacity,
+        bottleneckCapacity
+      });
+    }
+
+    function displayResults(results, summary) {
+      // Show metrics cards
+      const metricsHtml = `
+        <div class="result-card ${summary.avgUtilization > 100 ? 'critical' : summary.avgUtilization > 85 ? 'warning' : 'healthy'}">
+          <div class="result-value">${summary.avgUtilization.toFixed(1)}%</div>
+          <div class="result-label">Average Utilization</div>
+          <div class="result-sublabel">Target: ${document.getElementById('utilizationTarget').value}%</div>
+        </div>
+        <div class="result-card ${summary.maxUtilization > 100 ? 'critical' : summary.maxUtilization > 90 ? 'warning' : 'healthy'}">
+          <div class="result-value">${summary.maxUtilization.toFixed(1)}%</div>
+          <div class="result-label">Peak Utilization</div>
+          <div class="result-sublabel">Maximum period load</div>
+        </div>
+        <div class="result-card ${summary.totalCapacityGap > 0 ? 'warning' : 'healthy'}">
+          <div class="result-value">${summary.totalCapacityGap > 0 ? '+' : ''}${summary.totalCapacityGap.toFixed(0)}</div>
+          <div class="result-label">Capacity Gap</div>
+          <div class="result-sublabel">Additional capacity needed</div>
+        </div>
+        <div class="result-card ${summary.criticalPeriods > 0 ? 'critical' : 'healthy'}">
+          <div class="result-value">${summary.criticalPeriods}</div>
+          <div class="result-label">Critical Periods</div>
+          <div class="result-sublabel">Periods with >100% utilization</div>
+        </div>
+      `;
+      document.getElementById('metricsGrid').innerHTML = metricsHtml;
+
+      // Bottleneck analysis
+      const bottleneckHtml = `
+        <div class="resource-input">
+          <div class="resource-item ${summary.laborCapacity <= summary.bottleneckCapacity ? 'bottleneck' : ''}">
+            <label>Labor Capacity</label>
+            <div style="font-size: 1.4em; font-weight: 600; color: var(--purple); margin-top: 4px;">
+              ${summary.laborCapacity.toFixed(0)} units/period
+            </div>
+            <div style="font-size: 0.8em; color: var(--text-secondary);">
+              ${summary.laborCapacity <= summary.bottleneckCapacity ? '⚠️ BOTTLENECK' : '✅ Adequate'}
+            </div>
+          </div>
+          <div class="resource-item ${summary.machineCapacity <= summary.bottleneckCapacity ? 'bottleneck' : ''}">
+            <label>Machine Capacity</label>
+            <div style="font-size: 1.4em; font-weight: 600; color: var(--purple); margin-top: 4px;">
+              ${summary.machineCapacity.toFixed(0)} units/period
+            </div>
+            <div style="font-size: 0.8em; color: var(--text-secondary);">
+              ${summary.machineCapacity <= summary.bottleneckCapacity ? '⚠️ BOTTLENECK' : '✅ Adequate'}
+            </div>
+          </div>
+          <div class="resource-item">
+            <label>System Capacity</label>
+            <div style="font-size: 1.4em; font-weight: 600; color: var(--purple); margin-top: 4px;">
+              ${summary.bottleneckCapacity.toFixed(0)} units/period
+            </div>
+            <div style="font-size: 0.8em; color: var(--text-secondary);">
+              Limited by constraining resource
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('bottleneckAnalysis').innerHTML = bottleneckHtml;
+
+      // Generate table
+      generateCapacityTable(results);
+      
+      // Generate chart
+      generateCapacityChart(results);
+      
+      // Show results section
+      document.getElementById('resultsSection').style.display = '';
+      
+      showToast('Capacity analysis completed!', 'success');
+    }
+
+    function generateCapacityTable(results) {
+      let tableRows = `
+        <tr>
+          <th>Period</th>
+          <th>Demand</th>
+          <th>Current Capacity</th>
+          <th>Required Capacity</th>
+          <th>Capacity Gap</th>
+          <th>Utilization</th>
+          <th>Status</th>
+        </tr>
+      `;
+      
+      results.forEach(result => {
+        const statusIcon = result.status === 'critical' ? '🔴' : 
+                          result.status === 'warning' ? '🟡' : '🟢';
+        const statusText = result.status === 'critical' ? 'Over Capacity' :
+                          result.status === 'warning' ? 'High Load' : 'Healthy';
+        
+        tableRows += `
+          <tr class="${result.status}">
+            <td>${result.period}</td>
+            <td>${result.demand.toFixed(0)}</td>
+            <td>${result.currentCapacity.toFixed(0)}</td>
+            <td>${result.requiredCapacity.toFixed(0)}</td>
+            <td style="color: ${result.capacityGap > 0 ? 'var(--danger)' : 'var(--success)'}">
+              ${result.capacityGap > 0 ? '+' : ''}${result.capacityGap.toFixed(0)}
+            </td>
+            <td style="color: ${result.utilization > 100 ? 'var(--danger)' : result.utilization > 85 ? 'var(--warning)' : 'var(--success)'}">
+              ${result.utilization.toFixed(1)}%
+            </td>
+            <td>${statusIcon} ${statusText}</td>
+          </tr>
+        `;
+      });
+      
+      document.getElementById('capacityTable').innerHTML = tableRows;
+    }
+
+    let capacityChart = null;
+    function generateCapacityChart(results) {
+      if (capacityChart) capacityChart.destroy();
+      
+      const ctx = document.getElementById('capacityChart').getContext('2d');
+      const labels = results.map(r => `Period ${r.period}`);
+      
+      capacityChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Demand',
+              data: results.map(r => r.demand),
+              borderColor: '#3b82f6',
+              backgroundColor: '#93c5fd55',
+              pointRadius: 4,
+              borderWidth: 2,
+              tension: 0.3
+            },
+            {
+              label: 'Current Capacity',
+              data: results.map(r => r.currentCapacity),
+              borderColor: '#10b981',
+              backgroundColor: '#18a68f33',
+              pointRadius: 3,
+              borderWidth: 2,
+              borderDash: [5, 3]
+            },
+            {
+              label: 'Required Capacity',
+              data: results.map(r => r.requiredCapacity),
+              borderColor: '#f59e0b',
+              backgroundColor: '#fbbf2455',
+              pointRadius: 3,
+              borderWidth: 2,
+              borderDash: [3, 3]
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { labels: { color: '#c6dbfa' } },
+            title: { 
+              display: true, 
+              text: 'Capacity vs Demand Analysis',
+              color: '#c6dbfa',
+              font: { size: 16 }
+            }
+          },
+          scales: {
+            x: { 
+              title: { display: true, text: 'Planning Period', color: '#9ca3af' },
+              ticks: { color: '#9ca3af' }
+            },
+            y: { 
+              title: { display: true, text: 'Units', color: '#9ca3af' },
+              ticks: { color: '#9ca3af' }
+            }
+          }
+        }
+      });
+    }
+
+    function runScenarioAnalysis() {
+      const baseResults = getCurrentResults();
+      if (!baseResults) {
+        showToast('Please run capacity analysis first!', 'warning');
+        return;
+      }
+
+      // Define scenarios
+      const scenarios = [
+        { name: 'Optimistic (+20% demand)', factor: 1.2, color: '#ef4444' },
+        { name: 'Current Forecast', factor: 1.0, color: '#8b5cf6' },
+        { name: 'Conservative (-10% demand)', factor: 0.9, color: '#10b981' },
+        { name: '+50% Capacity', factor: 1.0, capacityIncrease: 1.5, color: '#f59e0b' }
+      ];
+
+      const scenarioResults = scenarios.map(scenario => {
+        const demandData = getCurrentDemand().map(d => d * scenario.factor);
+        const capacity = getCurrentCapacity() * (scenario.capacityIncrease || 1);
+        
+        const utilization = demandData.map(d => (d / capacity) * 100);
+        const avgUtilization = utilization.reduce((a, b) => a + b, 0) / utilization.length;
+        const maxUtilization = Math.max(...utilization);
+        const criticalPeriods = utilization.filter(u => u > 100).length;
+        
+        return {
+          ...scenario,
+          avgUtilization,
+          maxUtilization,
+          criticalPeriods,
+          utilization
+        };
+      });
+
+      displayScenarioAnalysis(scenarioResults);
+    }
+
+    function displayScenarioAnalysis(scenarios) {
+      const scenarioHtml = scenarios.map(scenario => `
+        <div class="scenario-card">
+          <div class="scenario-title">${scenario.name}</div>
+          <div><strong>Avg Utilization:</strong> ${scenario.avgUtilization.toFixed(1)}%</div>
+          <div><strong>Peak Utilization:</strong> ${scenario.maxUtilization.toFixed(1)}%</div>
+          <div><strong>Critical Periods:</strong> ${scenario.criticalPeriods}</div>
+          <div style="margin-top: 8px;">
+            <div style="height: 4px; background: ${scenario.color}; border-radius: 2px; width: ${Math.min(scenario.avgUtilization, 100)}%;"></div>
+          </div>
+        </div>
+      `).join('');
+      
+      document.getElementById('scenarioGrid').innerHTML = scenarioHtml;
+      document.getElementById('scenarioSection').style.display = '';
+      
+      generateScenarioChart(scenarios);
+    }
+
+    let scenarioChart = null;
+    function generateScenarioChart(scenarios) {
+      if (scenarioChart) scenarioChart.destroy();
+      
+      const ctx = document.getElementById('scenarioChart').getContext('2d');
+      const labels = Array.from({length: getCurrentDemand().length}, (_, i) => `Period ${i + 1}`);
+      
+      scenarioChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: scenarios.map(scenario => ({
+            label: scenario.name,
+            data: scenario.utilization,
+            borderColor: scenario.color,
+            backgroundColor: scenario.color + '33',
+            borderWidth: 2,
+            tension: 0.3
+          }))
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { labels: { color: '#c6dbfa' } },
+            title: { 
+              display: true, 
+              text: 'Scenario Analysis - Utilization Comparison',
+              color: '#c6dbfa',
+              font: { size: 16 }
+            }
+          },
+          scales: {
+            x: { 
+              title: { display: true, text: 'Planning Period', color: '#9ca3af' },
+              ticks: { color: '#9ca3af' }
+            },
+            y: { 
+              title: { display: true, text: 'Utilization %', color: '#9ca3af' },
+              ticks: { color: '#9ca3af' },
+              min: 0,
+              max: 150
+            }
+          }
+        }
+      });
+    }
+
+    // Helper functions
+    function getCurrentResults() {
+      return document.getElementById('resultsSection').style.display !== 'none';
+    }
+
+    function getCurrentDemand() {
+      const demandStr = document.getElementById('demandData').value
+        .replace(/[, ]+/g, ',').replace(/,+/g, ',').replace(/,$/, '');
+      return demandStr.split(',').map(x => parseFloat(x)).filter(x => !isNaN(x));
+    }
+
+    function getCurrentCapacity() {
+      return parseFloat(document.getElementById('currentCapacity').value) || 0;
+    }
+
+    function exportPlan() {
+      if (!getCurrentResults()) {
+        showToast('No results to export!', 'error');
+        return;
+      }
+      
+      // Create CSV content
+      const table = document.getElementById('capacityTable');
+      let csv = 'Capacity Planning Analysis\n\n';
+      
+      const rows = table.querySelectorAll('tr');
+      rows.forEach(row => {
+        const cols = row.querySelectorAll('td, th');
+        const rowData = Array.from(cols).map(col => col.textContent.trim()).join(',');
+        csv += rowData + '\n';
+      });
+      
+      // Add summary
+      csv += '\nSummary Metrics\n';
+      const metrics = document.querySelectorAll('#metricsGrid .result-card');
+      metrics.forEach(metric => {
+        const label = metric.querySelector('.result-label').textContent;
+        const value = metric.querySelector('.result-value').textContent;
+        csv += `${label},${value}\n`;
+      });
+      
+      // Download CSV
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'capacity_planning_analysis.csv';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      
+      showToast('Capacity plan exported successfully!', 'success');
+    }
+
+    function resetForm() {
+      document.getElementById('demandData').value = '';
+      document.getElementById('resultsSection').style.display = 'none';
+      document.getElementById('scenarioSection').style.display = 'none';
+      if (capacityChart) capacityChart.destroy();
+      if (scenarioChart) scenarioChart.destroy();
+      showToast('Form reset successfully!', 'success');
+    }
+
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = `toast ${type}`;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+  </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

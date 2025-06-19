@@ -1,0 +1,2078 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body>
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIPOC Diagram Maker - Ashi Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #00ffe1;
+            --primary-dark: #00c4aa;
+            --secondary: #ff0077;
+            --dark-bg: #080c14;
+            --mid-bg: #0f1725;
+            --card-bg: rgba(30, 40, 60, 0.7);
+            --border: rgba(0, 255, 225, 0.3);
+            --text-light: #e0f3ff;
+            --transition: all 0.4s ease;
+            
+            /* SIPOC specific colors */
+            --supplier-color: #8e44ad;
+            --input-color: #2ecc71;
+            --process-color: #f39c12;
+            --output-color: #e74c3c;
+            --customer-color: #1abc9c;
+            
+            --supplier-bg: rgba(142, 68, 173, 0.15);
+            --input-bg: rgba(46, 204, 113, 0.15);
+            --process-bg: rgba(243, 156, 18, 0.15);
+            --output-bg: rgba(231, 76, 60, 0.15);
+            --customer-bg: rgba(26, 188, 156, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #081020 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Floating background elements */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-elements span {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(0, 255, 225, 0.1) 0%, rgba(255, 0, 119, 0.1) 100%);
+            border-radius: 50%;
+            filter: blur(30px);
+            animation: float 16s linear infinite;
+        }
+
+        .floating-elements span:nth-child(1) {
+            width: 25vw;
+            height: 25vw;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+            animation-duration: 20s;
+            background: radial-gradient(var(--primary) 0%, transparent 70%);
+        }
+
+        .floating-elements span:nth-child(2) {
+            width: 20vw;
+            height: 20vw;
+            top: 70%;
+            left: 75%;
+            animation-delay: 4s;
+            animation-duration: 25s;
+            background: radial-gradient(var(--secondary) 0%, transparent 70%);
+        }
+
+        .floating-elements span:nth-child(3) {
+            width: 15vw;
+            height: 15vw;
+            top: 40%;
+            left: 80%;
+            animation-delay: 8s;
+            animation-duration: 18s;
+            background: radial-gradient(var(--supplier-color) 0%, transparent 70%);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.4;
+            }
+            50% {
+                transform: translate(50px, 100px) rotate(180deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+                opacity: 0.4;
+            }
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            background: var(--primary);
+            color: var(--dark-bg);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--primary), #a8ffe7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+
+        .header-sub {
+            font-size: 1.4rem;
+            max-width: 700px;
+            margin: 0 auto 25px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            max-width: 1400px;
+            width: 95%;
+            margin: 0 auto 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .card {
+            background: rgba(8, 15, 28, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1.05rem;
+            transition: var(--transition);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 225, 0.2);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: var(--dark-bg);
+            border: none;
+            padding: 16px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 255, 225, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(15, 23, 37, 0.8);
+            color: var(--text-light);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 150, 150, 0.3);
+        }
+
+        .btn-small {
+            padding: 10px 16px;
+            font-size: 0.95rem;
+        }
+
+        .btn-link {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        .btn-link:hover {
+            background: var(--primary);
+            color: var(--dark-bg);
+        }
+
+        /* Template Selector */
+        .template-selector {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .template-selector h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .template-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .template-btn {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            color: var(--text-light);
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .template-btn:hover {
+            background: rgba(0, 255, 225, 0.1);
+            border-color: var(--primary);
+        }
+
+        .sipoc-container {
+            position: relative;
+        }
+
+        .sipoc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .process-title {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.8rem;
+            color: var(--primary);
+            padding: 15px;
+            background: rgba(0, 255, 225, 0.1);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .sipoc-diagram {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .sipoc-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 400px;
+        }
+
+        .sipoc-column-header {
+            text-align: center;
+            font-weight: bold;
+            padding: 15px 10px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .supplier-header {
+            background: var(--supplier-bg);
+            color: var(--supplier-color);
+            border: 2px solid var(--supplier-color);
+        }
+
+        .input-header {
+            background: var(--input-bg);
+            color: var(--input-color);
+            border: 2px solid var(--input-color);
+        }
+
+        .process-header {
+            background: var(--process-bg);
+            color: var(--process-color);
+            border: 2px solid var(--process-color);
+        }
+
+        .output-header {
+            background: var(--output-bg);
+            color: var(--output-color);
+            border: 2px solid var(--output-color);
+        }
+
+        .customer-header {
+            background: var(--customer-bg);
+            color: var(--customer-color);
+            border: 2px solid var(--customer-color);
+        }
+
+        .sipoc-items {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sipoc-item {
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            word-break: break-word;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .sipoc-item:hover {
+            background: rgba(0, 255, 225, 0.05);
+            border-color: var(--primary);
+        }
+
+        .sipoc-item.selected {
+            background: rgba(0, 255, 225, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 255, 225, 0.3);
+        }
+
+        .sipoc-item.connected {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: #ffd700;
+        }
+
+        .sipoc-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .sipoc-item:hover .sipoc-actions {
+            opacity: 1;
+        }
+
+        .sipoc-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 4px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .edit-btn {
+            color: #f39c12;
+        }
+
+        .edit-btn:hover {
+            background: rgba(243, 156, 18, 0.2);
+        }
+
+        .delete-btn {
+            color: #e74c3c;
+        }
+
+        .delete-btn:hover {
+            background: rgba(231, 76, 60, 0.2);
+        }
+
+        .link-btn {
+            color: var(--primary);
+        }
+
+        .link-btn:hover {
+            background: rgba(0, 255, 225, 0.2);
+        }
+
+        .add-item-row {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .add-item-row input {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .add-item-row input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 255, 225, 0.2);
+        }
+
+        /* Relationship Mapping */
+        .relationship-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .relationship-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .relationship-section {
+            margin-bottom: 25px;
+        }
+
+        .relationship-section h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .relationship-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .relationship-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .relationship-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .supplier-badge {
+            background: var(--supplier-bg);
+            color: var(--supplier-color);
+        }
+
+        .input-badge {
+            background: var(--input-bg);
+            color: var(--input-color);
+        }
+
+        .process-badge {
+            background: var(--process-bg);
+            color: var(--process-color);
+        }
+
+        .output-badge {
+            background: var(--output-bg);
+            color: var(--output-color);
+        }
+
+        .customer-badge {
+            background: var(--customer-bg);
+            color: var(--customer-color);
+        }
+
+        .flow-view {
+            display: none;
+        }
+
+        .flow-view.active {
+            display: block;
+        }
+
+        .flow-chain {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .flow-step {
+            text-align: center;
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 0 5px;
+        }
+
+        .flow-arrow {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 0 10px;
+        }
+
+        .info-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .info-box {
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        .info-box:hover {
+            background: rgba(0, 255, 225, 0.05);
+            border-color: var(--primary);
+        }
+
+        .info-box h3 {
+            margin-bottom: 12px;
+            color: var(--primary);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 10px;
+            font-size: 1rem;
+            margin-top: auto;
+            border-top: 1px solid rgba(0, 120, 150, 0.3);
+            position: relative;
+            z-index: 10;
+            background: rgba(8, 12, 20, 0.9);
+        }
+
+        .insta-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .insta-link:hover {
+            text-decoration: underline;
+            color: var(--primary-dark);
+        }
+
+        .export-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .sipoc-diagram {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(2, auto);
+            }
+
+            .sipoc-column:nth-child(4),
+            .sipoc-column:nth-child(5) {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sipoc-diagram {
+                grid-template-columns: 1fr;
+            }
+
+            .template-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .sipoc-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .export-controls,
+            .view-toggle {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .header-sub {
+                font-size: 1.1rem;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .modal-content {
+                padding: 20px;
+                width: 95%;
+            }
+        }
+    </style>
+
+
+    <!-- Floating Background Elements -->
+    <div class="floating-elements">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon"><i class="fas fa-project-diagram"></i></div>
+            <div>
+                <h1>SIPOC Diagram Maker</h1>
+                <p class="header-sub">Create comprehensive SIPOC diagrams with relationship mapping and flow visualization</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-cog"></i> Process Information</h2>
+            
+            <!-- Template Selector -->
+            <div class="template-selector">
+                <h3><i class="fas fa-layer-group"></i> Choose a Template</h3>
+                <div class="template-buttons">
+                    <button class="template-btn" onclick="loadTemplate('orderFulfillment')">
+                        <i class="fas fa-shopping-cart"></i> Order Fulfillment
+                    </button>
+                    <button class="template-btn" onclick="loadTemplate('customerService')">
+                        <i class="fas fa-headset"></i> Customer Service
+                    </button>
+                    <button class="template-btn" onclick="loadTemplate('hiring')">
+                        <i class="fas fa-user-plus"></i> Hiring Process
+                    </button>
+                    <button class="template-btn" onclick="loadTemplate('manufacturing')">
+                        <i class="fas fa-industry"></i> Manufacturing
+                    </button>
+                    <button class="template-btn" onclick="loadTemplate('software')">
+                        <i class="fas fa-code"></i> Software Development
+                    </button>
+                    <button class="template-btn" onclick="loadTemplate('clear')">
+                        <i class="fas fa-eraser"></i> Clear All
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="process-name">Process Name</label>
+                <input type="text" id="process-name" placeholder="e.g., Order Fulfillment Process" value="Order Fulfillment Process">
+            </div>
+            <div class="form-group">
+                <label for="process-desc">Process Description (Optional)</label>
+                <textarea id="process-desc" rows="3" placeholder="Brief description of the process"></textarea>
+            </div>
+        </div>
+
+        <div class="card sipoc-container">
+            <div class="sipoc-header">
+                <h2 class="card-title"><i class="fas fa-sitemap"></i> SIPOC Diagram</h2>
+                <div class="view-toggle">
+                    <button id="relationships-btn" class="btn btn-link"><i class="fas fa-link"></i> Manage Relationships</button>
+                    <button id="flow-view-btn" class="btn btn-secondary"><i class="fas fa-exchange-alt"></i> Flow View</button>
+                    <button id="export-pdf" class="btn"><i class="fas fa-file-pdf"></i> Export PDF</button>
+                </div>
+            </div>
+            
+            <h3 id="displayed-process-name" class="process-title">Order Fulfillment Process</h3>
+            
+            <!-- Standard SIPOC View -->
+            <div class="sipoc-diagram" id="standard-view">
+                <!-- Suppliers Column -->
+                <div class="sipoc-column">
+                    <div class="sipoc-column-header supplier-header">
+                        <i class="fas fa-truck"></i> Suppliers
+                    </div>
+                    <div class="sipoc-items" id="suppliers-items"><div class="sipoc-item" data-category="suppliers" data-item="E-commerce Platform"><span>E-commerce Platform</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="suppliers" data-item="Payment Gateway"><span>Payment Gateway</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="suppliers" data-item="Inventory System"><span>Inventory System</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="suppliers" data-item="Shipping Partners"><span>Shipping Partners</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div></div>
+                    <div class="add-item-row">
+                        <input type="text" id="add-supplier" placeholder="Add supplier...">
+                        <button class="btn btn-small" id="add-supplier-btn"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+
+                <!-- Inputs Column -->
+                <div class="sipoc-column">
+                    <div class="sipoc-column-header input-header">
+                        <i class="fas fa-box"></i> Inputs
+                    </div>
+                    <div class="sipoc-items" id="inputs-items"><div class="sipoc-item" data-category="inputs" data-item="Customer Order"><span>Customer Order</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="inputs" data-item="Payment Information"><span>Payment Information</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="inputs" data-item="Product Inventory"><span>Product Inventory</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="inputs" data-item="Shipping Address"><span>Shipping Address</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div></div>
+                    <div class="add-item-row">
+                        <input type="text" id="add-input" placeholder="Add input...">
+                        <button class="btn btn-small" id="add-input-btn"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+
+                <!-- Process Column -->
+                <div class="sipoc-column">
+                    <div class="sipoc-column-header process-header">
+                        <i class="fas fa-cogs"></i> Process Steps
+                    </div>
+                    <div class="sipoc-items" id="process-items"><div class="sipoc-item" data-category="process" data-item="Order Validation"><span>Order Validation</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="process" data-item="Payment Processing"><span>Payment Processing</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="process" data-item="Inventory Check"><span>Inventory Check</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="process" data-item="Pick &amp; Pack"><span>Pick &amp; Pack</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="process" data-item="Shipping"><span>Shipping</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div></div>
+                    <div class="add-item-row">
+                        <input type="text" id="add-process" placeholder="Add process step...">
+                        <button class="btn btn-small" id="add-process-btn"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+
+                <!-- Outputs Column -->
+                <div class="sipoc-column">
+                    <div class="sipoc-column-header output-header">
+                        <i class="fas fa-shipping-fast"></i> Outputs
+                    </div>
+                    <div class="sipoc-items" id="outputs-items"><div class="sipoc-item" data-category="outputs" data-item="Shipped Order"><span>Shipped Order</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="outputs" data-item="Tracking Number"><span>Tracking Number</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="outputs" data-item="Invoice"><span>Invoice</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="outputs" data-item="Delivery Confirmation"><span>Delivery Confirmation</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div></div>
+                    <div class="add-item-row">
+                        <input type="text" id="add-output" placeholder="Add output...">
+                        <button class="btn btn-small" id="add-output-btn"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+
+                <!-- Customers Column -->
+                <div class="sipoc-column">
+                    <div class="sipoc-column-header customer-header">
+                        <i class="fas fa-users"></i> Customers
+                    </div>
+                    <div class="sipoc-items" id="customers-items"><div class="sipoc-item" data-category="customers" data-item="End Customers"><span>End Customers</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="customers" data-item="Customer Service"><span>Customer Service</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div><div class="sipoc-item" data-category="customers" data-item="Accounting Department"><span>Accounting Department</span><div class="sipoc-actions"><button class="link-btn" title="Manage Relationships"><i class="fas fa-link"></i></button><button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button><button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button></div></div></div>
+                    <div class="add-item-row">
+                        <input type="text" id="add-customer" placeholder="Add customer...">
+                        <button class="btn btn-small" id="add-customer-btn"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flow View -->
+            <div class="flow-view" id="flow-view">
+                <div id="flow-chains"><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>E-commerce Platform</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Customer Order</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Order Validation</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Invoice</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>End Customers</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>E-commerce Platform</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Customer Order</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Order Validation</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Invoice</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>Accounting Department</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>E-commerce Platform</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Shipping Address</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Pick &amp; Pack</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Shipped Order</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>End Customers</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>E-commerce Platform</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Shipping Address</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Shipping</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Tracking Number</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>End Customers</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>E-commerce Platform</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Shipping Address</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Shipping</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Tracking Number</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>Customer Service</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>E-commerce Platform</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Shipping Address</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Shipping</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Delivery Confirmation</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>End Customers</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>E-commerce Platform</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Shipping Address</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Shipping</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Delivery Confirmation</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>Customer Service</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>Payment Gateway</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Payment Information</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Payment Processing</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Invoice</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>End Customers</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>Payment Gateway</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Payment Information</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Payment Processing</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Invoice</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>Accounting Department</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>Inventory System</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Product Inventory</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Inventory Check</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Shipped Order</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>End Customers</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>Shipping Partners</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Shipping Address</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Pick &amp; Pack</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Shipped Order</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>End Customers</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>Shipping Partners</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Shipping Address</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Shipping</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Tracking Number</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>End Customers</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>Shipping Partners</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Shipping Address</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Shipping</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Tracking Number</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>Customer Service</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>Shipping Partners</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Shipping Address</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Shipping</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Delivery Confirmation</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>End Customers</div>
+                        </div></div><div class="flow-chain"><div class="flow-step suppliers-bg">
+                            <div class="suppliers-badge relationship-badge">SUPPLIERS</div>
+                            <div>Shipping Partners</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step inputs-bg">
+                            <div class="inputs-badge relationship-badge">INPUTS</div>
+                            <div>Shipping Address</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step process-bg">
+                            <div class="process-badge relationship-badge">PROCESS</div>
+                            <div>Shipping</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step outputs-bg">
+                            <div class="outputs-badge relationship-badge">OUTPUTS</div>
+                            <div>Delivery Confirmation</div>
+                        </div><div class="flow-arrow"><i class="fas fa-arrow-right"></i></div><div class="flow-step customers-bg">
+                            <div class="customers-badge relationship-badge">CUSTOMERS</div>
+                            <div>Customer Service</div>
+                        </div></div></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-info-circle"></i> About SIPOC Diagrams with Relationships</h2>
+            <p>A SIPOC diagram with relationship mapping shows not just the components, but how they connect and flow through your process:</p>
+            
+            <div class="info-section">
+                <div class="info-box">
+                    <h3><i class="fas fa-truck"></i> Suppliers</h3>
+                    <p>The providers of resources to the process. Click the link button to map which suppliers provide which inputs.</p>
+                </div>
+                <div class="info-box">
+                    <h3><i class="fas fa-box"></i> Inputs</h3>
+                    <p>The materials, resources, data, or information needed. Link inputs to specific process steps to show the flow.</p>
+                </div>
+                <div class="info-box">
+                    <h3><i class="fas fa-cogs"></i> Process</h3>
+                    <p>The key steps that transform inputs into outputs. Map which inputs are used and outputs are created in each step.</p>
+                </div>
+                <div class="info-box">
+                    <h3><i class="fas fa-shipping-fast"></i> Outputs</h3>
+                    <p>The products, services, or information that result. Connect outputs to their target customers or recipients.</p>
+                </div>
+                <div class="info-box">
+                    <h3><i class="fas fa-users"></i> Customers</h3>
+                    <p>The recipients of the process outputs. Map which customers receive which specific outputs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Relationship Modal -->
+    <div class="relationship-modal" id="relationship-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Manage Relationships</h3>
+                <button class="close-btn" onclick="closeRelationshipModal()">×</button>
+            </div>
+            <div id="relationship-content">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>SIPOC Diagram Maker - Ashi Tools | Connect <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="insta-link">@ashish_singh_rajput_3</a></p>
+        <div style="margin-top: 10px; color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">
+            © 2025 Ashi Tools. Empowering tomorrow's management leaders.
+        </div>
+    </footer>
+
+    <script>
+        // Template data with relationships
+        const templates = {
+            orderFulfillment: {
+                name: "Order Fulfillment Process",
+                description: "Complete process from customer order to delivery",
+                suppliers: ["E-commerce Platform", "Payment Gateway", "Inventory System", "Shipping Partners"],
+                inputs: ["Customer Order", "Payment Information", "Product Inventory", "Shipping Address"],
+                process: ["Order Validation", "Payment Processing", "Inventory Check", "Pick & Pack", "Shipping"],
+                outputs: ["Shipped Order", "Tracking Number", "Invoice", "Delivery Confirmation"],
+                customers: ["End Customers", "Customer Service", "Accounting Department"],
+                relationships: {
+                    supplierToInput: {
+                        "E-commerce Platform": ["Customer Order", "Shipping Address"],
+                        "Payment Gateway": ["Payment Information"],
+                        "Inventory System": ["Product Inventory"],
+                        "Shipping Partners": ["Shipping Address"]
+                    },
+                    inputToProcess: {
+                        "Customer Order": ["Order Validation"],
+                        "Payment Information": ["Payment Processing"],
+                        "Product Inventory": ["Inventory Check"],
+                        "Shipping Address": ["Pick & Pack", "Shipping"]
+                    },
+                    processToOutput: {
+                        "Order Validation": ["Invoice"],
+                        "Payment Processing": ["Invoice"],
+                        "Inventory Check": ["Shipped Order"],
+                        "Pick & Pack": ["Shipped Order"],
+                        "Shipping": ["Tracking Number", "Delivery Confirmation"]
+                    },
+                    outputToCustomer: {
+                        "Shipped Order": ["End Customers"],
+                        "Tracking Number": ["End Customers", "Customer Service"],
+                        "Invoice": ["End Customers", "Accounting Department"],
+                        "Delivery Confirmation": ["End Customers", "Customer Service"]
+                    }
+                }
+            },
+            customerService: {
+                name: "Customer Service Process",
+                description: "Handling customer inquiries and support requests",
+                suppliers: ["Customer", "Knowledge Base", "CRM System", "Technical Team"],
+                inputs: ["Customer Inquiry", "Account Information", "Product Documentation", "Previous Cases"],
+                process: ["Ticket Creation", "Issue Analysis", "Solution Research", "Response Delivery", "Follow-up"],
+                outputs: ["Resolution", "Response Email", "Updated Ticket", "Customer Satisfaction"],
+                customers: ["Customers", "Sales Team", "Product Management"],
+                relationships: {
+                    supplierToInput: {
+                        "Customer": ["Customer Inquiry"],
+                        "Knowledge Base": ["Product Documentation"],
+                        "CRM System": ["Account Information", "Previous Cases"],
+                        "Technical Team": ["Product Documentation"]
+                    },
+                    inputToProcess: {
+                        "Customer Inquiry": ["Ticket Creation", "Issue Analysis"],
+                        "Account Information": ["Issue Analysis"],
+                        "Product Documentation": ["Solution Research"],
+                        "Previous Cases": ["Solution Research"]
+                    },
+                    processToOutput: {
+                        "Ticket Creation": ["Updated Ticket"],
+                        "Issue Analysis": ["Resolution"],
+                        "Solution Research": ["Resolution", "Response Email"],
+                        "Response Delivery": ["Response Email"],
+                        "Follow-up": ["Customer Satisfaction"]
+                    },
+                    outputToCustomer: {
+                        "Resolution": ["Customers"],
+                        "Response Email": ["Customers"],
+                        "Updated Ticket": ["Sales Team", "Product Management"],
+                        "Customer Satisfaction": ["Sales Team", "Product Management"]
+                    }
+                }
+            },
+            hiring: {
+                name: "Employee Hiring Process",
+                description: "Complete recruitment and onboarding process",
+                suppliers: ["HR Department", "Hiring Manager", "Job Boards", "Recruitment Agencies"],
+                inputs: ["Job Requirements", "Candidate Applications", "Interview Feedback", "Background Checks"],
+                process: ["Job Posting", "Resume Screening", "Interviews", "Background Check", "Job Offer"],
+                outputs: ["New Employee", "Employment Contract", "Onboarding Plan", "Updated Org Chart"],
+                customers: ["New Employee", "Department Manager", "HR Records"],
+                relationships: {
+                    supplierToInput: {
+                        "HR Department": ["Job Requirements"],
+                        "Hiring Manager": ["Job Requirements", "Interview Feedback"],
+                        "Job Boards": ["Candidate Applications"],
+                        "Recruitment Agencies": ["Candidate Applications", "Background Checks"]
+                    },
+                    inputToProcess: {
+                        "Job Requirements": ["Job Posting"],
+                        "Candidate Applications": ["Resume Screening"],
+                        "Interview Feedback": ["Background Check", "Job Offer"],
+                        "Background Checks": ["Job Offer"]
+                    },
+                    processToOutput: {
+                        "Job Posting": ["Candidate Applications"],
+                        "Resume Screening": ["Interview Feedback"],
+                        "Interviews": ["Interview Feedback"],
+                        "Background Check": ["Employment Contract"],
+                        "Job Offer": ["New Employee", "Employment Contract", "Onboarding Plan"]
+                    },
+                    outputToCustomer: {
+                        "New Employee": ["Department Manager"],
+                        "Employment Contract": ["New Employee", "HR Records"],
+                        "Onboarding Plan": ["New Employee", "Department Manager"],
+                        "Updated Org Chart": ["Department Manager", "HR Records"]
+                    }
+                }
+            },
+            manufacturing: {
+                name: "Manufacturing Process",
+                description: "Product manufacturing and quality control",
+                suppliers: ["Raw Material Vendors", "Equipment Suppliers", "Quality Lab", "Maintenance Team"],
+                inputs: ["Raw Materials", "Production Schedule", "Quality Standards", "Equipment"],
+                process: ["Material Preparation", "Production Setup", "Manufacturing", "Quality Check", "Packaging"],
+                outputs: ["Finished Product", "Quality Report", "Production Data", "Packaged Goods"],
+                customers: ["Distribution Center", "Quality Assurance", "Sales Team"],
+                relationships: {
+                    supplierToInput: {
+                        "Raw Material Vendors": ["Raw Materials"],
+                        "Equipment Suppliers": ["Equipment"],
+                        "Quality Lab": ["Quality Standards"],
+                        "Maintenance Team": ["Equipment"]
+                    },
+                    inputToProcess: {
+                        "Raw Materials": ["Material Preparation", "Manufacturing"],
+                        "Production Schedule": ["Production Setup"],
+                        "Quality Standards": ["Quality Check"],
+                        "Equipment": ["Production Setup", "Manufacturing"]
+                    },
+                    processToOutput: {
+                        "Material Preparation": ["Raw Materials"],
+                        "Production Setup": ["Production Data"],
+                        "Manufacturing": ["Finished Product"],
+                        "Quality Check": ["Quality Report", "Finished Product"],
+                        "Packaging": ["Packaged Goods"]
+                    },
+                    outputToCustomer: {
+                        "Finished Product": ["Distribution Center"],
+                        "Quality Report": ["Quality Assurance"],
+                        "Production Data": ["Sales Team"],
+                        "Packaged Goods": ["Distribution Center"]
+                    }
+                }
+            },
+            software: {
+                name: "Software Development Process",
+                description: "Software feature development lifecycle",
+                suppliers: ["Product Manager", "UX Designer", "DevOps Team", "QA Team"],
+                inputs: ["Requirements", "Design Specs", "Code Repository", "Test Cases"],
+                process: ["Planning", "Development", "Code Review", "Testing", "Deployment"],
+                outputs: ["Working Software", "Documentation", "Test Results", "Release Notes"],
+                customers: ["End Users", "Product Manager", "Support Team"],
+                relationships: {
+                    supplierToInput: {
+                        "Product Manager": ["Requirements"],
+                        "UX Designer": ["Design Specs"],
+                        "DevOps Team": ["Code Repository"],
+                        "QA Team": ["Test Cases"]
+                    },
+                    inputToProcess: {
+                        "Requirements": ["Planning"],
+                        "Design Specs": ["Development"],
+                        "Code Repository": ["Development", "Code Review"],
+                        "Test Cases": ["Testing"]
+                    },
+                    processToOutput: {
+                        "Planning": ["Documentation"],
+                        "Development": ["Working Software"],
+                        "Code Review": ["Working Software"],
+                        "Testing": ["Test Results"],
+                        "Deployment": ["Working Software", "Release Notes"]
+                    },
+                    outputToCustomer: {
+                        "Working Software": ["End Users"],
+                        "Documentation": ["Support Team"],
+                        "Test Results": ["Product Manager"],
+                        "Release Notes": ["End Users", "Support Team"]
+                    }
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Process name handling
+            const processNameInput = document.getElementById('process-name');
+            const processDescInput = document.getElementById('process-desc');
+            const displayedProcessName = document.getElementById('displayed-process-name');
+            
+            processNameInput.addEventListener('input', function() {
+                displayedProcessName.textContent = this.value || 'Untitled Process';
+            });
+            
+            // SIPOC data structure with relationships
+            let sipocData = {
+                suppliers: ["E-commerce Platform", "Payment Gateway", "Inventory System", "Shipping Partners"],
+                inputs: ["Customer Order", "Payment Information", "Product Inventory", "Shipping Address"],
+                process: ["Order Validation", "Payment Processing", "Inventory Check", "Pick & Pack", "Shipping"],
+                outputs: ["Shipped Order", "Tracking Number", "Invoice", "Delivery Confirmation"],
+                customers: ["End Customers", "Customer Service", "Accounting Department"],
+                relationships: {
+                    supplierToInput: {
+                        "E-commerce Platform": ["Customer Order", "Shipping Address"],
+                        "Payment Gateway": ["Payment Information"],
+                        "Inventory System": ["Product Inventory"],
+                        "Shipping Partners": ["Shipping Address"]
+                    },
+                    inputToProcess: {
+                        "Customer Order": ["Order Validation"],
+                        "Payment Information": ["Payment Processing"],
+                        "Product Inventory": ["Inventory Check"],
+                        "Shipping Address": ["Pick & Pack", "Shipping"]
+                    },
+                    processToOutput: {
+                        "Order Validation": ["Invoice"],
+                        "Payment Processing": ["Invoice"],
+                        "Inventory Check": ["Shipped Order"],
+                        "Pick & Pack": ["Shipped Order"],
+                        "Shipping": ["Tracking Number", "Delivery Confirmation"]
+                    },
+                    outputToCustomer: {
+                        "Shipped Order": ["End Customers"],
+                        "Tracking Number": ["End Customers", "Customer Service"],
+                        "Invoice": ["End Customers", "Accounting Department"],
+                        "Delivery Confirmation": ["End Customers", "Customer Service"]
+                    }
+                }
+            };
+
+            let currentView = 'standard';
+            let selectedItem = null;
+            let linkingMode = false;
+
+            // Template loading function
+            window.loadTemplate = function(templateKey) {
+                if (templateKey === 'clear') {
+                    processNameInput.value = '';
+                    processDescInput.value = '';
+                    displayedProcessName.textContent = 'Untitled Process';
+                    
+                    sipocData = {
+                        suppliers: [],
+                        inputs: [],
+                        process: [],
+                        outputs: [],
+                        customers: [],
+                        relationships: {
+                            supplierToInput: {},
+                            inputToProcess: {},
+                            processToOutput: {},
+                            outputToCustomer: {}
+                        }
+                    };
+                } else if (templates[templateKey]) {
+                    const template = templates[templateKey];
+                    processNameInput.value = template.name;
+                    processDescInput.value = template.description;
+                    displayedProcessName.textContent = template.name;
+                    
+                    sipocData = {
+                        suppliers: [...template.suppliers],
+                        inputs: [...template.inputs],
+                        process: [...template.process],
+                        outputs: [...template.outputs],
+                        customers: [...template.customers],
+                        relationships: JSON.parse(JSON.stringify(template.relationships))
+                    };
+                }
+                
+                // Re-render all items
+                renderItems('suppliers');
+                renderItems('inputs');
+                renderItems('process');
+                renderItems('outputs');
+                renderItems('customers');
+                updateFlowView();
+            };
+            
+            // Item handling functions
+            function addItem(category, text) {
+                if (!text.trim()) return;
+                
+                sipocData[category].push(text.trim());
+                renderItems(category);
+                
+                // Clear input field
+                const inputId = category === 'process' ? 'add-process' : `add-${category.slice(0, -1)}`;
+                document.getElementById(inputId).value = '';
+                
+                updateFlowView();
+            }
+            
+            function editItem(category, index) {
+                const currentValue = sipocData[category][index];
+                const categoryName = category === 'process' ? 'process step' : category.slice(0, -1);
+                const newValue = prompt(`Edit this ${categoryName}:`, currentValue);
+                
+                if (newValue !== null && newValue.trim() !== '') {
+                    // Update relationships if item name changed
+                    updateRelationshipsAfterEdit(category, currentValue, newValue.trim());
+                    sipocData[category][index] = newValue.trim();
+                    renderItems(category);
+                    updateFlowView();
+                }
+            }
+            
+            function deleteItem(category, index) {
+                const categoryName = category === 'process' ? 'process step' : category.slice(0, -1);
+                const itemName = sipocData[category][index];
+                
+                if (confirm(`Are you sure you want to delete this ${categoryName}? This will also remove all its relationships.`)) {
+                    // Remove from relationships
+                    removeFromRelationships(category, itemName);
+                    sipocData[category].splice(index, 1);
+                    renderItems(category);
+                    updateFlowView();
+                }
+            }
+
+            function updateRelationshipsAfterEdit(category, oldName, newName) {
+                // Update relationships when an item is renamed
+                const relationships = sipocData.relationships;
+                
+                Object.keys(relationships).forEach(relType => {
+                    Object.keys(relationships[relType]).forEach(key => {
+                        if (key === oldName) {
+                            relationships[relType][newName] = relationships[relType][oldName];
+                            delete relationships[relType][oldName];
+                        }
+                        
+                        // Update in arrays
+                        if (relationships[relType][key]) {
+                            relationships[relType][key] = relationships[relType][key].map(item => 
+                                item === oldName ? newName : item
+                            );
+                        }
+                    });
+                });
+            }
+
+            function removeFromRelationships(category, itemName) {
+                const relationships = sipocData.relationships;
+                
+                Object.keys(relationships).forEach(relType => {
+                    // Remove as key
+                    delete relationships[relType][itemName];
+                    
+                    // Remove from arrays
+                    Object.keys(relationships[relType]).forEach(key => {
+                        if (relationships[relType][key]) {
+                            relationships[relType][key] = relationships[relType][key].filter(item => item !== itemName);
+                        }
+                    });
+                });
+            }
+            
+            function renderItems(category) {
+                const container = document.getElementById(`${category}-items`);
+                container.innerHTML = '';
+                
+                sipocData[category].forEach((item, index) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'sipoc-item';
+                    itemElement.dataset.category = category;
+                    itemElement.dataset.item = item;
+                    
+                    const textSpan = document.createElement('span');
+                    textSpan.textContent = item;
+                    
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'sipoc-actions';
+                    
+                    const linkBtn = document.createElement('button');
+                    linkBtn.className = 'link-btn';
+                    linkBtn.innerHTML = '<i class="fas fa-link"></i>';
+                    linkBtn.title = 'Manage Relationships';
+                    linkBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        openRelationshipModal(category, item);
+                    });
+                    
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'edit-btn';
+                    editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+                    editBtn.title = 'Edit';
+                    editBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        editItem(category, index);
+                    });
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-btn';
+                    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                    deleteBtn.title = 'Delete';
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        deleteItem(category, index);
+                    });
+                    
+                    actionsDiv.appendChild(linkBtn);
+                    actionsDiv.appendChild(editBtn);
+                    actionsDiv.appendChild(deleteBtn);
+                    
+                    itemElement.appendChild(textSpan);
+                    itemElement.appendChild(actionsDiv);
+                    
+                    // Click handler for selection
+                    itemElement.addEventListener('click', () => {
+                        selectItem(itemElement);
+                    });
+                    
+                    container.appendChild(itemElement);
+                });
+            }
+
+            function selectItem(element) {
+                // Remove previous selections
+                document.querySelectorAll('.sipoc-item.selected').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                // Clear connected highlights
+                document.querySelectorAll('.sipoc-item.connected').forEach(item => {
+                    item.classList.remove('connected');
+                });
+                
+                // Select current item
+                element.classList.add('selected');
+                selectedItem = {
+                    category: element.dataset.category,
+                    item: element.dataset.item
+                };
+                
+                // Highlight connected items
+                highlightConnectedItems(selectedItem.category, selectedItem.item);
+            }
+
+            function highlightConnectedItems(category, item) {
+                const relationships = sipocData.relationships;
+                const connected = new Set();
+                
+                // Find all connected items
+                Object.keys(relationships).forEach(relType => {
+                    if (relationships[relType][item]) {
+                        relationships[relType][item].forEach(connectedItem => {
+                            connected.add(connectedItem);
+                        });
+                    }
+                    
+                    Object.keys(relationships[relType]).forEach(key => {
+                        if (relationships[relType][key] && relationships[relType][key].includes(item)) {
+                            connected.add(key);
+                        }
+                    });
+                });
+                
+                // Highlight connected items
+                document.querySelectorAll('.sipoc-item').forEach(element => {
+                    if (connected.has(element.dataset.item)) {
+                        element.classList.add('connected');
+                    }
+                });
+            }
+
+            // Relationship management
+            function openRelationshipModal(category, item) {
+                const modal = document.getElementById('relationship-modal');
+                const content = document.getElementById('relationship-content');
+                
+                content.innerHTML = generateRelationshipContent(category, item);
+                modal.classList.add('active');
+            }
+
+            window.closeRelationshipModal = function() {
+                document.getElementById('relationship-modal').classList.remove('active');
+            };
+
+            function generateRelationshipContent(category, item) {
+                let html = `<h4>Manage Relationships for: <span class="${category}-badge relationship-badge">${item}</span></h4>`;
+                
+                const relationships = sipocData.relationships;
+                const relTypes = getRelationshipTypes(category);
+                
+                relTypes.forEach(relType => {
+                    const { label, targetCategory, isSource } = relType;
+                    
+                    html += `<div class="relationship-section">
+                        <h4><i class="fas fa-arrow-${isSource ? 'right' : 'left'}"></i> ${label}</h4>
+                        <div class="relationship-list">`;
+                    
+                    const targetItems = sipocData[targetCategory];
+                    const currentRelations = isSource ? 
+                        (relationships[relType.key] && relationships[relType.key][item] ? relationships[relType.key][item] : []) :
+                        getIncomingRelations(relType.key, item);
+                    
+                    targetItems.forEach(targetItem => {
+                        const isLinked = currentRelations.includes(targetItem);
+                        html += `<div class="relationship-item">
+                            <span>${targetItem}</span>
+                            <button class="btn btn-small ${isLinked ? 'btn-secondary' : ''}" 
+                                onclick="toggleRelationship('${relType.key}', '${isSource ? item : targetItem}', '${isSource ? targetItem : item}', ${isSource})">
+                                ${isLinked ? 'Unlink' : 'Link'}
+                            </button>
+                        </div>`;
+                    });
+                    
+                    html += `</div></div>`;
+                });
+                
+                return html;
+            }
+
+            function getRelationshipTypes(category) {
+                const types = [];
+                
+                switch(category) {
+                    case 'suppliers':
+                        types.push({ key: 'supplierToInput', label: 'Provides Inputs', targetCategory: 'inputs', isSource: true });
+                        break;
+                    case 'inputs':
+                        types.push({ key: 'supplierToInput', label: 'Provided by Suppliers', targetCategory: 'suppliers', isSource: false });
+                        types.push({ key: 'inputToProcess', label: 'Used in Process Steps', targetCategory: 'process', isSource: true });
+                        break;
+                    case 'process':
+                        types.push({ key: 'inputToProcess', label: 'Uses Inputs', targetCategory: 'inputs', isSource: false });
+                        types.push({ key: 'processToOutput', label: 'Produces Outputs', targetCategory: 'outputs', isSource: true });
+                        break;
+                    case 'outputs':
+                        types.push({ key: 'processToOutput', label: 'Produced by Process Steps', targetCategory: 'process', isSource: false });
+                        types.push({ key: 'outputToCustomer', label: 'Delivered to Customers', targetCategory: 'customers', isSource: true });
+                        break;
+                    case 'customers':
+                        types.push({ key: 'outputToCustomer', label: 'Receives Outputs', targetCategory: 'outputs', isSource: false });
+                        break;
+                }
+                
+                return types;
+            }
+
+            function getIncomingRelations(relKey, targetItem) {
+                const relations = [];
+                const relationshipData = sipocData.relationships[relKey];
+                
+                Object.keys(relationshipData).forEach(source => {
+                    if (relationshipData[source] && relationshipData[source].includes(targetItem)) {
+                        relations.push(source);
+                    }
+                });
+                
+                return relations;
+            }
+
+            window.toggleRelationship = function(relKey, source, target, isSource) {
+                const relationships = sipocData.relationships;
+                
+                if (!relationships[relKey]) {
+                    relationships[relKey] = {};
+                }
+                
+                if (!relationships[relKey][source]) {
+                    relationships[relKey][source] = [];
+                }
+                
+                const index = relationships[relKey][source].indexOf(target);
+                if (index > -1) {
+                    relationships[relKey][source].splice(index, 1);
+                } else {
+                    relationships[relKey][source].push(target);
+                }
+                
+                // Clean up empty arrays
+                if (relationships[relKey][source].length === 0) {
+                    delete relationships[relKey][source];
+                }
+                
+                // Refresh the modal content
+                const category = isSource ? getSourceCategory(relKey) : getTargetCategory(relKey);
+                const item = isSource ? source : target;
+                document.getElementById('relationship-content').innerHTML = generateRelationshipContent(category, item);
+                
+                updateFlowView();
+            };
+
+            function getSourceCategory(relKey) {
+                const mapping = {
+                    'supplierToInput': 'suppliers',
+                    'inputToProcess': 'inputs',
+                    'processToOutput': 'process',
+                    'outputToCustomer': 'outputs'
+                };
+                return mapping[relKey];
+            }
+
+            function getTargetCategory(relKey) {
+                const mapping = {
+                    'supplierToInput': 'inputs',
+                    'inputToProcess': 'process',
+                    'processToOutput': 'outputs',
+                    'outputToCustomer': 'customers'
+                };
+                return mapping[relKey];
+            }
+
+            // Flow view
+            function updateFlowView() {
+                const flowContainer = document.getElementById('flow-chains');
+                flowContainer.innerHTML = '';
+                
+                // Generate flow chains based on relationships
+                const chains = generateFlowChains();
+                
+                chains.forEach(chain => {
+                    const chainElement = document.createElement('div');
+                    chainElement.className = 'flow-chain';
+                    
+                    chain.forEach((step, index) => {
+                        if (index > 0) {
+                            const arrow = document.createElement('div');
+                            arrow.className = 'flow-arrow';
+                            arrow.innerHTML = '<i class="fas fa-arrow-right"></i>';
+                            chainElement.appendChild(arrow);
+                        }
+                        
+                        const stepElement = document.createElement('div');
+                        stepElement.className = `flow-step ${step.category}-bg`;
+                        stepElement.innerHTML = `
+                            <div class="${step.category}-badge relationship-badge">${step.category.toUpperCase()}</div>
+                            <div>${step.item}</div>
+                        `;
+                        chainElement.appendChild(stepElement);
+                    });
+                    
+                    flowContainer.appendChild(chainElement);
+                });
+            }
+
+            function generateFlowChains() {
+                const chains = [];
+                const relationships = sipocData.relationships;
+                
+                // Start with suppliers and trace through the process
+                sipocData.suppliers.forEach(supplier => {
+                    const inputs = relationships.supplierToInput[supplier] || [];
+                    
+                    inputs.forEach(input => {
+                        const processes = relationships.inputToProcess[input] || [];
+                        
+                        processes.forEach(process => {
+                            const outputs = relationships.processToOutput[process] || [];
+                            
+                            outputs.forEach(output => {
+                                const customers = relationships.outputToCustomer[output] || [];
+                                
+                                customers.forEach(customer => {
+                                    chains.push([
+                                        { category: 'suppliers', item: supplier },
+                                        { category: 'inputs', item: input },
+                                        { category: 'process', item: process },
+                                        { category: 'outputs', item: output },
+                                        { category: 'customers', item: customer }
+                                    ]);
+                                });
+                            });
+                        });
+                    });
+                });
+                
+                return chains;
+            }
+
+            // View toggle
+            document.getElementById('flow-view-btn').addEventListener('click', function() {
+                const standardView = document.getElementById('standard-view');
+                const flowView = document.getElementById('flow-view');
+                
+                if (currentView === 'standard') {
+                    standardView.style.display = 'none';
+                    flowView.classList.add('active');
+                    this.innerHTML = '<i class="fas fa-th"></i> Standard View';
+                    this.classList.remove('btn-secondary');
+                    this.classList.add('btn');
+                    currentView = 'flow';
+                    updateFlowView();
+                } else {
+                    standardView.style.display = 'grid';
+                    flowView.classList.remove('active');
+                    this.innerHTML = '<i class="fas fa-exchange-alt"></i> Flow View';
+                    this.classList.remove('btn');
+                    this.classList.add('btn-secondary');
+                    currentView = 'standard';
+                }
+            });
+
+            // Relationships button
+            document.getElementById('relationships-btn').addEventListener('click', function() {
+                if (selectedItem) {
+                    openRelationshipModal(selectedItem.category, selectedItem.item);
+                } else {
+                    alert('Please select an item first by clicking on it.');
+                }
+            });
+            
+            // Add button event listeners
+            const categories = ['suppliers', 'inputs', 'process', 'outputs', 'customers'];
+            
+            categories.forEach(category => {
+                const inputId = category === 'process' ? 'add-process' : `add-${category.slice(0, -1)}`;
+                const btnId = category === 'process' ? 'add-process-btn' : `add-${category.slice(0, -1)}-btn`;
+                
+                document.getElementById(btnId).addEventListener('click', function() {
+                    const text = document.getElementById(inputId).value;
+                    addItem(category, text);
+                });
+                
+                document.getElementById(inputId).addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        addItem(category, this.value);
+                    }
+                });
+            });
+            
+            // Enhanced PDF Export with relationships
+            document.getElementById('export-pdf').addEventListener('click', function() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('l', 'mm', 'a4');
+                
+                // Page dimensions
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const margin = 15;
+                
+                // Colors
+                const primaryColor = [0, 200, 180];
+                const darkBg = [8, 12, 20];
+                const lightBg = [248, 249, 250];
+                const darkText = [33, 37, 41];
+                
+                // Header
+                doc.setFillColor(...darkBg);
+                doc.rect(0, 0, pageWidth, 35, 'F');
+                
+                doc.setFillColor(...primaryColor);
+                doc.circle(25, 17, 8, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(12);
+                doc.text('', 25, 21, { align: 'center' });
+                
+                doc.setTextColor(...primaryColor);
+                doc.setFontSize(24);
+                const processName = processNameInput.value || 'Untitled Process';
+                doc.text(`SIPOC Diagram: ${processName}`, 40, 22);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(200, 200, 200);
+                doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth - 15, 15, { align: 'right' });
+                
+                const processDesc = processDescInput.value;
+                if (processDesc.trim()) {
+                    doc.setFontSize(11);
+                    doc.text(`Description: ${processDesc}`, pageWidth - 15, 25, { align: 'right' });
+                }
+                
+                // Content background
+                doc.setFillColor(...lightBg);
+                doc.rect(0, 35, pageWidth, pageHeight - 35, 'F');
+                
+                // SIPOC diagram
+                const diagramStartY = 50;
+                const columnWidth = (pageWidth - margin * 2) / 5;
+                const headerHeight = 15;
+                
+                const columnColors = [
+                    [142, 68, 173], [46, 204, 113], [243, 156, 18], [231, 76, 60], [26, 188, 156]
+                ];
+                
+                const columnBgColors = [
+                    [232, 218, 239], [212, 247, 223], [254, 235, 200], [252, 228, 225], [212, 245, 238]
+                ];
+                
+                const columnLabels = ['SUPPLIERS', 'INPUTS', 'PROCESS STEPS', 'OUTPUTS', 'CUSTOMERS'];
+                const columnData = [sipocData.suppliers, sipocData.inputs, sipocData.process, sipocData.outputs, sipocData.customers];
+                
+                // Draw headers
+                columnLabels.forEach((label, i) => {
+                    const x = margin + (i * columnWidth);
+                    
+                    doc.setFillColor(...columnColors[i]);
+                    doc.roundedRect(x, diagramStartY, columnWidth - 2, headerHeight, 2, 2, 'F');
+                    
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFontSize(11);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text(label, x + columnWidth/2 - 1, diagramStartY + 10, { align: 'center' });
+                });
+                
+                // Draw content
+                const contentStartY = diagramStartY + headerHeight + 5;
+                const maxContentHeight = pageHeight - contentStartY - 60;
+                
+                columnData.forEach((data, colIndex) => {
+                    const x = margin + (colIndex * columnWidth);
+                    let currentY = contentStartY;
+                    
+                    doc.setFillColor(...columnBgColors[colIndex]);
+                    doc.roundedRect(x, contentStartY, columnWidth - 2, maxContentHeight, 2, 2, 'F');
+                    
+                    doc.setDrawColor(...columnColors[colIndex]);
+                    doc.setLineWidth(1);
+                    doc.roundedRect(x, contentStartY, columnWidth - 2, maxContentHeight, 2, 2, 'S');
+                    
+                    doc.setTextColor(...darkText);
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'normal');
+                    
+                    data.forEach((item, itemIndex) => {
+                        if (currentY > contentStartY + maxContentHeight - 20) return;
+                        
+                        doc.setFillColor(...columnColors[colIndex]);
+                        doc.circle(x + 8, currentY + 3, 1.5, 'F');
+                        
+                        const maxWidth = columnWidth - 20;
+                        const wrappedText = doc.splitTextToSize(item, maxWidth);
+                        
+                        wrappedText.forEach((line, lineIndex) => {
+                            if (currentY <= contentStartY + maxContentHeight - 15) {
+                                doc.text(line, x + 12, currentY + 5 + (lineIndex * 4));
+                            }
+                        });
+                        
+                        currentY += Math.max(8, wrappedText.length * 4 + 2);
+                    });
+                });
+                
+                // Add relationship summary on second page
+                doc.addPage();
+                doc.setFillColor(...lightBg);
+                doc.rect(0, 0, pageWidth, pageHeight, 'F');
+                
+                doc.setTextColor(...darkText);
+                doc.setFontSize(18);
+                doc.text('Process Flow & Relationships', 20, 20);
+                
+                // Generate and add flow chains
+                const chains = generateFlowChains();
+                let flowY = 35;
+                
+                chains.slice(0, 8).forEach((chain, index) => { // Limit to first 8 chains
+                    if (flowY > pageHeight - 30) return;
+                    
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text(`Flow Chain ${index + 1}:`, 20, flowY);
+                    flowY += 8;
+                    
+                    doc.setFont('helvetica', 'normal');
+                    const flowText = chain.map(step => step.item).join(' → ');
+                    const wrappedFlow = doc.splitTextToSize(flowText, pageWidth - 40);
+                    
+                    wrappedFlow.forEach(line => {
+                        doc.text(line, 25, flowY);
+                        flowY += 6;
+                    });
+                    
+                    flowY += 8;
+                });
+                
+                // Footer
+                doc.setFontSize(8);
+                doc.setTextColor(108, 117, 125);
+                doc.text('© 2025 Ashi Tools - Advanced SIPOC Diagram Maker with Relationship Mapping', pageWidth/2, pageHeight - 10, { align: 'center' });
+                doc.text('Connect with us: instagram.com/ashish_singh_rajput_3', pageWidth/2, pageHeight - 5, { align: 'center' });
+                
+                // Save
+                const fileName = `SIPOC-Advanced-${processName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.pdf`;
+                doc.save(fileName);
+            });
+            
+            // Initialize
+            loadTemplate('orderFulfillment');
+        });
+    </script>
+
+
+            <script></script>
+        
+    
+</body>

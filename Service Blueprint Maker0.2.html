@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1240.0" data-gr-ext-installed="">
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Blueprint Maker - Ashi Tools</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #e67e22;
+            --dark-bg: #1e293b;
+            --card-bg: #1f2937;
+            --card-bg-alt: #374151;
+            --text-light: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --border-light: rgba(156, 163, 175, 0.2);
+            --input-bg: rgba(55, 65, 81, 0.5);
+
+            /* Lane Colors */
+            --evidence-color: #9b59b6;
+            --customer-color: #3498db;
+            --frontstage-color: #2ecc71;
+            --technology-color: #f1c40f;
+            --backstage-color: #e67e22;
+            --support-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: var(--text-light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #1f2937, #111827);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .logo-icon {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            color: white;
+        }
+
+        .header-sub {
+            font-size: 1.1em;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Controls Panel */
+        .controls-panel {
+            padding: 20px 30px;
+            background: linear-gradient(145deg, #1f2937, #111827);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .project-title-section {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .project-title-section label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        #projectTitleInput {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 2px solid var(--border-light);
+            background: var(--input-bg);
+            color: var(--text-light);
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+        }
+
+        #projectTitleInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+            font-family: Roboto, sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #d35400;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3);
+        }
+
+        .btn-success {
+            background: #059669;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #047857;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(5, 150, 105, 0.3);
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 30px;
+            background: linear-gradient(145deg, #1f2937, #111827);
+        }
+
+        /* Blueprint Input Form */
+        .blueprint-form {
+            background: var(--card-bg-alt);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .form-header-icon {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-header h3 {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 200px;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid var(--border-light);
+            background: var(--input-bg);
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        /* Templates Section */
+        .templates-section {
+            background: var(--card-bg-alt);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .templates-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .templates-header-icon {
+            background: var(--secondary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .templates-header h3 {
+            color: var(--secondary);
+            font-size: 1.3rem;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .template-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--border-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .template-card h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .template-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .template-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            background: var(--input-bg);
+            color: var(--text-light);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        /* Service Blueprint */
+        .blueprint {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            background: var(--border-light);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .lane {
+            background: var(--card-bg);
+            transition: all 0.3s ease;
+        }
+
+        .lane:hover {
+            background: var(--card-bg-alt);
+        }
+
+        .lane-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .lane-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .lane-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .lane-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .lane-items {
+            padding: 20px;
+            min-height: 120px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-content: flex-start;
+        }
+
+        .blueprint-item {
+            background: var(--input-bg);
+            border: 2px solid var(--border-light);
+            border-radius: 10px;
+            padding: 15px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            max-width: 350px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .blueprint-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+
+        .item-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+        }
+
+        .item-text {
+            flex-grow: 1;
+            word-break: break-word;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 8px;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .blueprint-item:hover .item-actions {
+            opacity: 1;
+        }
+
+        .item-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: var(--card-bg-alt);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .item-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .item-btn.delete-btn:hover {
+            background: var(--support-color);
+        }
+
+        /* Lane specific colors */
+        .lane-evidence .lane-icon { background: var(--evidence-color); }
+        .lane-customer .lane-icon { background: var(--customer-color); }
+        .lane-frontstage .lane-icon { background: var(--frontstage-color); }
+        .lane-technology .lane-icon { background: var(--technology-color); }
+        .lane-backstage .lane-icon { background: var(--backstage-color); }
+        .lane-support .lane-icon { background: var(--support-color); }
+
+        /* Lane dividers */
+        .lane-divider-container {
+            position: relative;
+            margin: 15px 30px;
+            height: 3px;
+        }
+
+        .lane-divider {
+            height: 3px;
+            width: 100%;
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .divider-label {
+            position: absolute;
+            left: 30px;
+            top: -20px;
+            background: var(--card-bg);
+            padding: 5px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            border-radius: 15px;
+            border: 1px solid var(--border-light);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 0;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: white;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-close:hover {
+            opacity: 0.7;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-content {
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: toastSlideIn 0.3s ease;
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            background: #059669;
+        }
+
+        .toast.error {
+            background: #dc2626;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 40px;
+            padding: 30px;
+            line-height: 1.6;
+            background: linear-gradient(145deg, #1f2937, #111827);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .insta-link {
+            color: #e1306c;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .insta-link:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 8px rgba(225, 48, 108, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .controls-panel {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .control-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .template-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .lane-items {
+                padding: 15px;
+            }
+
+            .blueprint-item {
+                max-width: 100%;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+    </style>
+
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-sitemap"></i>
+                </div>
+                <div>
+                    <h1>Service Blueprint Maker</h1>
+                    <p class="header-sub">Map your service journey from customer touchpoints to support processes. Visualize the entire service ecosystem with professional templates.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="project-title-section">
+                <label for="projectTitleInput">
+                    <i class="fas fa-edit"></i> Project Title
+                </label>
+                <input type="text" id="projectTitleInput" placeholder="Enter your service blueprint title" value="Customer Onboarding Experience">
+            </div>
+            <div class="control-buttons">
+                <button class="btn btn-primary" id="exportPdfBtn">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </button>
+                <button class="btn btn-secondary" id="exportCsvBtn">
+                    <i class="fas fa-file-csv"></i> Export CSV
+                </button>
+                <button class="btn btn-success" id="saveTemplateBtn">
+                    <i class="fas fa-save"></i> Save Template
+                </button>
+                <button class="btn btn-danger" id="clearAllBtn">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Templates Section -->
+            <div class="templates-section">
+                <div class="templates-header">
+                    <div class="templates-header-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <div>
+                        <h3>Quick Start Templates</h3>
+                        <p>Load pre-built service blueprints for common business scenarios</p>
+                    </div>
+                </div>
+                <div class="template-grid">
+                    <div class="template-card" onclick="loadTemplate('ecommerce')">
+                        <h4><i class="fas fa-shopping-cart"></i> E-commerce Purchase</h4>
+                        <p>Complete online shopping experience from browsing to delivery</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Web Interface</span>
+                            <span class="feature-tag">Payment Process</span>
+                            <span class="feature-tag">Fulfillment</span>
+                        </div>
+                    </div>
+                    
+                    <div class="template-card" onclick="loadTemplate('restaurant')">
+                        <h4><i class="fas fa-utensils"></i> Restaurant Service</h4>
+                        <p>Dining experience from reservation to payment</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Reservation</span>
+                            <span class="feature-tag">Table Service</span>
+                            <span class="feature-tag">Kitchen Operations</span>
+                        </div>
+                    </div>
+                    
+                    <div class="template-card" onclick="loadTemplate('banking')">
+                        <h4><i class="fas fa-university"></i> Banking Service</h4>
+                        <p>Account opening and banking service delivery</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Account Setup</span>
+                            <span class="feature-tag">Verification</span>
+                            <span class="feature-tag">Digital Banking</span>
+                        </div>
+                    </div>
+                    
+                    <div class="template-card" onclick="loadTemplate('healthcare')">
+                        <h4><i class="fas fa-heartbeat"></i> Healthcare Appointment</h4>
+                        <p>Patient journey from booking to treatment</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Appointment</span>
+                            <span class="feature-tag">Consultation</span>
+                            <span class="feature-tag">Follow-up</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blueprint Input Form -->
+            <div class="blueprint-form">
+                <div class="form-header">
+                    <div class="form-header-icon">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div>
+                        <h3>Add New Stage</h3>
+                        <p>Add a new step or touchpoint to your service blueprint</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="itemText">
+                            <i class="fas fa-edit"></i> Stage Description
+                        </label>
+                        <input type="text" id="itemText" placeholder="Enter step or action description">
+                    </div>
+                    <div class="form-group">
+                        <label for="itemLane">
+                            <i class="fas fa-layer-group"></i> Lane Type
+                        </label>
+                        <select id="itemLane">
+                            <option value="evidence">Physical Evidence</option>
+                            <option value="customer">Customer Actions</option>
+                            <option value="frontstage">Frontstage Actions</option>
+                            <option value="technology">Technology</option>
+                            <option value="backstage">Backstage Actions</option>
+                            <option value="support">Support Processes</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="addItemBtn">
+                        <i class="fas fa-plus"></i> Add Stage
+                    </button>
+                </div>
+            </div>
+
+            <!-- Service Blueprint -->
+            <div class="blueprint" id="serviceBlueprintContainer">
+                <!-- Physical Evidence Lane -->
+                <div class="lane lane-evidence">
+                    <div class="lane-header">
+                        <div class="lane-icon"><i class="fas fa-image"></i></div>
+                        <div>
+                            <div class="lane-title">Physical Evidence</div>
+                            <div class="lane-description">Tangible elements customers see and interact with</div>
+                        </div>
+                    </div>
+                    <div class="lane-items" id="evidence-items"></div>
+                </div>
+
+                <!-- Customer Actions Lane -->
+                <div class="lane lane-customer">
+                    <div class="lane-header">
+                        <div class="lane-icon"><i class="fas fa-user"></i></div>
+                        <div>
+                            <div class="lane-title">Customer Actions</div>
+                            <div class="lane-description">Steps and actions performed by customers</div>
+                        </div>
+                    </div>
+                    <div class="lane-items" id="customer-items"></div>
+                </div>
+
+                <!-- Line of Interaction -->
+                <div class="lane-divider-container">
+                    <div class="lane-divider" style="background: var(--customer-color)"></div>
+                    <div class="divider-label" style="color: var(--customer-color)">
+                        <i class="fas fa-handshake"></i> Line of Interaction
+                    </div>
+                </div>
+
+                <!-- Frontstage Actions Lane -->
+                <div class="lane lane-frontstage">
+                    <div class="lane-header">
+                        <div class="lane-icon"><i class="fas fa-handshake"></i></div>
+                        <div>
+                            <div class="lane-title">Frontstage Actions</div>
+                            <div class="lane-description">Visible employee actions and interactions</div>
+                        </div>
+                    </div>
+                    <div class="lane-items" id="frontstage-items"></div>
+                </div>
+
+                <!-- Technology Lane -->
+                <div class="lane lane-technology">
+                    <div class="lane-header">
+                        <div class="lane-icon"><i class="fas fa-laptop"></i></div>
+                        <div>
+                            <div class="lane-title">Technology</div>
+                            <div class="lane-description">Technology systems and digital touchpoints</div>
+                        </div>
+                    </div>
+                    <div class="lane-items" id="technology-items"></div>
+                </div>
+
+                <!-- Line of Visibility -->
+                <div class="lane-divider-container">
+                    <div class="lane-divider" style="background: var(--frontstage-color)"></div>
+                    <div class="divider-label" style="color: var(--frontstage-color)">
+                        <i class="fas fa-eye"></i> Line of Visibility
+                    </div>
+                </div>
+
+                <!-- Backstage Actions Lane -->
+                <div class="lane lane-backstage">
+                    <div class="lane-header">
+                        <div class="lane-icon"><i class="fas fa-cogs"></i></div>
+                        <div>
+                            <div class="lane-title">Backstage Actions</div>
+                            <div class="lane-description">Behind-the-scenes employee activities</div>
+                        </div>
+                    </div>
+                    <div class="lane-items" id="backstage-items"></div>
+                </div>
+
+                <!-- Line of Internal Interaction -->
+                <div class="lane-divider-container">
+                    <div class="lane-divider" style="background: var(--backstage-color)"></div>
+                    <div class="divider-label" style="color: var(--backstage-color)">
+                        <i class="fas fa-exchange-alt"></i> Line of Internal Interaction
+                    </div>
+                </div>
+
+                <!-- Support Processes Lane -->
+                <div class="lane lane-support">
+                    <div class="lane-header">
+                        <div class="lane-icon"><i class="fas fa-wrench"></i></div>
+                        <div>
+                            <div class="lane-title">Support Processes</div>
+                            <div class="lane-description">Supporting activities and infrastructure</div>
+                        </div>
+                    </div>
+                    <div class="lane-items" id="support-items"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-edit"></i> Edit Stage</h3>
+                <button class="modal-close" id="closeModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="editItemText">
+                        <i class="fas fa-edit"></i> Stage Description
+                    </label>
+                    <input type="text" id="editItemText" placeholder="Enter stage description">
+                </div>
+                <div class="form-group">
+                    <label for="editItemLane">
+                        <i class="fas fa-layer-group"></i> Lane Type
+                    </label>
+                    <select id="editItemLane">
+                        <option value="evidence">Physical Evidence</option>
+                        <option value="customer">Customer Actions</option>
+                        <option value="frontstage">Frontstage Actions</option>
+                        <option value="technology">Technology</option>
+                        <option value="backstage">Backstage Actions</option>
+                        <option value="support">Support Processes</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="saveEditBtn">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Generating your service blueprint...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast success" id="toast" style="display: block;">All stages cleared successfully!</div>
+
+    <footer>
+        Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+        Connect with me: 
+        <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank">
+            @ashish_singh_rajput_3
+        </a>
+    </footer>
+
+    <script>
+        // Application State
+        let currentEditingItem = null;
+        let itemCounter = 1;
+
+        // Templates Data
+        const templates = {
+            ecommerce: {
+                title: "E-commerce Purchase Journey",
+                items: [
+                    { text: "Product website", lane: "evidence" },
+                    { text: "Shopping cart interface", lane: "evidence" },
+                    { text: "Checkout page", lane: "evidence" },
+                    { text: "Confirmation email", lane: "evidence" },
+                    { text: "Browse products", lane: "customer" },
+                    { text: "Add to cart", lane: "customer" },
+                    { text: "Enter payment info", lane: "customer" },
+                    { text: "Confirm order", lane: "customer" },
+                    { text: "Receive product", lane: "customer" },
+                    { text: "Live chat support", lane: "frontstage" },
+                    { text: "Order confirmation", lane: "frontstage" },
+                    { text: "Shipping notification", lane: "frontstage" },
+                    { text: "E-commerce platform", lane: "technology" },
+                    { text: "Payment processor", lane: "technology" },
+                    { text: "Inventory system", lane: "technology" },
+                    { text: "Process payment", lane: "backstage" },
+                    { text: "Pick and pack order", lane: "backstage" },
+                    { text: "Quality control", lane: "backstage" },
+                    { text: "Warehouse management", lane: "support" },
+                    { text: "Shipping logistics", lane: "support" },
+                    { text: "Customer database", lane: "support" }
+                ]
+            },
+            restaurant: {
+                title: "Restaurant Dining Experience",
+                items: [
+                    { text: "Restaurant atmosphere", lane: "evidence" },
+                    { text: "Menu design", lane: "evidence" },
+                    { text: "Table setting", lane: "evidence" },
+                    { text: "Receipt", lane: "evidence" },
+                    { text: "Make reservation", lane: "customer" },
+                    { text: "Arrive at restaurant", lane: "customer" },
+                    { text: "Order food", lane: "customer" },
+                    { text: "Eat meal", lane: "customer" },
+                    { text: "Pay bill", lane: "customer" },
+                    { text: "Greet and seat", lane: "frontstage" },
+                    { text: "Take order", lane: "frontstage" },
+                    { text: "Serve food", lane: "frontstage" },
+                    { text: "Process payment", lane: "frontstage" },
+                    { text: "Reservation system", lane: "technology" },
+                    { text: "POS system", lane: "technology" },
+                    { text: "Kitchen display", lane: "technology" },
+                    { text: "Food preparation", lane: "backstage" },
+                    { text: "Cooking", lane: "backstage" },
+                    { text: "Dishwashing", lane: "backstage" },
+                    { text: "Inventory management", lane: "support" },
+                    { text: "Staff scheduling", lane: "support" },
+                    { text: "Supplier management", lane: "support" }
+                ]
+            },
+            banking: {
+                title: "Bank Account Opening",
+                items: [
+                    { text: "Bank branch", lane: "evidence" },
+                    { text: "Account forms", lane: "evidence" },
+                    { text: "Welcome package", lane: "evidence" },
+                    { text: "Debit card", lane: "evidence" },
+                    { text: "Visit branch", lane: "customer" },
+                    { text: "Fill application", lane: "customer" },
+                    { text: "Provide documents", lane: "customer" },
+                    { text: "Sign agreements", lane: "customer" },
+                    { text: "Receive card", lane: "customer" },
+                    { text: "Welcome customer", lane: "frontstage" },
+                    { text: "Assist with forms", lane: "frontstage" },
+                    { text: "Verify documents", lane: "frontstage" },
+                    { text: "Explain services", lane: "frontstage" },
+                    { text: "Core banking system", lane: "technology" },
+                    { text: "Document scanner", lane: "technology" },
+                    { text: "Card printing system", lane: "technology" },
+                    { text: "Credit check", lane: "backstage" },
+                    { text: "Account setup", lane: "backstage" },
+                    { text: "Risk assessment", lane: "backstage" },
+                    { text: "Compliance monitoring", lane: "support" },
+                    { text: "IT infrastructure", lane: "support" },
+                    { text: "Security protocols", lane: "support" }
+                ]
+            },
+            healthcare: {
+                title: "Healthcare Appointment",
+                items: [
+                    { text: "Clinic reception", lane: "evidence" },
+                    { text: "Waiting room", lane: "evidence" },
+                    { text: "Examination room", lane: "evidence" },
+                    { text: "Prescription", lane: "evidence" },
+                    { text: "Book appointment", lane: "customer" },
+                    { text: "Arrive at clinic", lane: "customer" },
+                    { text: "Check-in", lane: "customer" },
+                    { text: "Consultation", lane: "customer" },
+                    { text: "Receive treatment", lane: "customer" },
+                    { text: "Schedule appointment", lane: "frontstage" },
+                    { text: "Register patient", lane: "frontstage" },
+                    { text: "Conduct examination", lane: "frontstage" },
+                    { text: "Provide diagnosis", lane: "frontstage" },
+                    { text: "Appointment system", lane: "technology" },
+                    { text: "Electronic health records", lane: "technology" },
+                    { text: "Diagnostic equipment", lane: "technology" },
+                    { text: "Prepare patient file", lane: "backstage" },
+                    { text: "Lab processing", lane: "backstage" },
+                    { text: "Medical records", lane: "backstage" },
+                    { text: "Medical supplies", lane: "support" },
+                    { text: "Insurance processing", lane: "support" },
+                    { text: "Facility maintenance", lane: "support" }
+                ]
+            }
+        };
+
+        // DOM Elements
+        const elements = {
+            addItemBtn: document.getElementById('addItemBtn'),
+            itemTextInput: document.getElementById('itemText'),
+            itemLaneSelect: document.getElementById('itemLane'),
+            exportPdfBtn: document.getElementById('exportPdfBtn'),
+            exportCsvBtn: document.getElementById('exportCsvBtn'),
+            saveTemplateBtn: document.getElementById('saveTemplateBtn'),
+            clearAllBtn: document.getElementById('clearAllBtn'),
+            loadingOverlay: document.getElementById('loadingOverlay'),
+            editModal: document.getElementById('editModal'),
+            closeModal: document.getElementById('closeModal'),
+            editItemText: document.getElementById('editItemText'),
+            editItemLane: document.getElementById('editItemLane'),
+            saveEditBtn: document.getElementById('saveEditBtn'),
+            toast: document.getElementById('toast'),
+            projectTitleInput: document.getElementById('projectTitleInput')
+        };
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            loadDefaultTemplate();
+        });
+
+        // Event Listeners
+        function setupEventListeners() {
+            elements.addItemBtn.addEventListener('click', handleAddItem);
+            elements.exportPdfBtn.addEventListener('click', handleExportPDF);
+            elements.exportCsvBtn.addEventListener('click', handleExportCSV);
+            elements.saveTemplateBtn.addEventListener('click', handleSaveTemplate);
+            elements.clearAllBtn.addEventListener('click', handleClearAll);
+            elements.closeModal.addEventListener('click', closeEditModal);
+            elements.saveEditBtn.addEventListener('click', handleSaveEdit);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && document.activeElement === elements.itemTextInput) {
+                    handleAddItem();
+                }
+                if (e.key === 'Escape' && elements.editModal.style.display === 'flex') {
+                    closeEditModal();
+                }
+                if (e.key === 'Enter' && document.activeElement === elements.editItemText) {
+                    handleSaveEdit();
+                }
+            });
+
+            // Close modal when clicking outside
+            elements.editModal.addEventListener('click', function(e) {
+                if (e.target === elements.editModal) {
+                    closeEditModal();
+                }
+            });
+        }
+
+        // Handle Add Item
+        function handleAddItem() {
+            const text = elements.itemTextInput.value.trim();
+            const lane = elements.itemLaneSelect.value;
+
+            if (!text) {
+                showToast('Please enter a description for the stage.', 'error');
+                return;
+            }
+
+            addItemToLane(text, lane);
+            elements.itemTextInput.value = '';
+            elements.itemTextInput.focus();
+            showToast('Stage added successfully!', 'success');
+        }
+
+        // Add Item to Lane
+        function addItemToLane(text, lane, itemId = null) {
+            const laneContainer = document.getElementById(`${lane}-items`);
+            const itemElement = document.createElement('div');
+            itemElement.className = 'blueprint-item';
+
+            const id = itemId || `item-${Date.now()}`;
+            itemElement.dataset.id = id;
+
+            itemElement.innerHTML = `
+                <div class="item-number">${itemCounter++}</div>
+                <div class="item-text">${text}</div>
+                <div class="item-actions">
+                    <button class="item-btn edit-btn" onclick="openEditModal(this)">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="item-btn delete-btn" onclick="deleteItem(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+
+            laneContainer.appendChild(itemElement);
+        }
+
+        // Open Edit Modal
+        function openEditModal(button) {
+            currentEditingItem = button.closest('.blueprint-item');
+            const itemText = currentEditingItem.querySelector('.item-text').textContent;
+            const itemLane = currentEditingItem.closest('.lane-items').id.split('-')[0];
+
+            elements.editItemText.value = itemText;
+            elements.editItemLane.value = itemLane;
+            elements.editModal.style.display = 'flex';
+            elements.editItemText.focus();
+        }
+
+        // Close Edit Modal
+        function closeEditModal() {
+            elements.editModal.style.display = 'none';
+            currentEditingItem = null;
+        }
+
+        // Handle Save Edit
+        function handleSaveEdit() {
+            if (!currentEditingItem) return;
+
+            const newText = elements.editItemText.value.trim();
+            const newLane = elements.editItemLane.value;
+
+            if (!newText) {
+                showToast('Please enter a description for the stage.', 'error');
+                return;
+            }
+
+            const currentLane = currentEditingItem.closest('.lane-items').id.split('-')[0];
+
+            if (currentLane !== newLane) {
+                currentEditingItem.remove();
+                const itemId = currentEditingItem.dataset.id;
+                addItemToLane(newText, newLane, itemId);
+            } else {
+                currentEditingItem.querySelector('.item-text').textContent = newText;
+            }
+
+            closeEditModal();
+            renumberItems();
+            showToast('Stage updated successfully!', 'success');
+        }
+
+        // Delete Item
+        function deleteItem(button) {
+            if (confirm('Are you sure you want to delete this stage?')) {
+                button.closest('.blueprint-item').remove();
+                renumberItems();
+                showToast('Stage deleted successfully!', 'success');
+            }
+        }
+
+        // Renumber Items
+        function renumberItems() {
+            const items = document.querySelectorAll('.blueprint-item');
+            let counter = 1;
+
+            items.forEach(item => {
+                const itemNumber = item.querySelector('.item-number');
+                itemNumber.textContent = counter++;
+            });
+
+            itemCounter = counter;
+        }
+
+        // Load Template
+        function loadTemplate(templateName) {
+            if (!templates[templateName]) {
+                showToast('Template not found!', 'error');
+                return;
+            }
+
+            const template = templates[templateName];
+            const hasExistingItems = document.querySelectorAll('.blueprint-item').length > 0;
+
+            if (hasExistingItems && !confirm('This will replace all existing items. Continue?')) {
+                return;
+            }
+
+            // Clear existing items
+            const lanes = ['evidence', 'customer', 'frontstage', 'technology', 'backstage', 'support'];
+            lanes.forEach(lane => {
+                document.getElementById(`${lane}-items`).innerHTML = '';
+            });
+
+            // Set project title
+            elements.projectTitleInput.value = template.title;
+
+            // Reset counter
+            itemCounter = 1;
+
+            // Add template items
+            template.items.forEach(item => {
+                addItemToLane(item.text, item.lane);
+            });
+
+            showToast(`${template.title} template loaded successfully!`, 'success');
+        }
+
+        // Load Default Template
+        function loadDefaultTemplate() {
+            loadTemplate('ecommerce');
+        }
+
+        // Handle Export PDF
+        async function handleExportPDF() {
+            elements.loadingOverlay.style.display = 'flex';
+
+            try {
+                const projectTitle = elements.projectTitleInput.value.trim() || 'Service Blueprint';
+                const blueprintContainer = document.getElementById('serviceBlueprintContainer');
+                const lightClone = createLightThemeClone(blueprintContainer, projectTitle);
+                
+                document.body.appendChild(lightClone);
+                await generatePDF(lightClone, projectTitle);
+                document.body.removeChild(lightClone);
+
+                showToast('PDF exported successfully!', 'success');
+            } catch (error) {
+                console.error('PDF Export Error:', error);
+                showToast('Error generating PDF. Please try again.', 'error');
+            } finally {
+                elements.loadingOverlay.style.display = 'none';
+            }
+        }
+
+        // Create Light Theme Clone for PDF
+        function createLightThemeClone(element, title) {
+            const clone = element.cloneNode(true);
+
+            clone.id = 'lightThemeClone';
+            clone.style.cssText = `
+                position: absolute;
+                left: -9999px;
+                width: 1000px;
+                background: #ffffff;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: none;
+                border: 1px solid #e0e0e0;
+                gap: 3px;
+                display: flex;
+                flex-direction: column;
+            `;
+
+            // Add title
+            const titleEl = document.createElement('h1');
+            titleEl.textContent = title;
+            titleEl.style.cssText = `
+                text-align: center;
+                margin-bottom: 30px;
+                color: #2c3e50;
+                font-size: 28px;
+                font-weight: 700;
+                border-bottom: 3px solid #3498db;
+                padding-bottom: 15px;
+            `;
+            clone.insertBefore(titleEl, clone.firstChild);
+
+            // Style lanes
+            const lanes = clone.querySelectorAll('.lane');
+            lanes.forEach(lane => {
+                lane.style.cssText = `
+                    background: #ffffff;
+                    border: 2px solid #e0e0e0;
+                    border-radius: 10px;
+                    margin-bottom: 5px;
+                `;
+            });
+
+            // Style lane headers
+            const laneHeaders = clone.querySelectorAll('.lane-header');
+            laneHeaders.forEach(header => {
+                header.style.cssText = `
+                    border-bottom: 2px solid #e0e0e0;
+                    background: #f8f9fa;
+                    border-radius: 10px 10px 0 0;
+                    padding: 20px;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                `;
+            });
+
+            // Style lane titles and descriptions
+            const laneTitles = clone.querySelectorAll('.lane-title');
+            laneTitles.forEach(title => {
+                title.style.cssText = `
+                    color: #2c3e50;
+                    font-weight: 700;
+                    font-size: 1.4rem;
+                `;
+            });
+
+            const laneDescriptions = clone.querySelectorAll('.lane-description');
+            laneDescriptions.forEach(desc => {
+                desc.style.cssText = `
+                    color: #7f8c8d;
+                    font-size: 0.9rem;
+                    margin-top: 5px;
+                `;
+            });
+
+            // Style lane items containers
+            const laneItemsContainers = clone.querySelectorAll('.lane-items');
+            laneItemsContainers.forEach(container => {
+                container.style.cssText = `
+                    padding: 20px;
+                    min-height: 100px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 15px;
+                    align-content: flex-start;
+                `;
+            });
+
+            // Style items
+            const items = clone.querySelectorAll('.blueprint-item');
+            items.forEach(item => {
+                item.style.cssText = `
+                    background: #f8f9fa;
+                    border: 2px solid #e0e0e0;
+                    border-radius: 10px;
+                    padding: 15px;
+                    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+                    color: #333;
+                    max-width: 320px;
+                    display: flex;
+                    align-items: center;
+                `;
+            });
+
+            // Style item numbers
+            const itemNumbers = clone.querySelectorAll('.item-number');
+            itemNumbers.forEach(number => {
+                number.style.cssText = `
+                    background: #3498db;
+                    color: white;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    margin-right: 15px;
+                    flex-shrink: 0;
+                    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+                `;
+            });
+
+            // Style item text
+            const itemTexts = clone.querySelectorAll('.item-text');
+            itemTexts.forEach(text => {
+                text.style.cssText = `
+                    color: #2c3e50;
+                    font-weight: 500;
+                    word-break: break-word;
+                    flex-grow: 1;
+                `;
+            });
+
+            // Style lane icons with specific colors
+            const iconMap = {
+                '.lane-evidence .lane-icon': '#9b59b6',
+                '.lane-customer .lane-icon': '#3498db',
+                '.lane-frontstage .lane-icon': '#2ecc71',
+                '.lane-technology .lane-icon': '#f1c40f',
+                '.lane-backstage .lane-icon': '#e67e22',
+                '.lane-support .lane-icon': '#e74c3c'
+            };
+
+            Object.entries(iconMap).forEach(([selector, color]) => {
+                const icon = clone.querySelector(selector);
+                if (icon) {
+                    icon.style.cssText = `
+                        background: ${color};
+                        color: white;
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 1.5rem;
+                        box-shadow: 0 4px 15px ${color}33;
+                    `;
+                }
+            });
+
+            // Style dividers
+            const dividers = clone.querySelectorAll('.lane-divider');
+            dividers.forEach(divider => {
+                divider.style.cssText = `
+                    margin: 10px 30px;
+                    height: 3px;
+                    border-radius: 2px;
+                `;
+            });
+
+            // Style divider labels
+            const labels = clone.querySelectorAll('.divider-label');
+            labels.forEach(label => {
+                label.style.cssText = `
+                    background: #ffffff;
+                    color: #2c3e50;
+                    font-weight: 700;
+                    padding: 8px 20px;
+                    border-radius: 20px;
+                    border: 2px solid #e0e0e0;
+                    position: absolute;
+                    left: 30px;
+                    top: -20px;
+                    font-size: 0.9rem;
+                    white-space: nowrap;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                `;
+            });
+
+            // Remove item actions
+            const itemActions = clone.querySelectorAll('.item-actions');
+            itemActions.forEach(action => action.remove());
+
+            return clone;
+        }
+
+        // Generate PDF
+        async function generatePDF(element, title) {
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff'
+                });
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'pt', 'a4');
+
+                const imgData = canvas.toDataURL('image/png');
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+
+                const imgWidth = pageWidth - 40;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                let heightLeft = imgHeight;
+                let position = 20;
+
+                // First page
+                doc.addImage(imgData, 'PNG', 20, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight - 40;
+
+                // Additional pages if needed
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight + 20;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 20, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                // Add footer to all pages
+                const totalPages = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(10);
+                    doc.setTextColor(128, 128, 128);
+                    doc.text(`Page ${i} of ${totalPages}`, pageWidth - 100, pageHeight - 20);
+                    doc.text(`Generated by Ashi Tools - ${new Date().toLocaleDateString()}`, 20, pageHeight - 20);
+                }
+
+                doc.save(`${title.replace(/\s+/g, '_')}_service_blueprint.pdf`);
+            } catch (error) {
+                console.error('PDF Generation Error:', error);
+                throw error;
+            }
+        }
+
+        // Handle Export CSV
+        function handleExportCSV() {
+            const projectTitle = elements.projectTitleInput.value.trim() || 'Service Blueprint';
+            
+            const laneNames = {
+                evidence: 'Physical Evidence',
+                customer: 'Customer Actions',
+                frontstage: 'Frontstage Actions',
+                technology: 'Technology',
+                backstage: 'Backstage Actions',
+                support: 'Support Processes'
+            };
+
+            let csvContent = 'data:text/csv;charset=utf-8,Number,Lane,Description\n';
+
+            const items = document.querySelectorAll('.blueprint-item');
+            items.forEach(item => {
+                const itemNumber = item.querySelector('.item-number').textContent;
+                const itemText = item.querySelector('.item-text').textContent.replace(/"/g, '""');
+                const lane = item.closest('.lane-items').id.split('-')[0];
+                const laneName = laneNames[lane];
+
+                csvContent += `${itemNumber},"${laneName}","${itemText}"\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', `${projectTitle.replace(/\s+/g, '_')}_service_blueprint.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showToast('CSV exported successfully!', 'success');
+        }
+
+        // Handle Save Template
+        function handleSaveTemplate() {
+            const projectTitle = elements.projectTitleInput.value.trim() || 'Custom Service Blueprint';
+            const items = [];
+
+            document.querySelectorAll('.blueprint-item').forEach(item => {
+                const text = item.querySelector('.item-text').textContent;
+                const lane = item.closest('.lane-items').id.split('-')[0];
+                items.push({ text, lane });
+            });
+
+            const templateData = {
+                title: projectTitle,
+                items: items,
+                exportDate: new Date().toISOString(),
+                generatedBy: 'Ashi Tools - Service Blueprint Maker'
+            };
+
+            const dataStr = JSON.stringify(templateData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+            const link = document.createElement('a');
+            link.setAttribute('href', dataUri);
+            link.setAttribute('download', `${projectTitle.replace(/\s+/g, '_')}_template.json`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showToast('Template saved successfully!', 'success');
+        }
+
+        // Handle Clear All
+        function handleClearAll() {
+            if (confirm('Are you sure you want to clear all stages? This action cannot be undone.')) {
+                const lanes = ['evidence', 'customer', 'frontstage', 'technology', 'backstage', 'support'];
+                lanes.forEach(lane => {
+                    document.getElementById(`${lane}-items`).innerHTML = '';
+                });
+
+                itemCounter = 1;
+                showToast('All stages cleared successfully!', 'success');
+            }
+        }
+
+        // Show Toast Notification
+        function showToast(message, type = 'success') {
+            elements.toast.textContent = message;
+            elements.toast.className = `toast ${type}`;
+            elements.toast.style.display = 'block';
+
+            setTimeout(() => {
+                elements.toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Make functions globally accessible
+        window.openEditModal = openEditModal;
+        window.deleteItem = deleteItem;
+        window.loadTemplate = loadTemplate;
+    </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

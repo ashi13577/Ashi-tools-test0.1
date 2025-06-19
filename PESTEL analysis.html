@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1238.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PESTEL Analysis – Ashi Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    /* Ashi Tools Dark Theme */
+    :root {
+      --primary: #16a085;       /* Teal focus */
+      --primary-dark: #117a65;
+      --dark-bg: #1c1e22;
+      --card-bg: #282c34;
+      --text-light: #f0f2f5;
+      --border-light: rgba(240,242,245,0.2);
+      --input-bg: rgba(240,242,245,0.05);
+      --transition: all 0.3s ease;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
+    body {
+      background: var(--dark-bg);
+      color: var(--text-light);
+      min-height:100vh;
+      display:flex; flex-direction:column;
+      line-height:1.6;
+      overflow:hidden;
+    }
+    header {
+      text-align:center;
+      padding:30px 20px;
+      border-bottom:1px solid var(--border-light);
+      flex-shrink:0;
+    }
+    .logo-container {
+      display:flex; align-items:center; justify-content:center; gap:15px; margin-bottom:10px;
+    }
+    .logo-icon {
+      background:var(--primary); color:#fff; width:60px; height:60px;
+      border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem;
+    }
+    h1 { font-size:2.2rem; color:var(--primary); }
+    .header-sub {
+      font-size:1rem; color:#bdc3c7; max-width:700px; margin:10px auto 0;
+    }
+    .controls-panel {
+      padding:15px 20px;
+      background:var(--dark-bg);
+      border-bottom:1px solid var(--card-bg);
+      display:flex; justify-content:center; align-items:center; gap:15px; flex-wrap:wrap;
+      position:sticky; top:0; z-index:100;
+    }
+    .controls-panel input {
+      flex-grow:1; max-width:400px;
+      padding:10px; border-radius:6px; border:1px solid var(--border-light);
+      background:var(--input-bg); color:var(--text-light);
+    }
+    .controls-panel input:focus {
+      outline:none; border-color:var(--primary);
+      box-shadow:0 0 0 2px rgba(22,160,133,0.3);
+    }
+    .btn {
+      padding:10px 25px; border:none; border-radius:6px; font-size:1rem;
+      font-weight:600; cursor:pointer; transition:var(--transition);
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--primary); color:#fff;
+    }
+    .btn:hover { background:var(--primary-dark); }
+    .btn i { margin-right:5px; }
+
+    .canvas-wrapper {
+      flex-grow:1; overflow:auto; padding:20px;
+    }
+    #pestel-canvas {
+      display:grid;
+      grid-template-columns:repeat(3,1fr); /* 3 columns */
+      grid-template-rows:repeat(2,auto);    /* 2 rows */
+      gap:10px;
+      max-width:1400px; margin:0 auto;
+      padding:10px; border:2px solid var(--primary);
+      border-radius:8px; background:var(--dark-bg);
+      min-height:60vh;
+    }
+    .pestel-block {
+      background:var(--card-bg);
+      border:1px solid var(--border-light);
+      border-radius:6px; padding:15px;
+      display:flex; flex-direction:column;
+      min-height:180px; /* Increased min-height */
+    }
+    .pestel-block h3 {
+      font-size:1.1rem; color:var(--primary);
+      margin-bottom:10px; padding-bottom:8px;
+      border-bottom:1px solid var(--border-light);
+      display:flex; align-items:center; gap:8px;
+    }
+    .pestel-block h3 i { font-size:0.9em; }
+    .pestel-content {
+      flex-grow:1;
+      background:var(--input-bg);
+      color:var(--text-light);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:4px;
+      padding:10px;
+      font-size:0.95rem;
+      overflow-y:auto; /* Scroll within block if content long */
+      white-space:pre-wrap; word-wrap:break-word;
+    }
+    .pestel-content:focus {
+      outline:none; border-color:var(--primary);
+      box-shadow:0 0 0 2px rgba(22,160,133,0.3);
+    }
+
+    footer {
+      text-align:center; padding:15px; background:var(--dark-bg);
+      border-top:1px solid var(--card-bg); font-size:0.9em; flex-shrink:0;
+    }
+    .insta-link { color:var(--primary); text-decoration:none; font-weight:bold; }
+    .insta-link:hover { text-decoration:underline; }
+    @media(max-width:900px){
+      #pestel-canvas{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,auto);}
+    }
+    @media(max-width:600px){
+      #pestel-canvas{grid-template-columns:1fr;grid-template-rows:repeat(6,auto);}
+    }
+  </style>
+
+
+
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon"><i class="fas fa-globe-americas"></i></div>
+      <div class="logo-text"><h1>PESTEL Analysis</h1></div>
+    </div>
+    <p class="header-sub">Analyze the Political, Economic, Social, Technological, Environmental, and Legal factors affecting your organization.</p>
+  </header>
+
+  <div class="controls-panel">
+    <input type="text" id="analysisTitle" placeholder="Analysis Title (e.g. PESTEL for New Market Entry)">
+    <button class="btn" id="exportPdfBtn"><i class="fas fa-file-pdf"></i> Export as PDF</button>
+  </div>
+
+  <div class="canvas-wrapper">
+    <div id="pestel-canvas">
+      <div class="pestel-block" id="political">
+        <h3><i class="fas fa-landmark"></i> Political</h3>
+        <div class="pestel-content is-placeholder" contenteditable="true" placeholder="Government stability, tax policies, trade regulations, political risk..." data-placeholder="Government stability, tax policies, trade regulations, political risk...">Government stability, tax policies, trade regulations, political risk...</div>
+      </div>
+      <div class="pestel-block" id="economic">
+        <h3><i class="fas fa-coins"></i> Economic</h3>
+        <div class="pestel-content is-placeholder" contenteditable="true" placeholder="Economic growth, inflation rates, exchange rates, unemployment levels, disposable income..." data-placeholder="Economic growth, inflation rates, exchange rates, unemployment levels, disposable income...">Economic growth, inflation rates, exchange rates, unemployment levels, disposable income...</div>
+      </div>
+      <div class="pestel-block" id="social">
+        <h3><i class="fas fa-users"></i> Social</h3>
+        <div class="pestel-content is-placeholder" contenteditable="true" placeholder="Cultural norms, demographics, lifestyle trends, education levels, health consciousness..." data-placeholder="Cultural norms, demographics, lifestyle trends, education levels, health consciousness...">Cultural norms, demographics, lifestyle trends, education levels, health consciousness...</div>
+      </div>
+      <div class="pestel-block" id="technological">
+        <h3><i class="fas fa-microchip"></i> Technological</h3>
+        <div class="pestel-content is-placeholder" contenteditable="true" placeholder="Innovation, automation, R&amp;D activity, technological awareness, infrastructure..." data-placeholder="Innovation, automation, R&amp;D activity, technological awareness, infrastructure...">Innovation, automation, R&amp;D activity, technological awareness, infrastructure...</div>
+      </div>
+      <div class="pestel-block" id="environmental">
+        <h3><i class="fas fa-leaf"></i> Environmental</h3>
+        <div class="pestel-content is-placeholder" contenteditable="true" placeholder="Weather, climate change, environmental policies, sustainability, waste management..." data-placeholder="Weather, climate change, environmental policies, sustainability, waste management...">Weather, climate change, environmental policies, sustainability, waste management...</div>
+      </div>
+      <div class="pestel-block" id="legal">
+        <h3><i class="fas fa-gavel"></i> Legal</h3>
+        <div class="pestel-content is-placeholder" contenteditable="true" placeholder="Employment laws, consumer rights, health and safety, product regulations, data protection..." data-placeholder="Employment laws, consumer rights, health and safety, product regulations, data protection...">Employment laws, consumer rights, health and safety, product regulations, data protection...</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>PESTEL Analysis – Ashi Tools | Connect <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="insta-link">@ashish_singh_rajput_3</a></p>
+  </footer>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Placeholder Logic
+    document.querySelectorAll('.pestel-content').forEach(div => {
+      if (!div.textContent.trim() && div.hasAttribute('placeholder')) {
+        div.dataset.placeholder = div.getAttribute('placeholder');
+        div.classList.add('is-placeholder');
+        div.textContent = div.dataset.placeholder;
+      }
+      div.addEventListener('focus', function() {
+        if (this.classList.contains('is-placeholder')) {
+          this.textContent = '';
+          this.classList.remove('is-placeholder');
+        }
+      });
+      div.addEventListener('blur', function() {
+        if (!this.textContent.trim() && this.dataset.placeholder) {
+          this.classList.add('is-placeholder');
+          this.textContent = this.dataset.placeholder;
+        }
+      });
+    });
+
+    // PDF Export
+    document.getElementById('exportPdfBtn').addEventListener('click', () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('p','pt','a4'); // Portrait for list-like structure
+      const margin = 40;
+      const pageW = doc.internal.pageSize.getWidth();
+      const pageH = doc.internal.pageSize.getHeight();
+      const cw = pageW - margin*2;
+      let yPos = margin; // Current Y position for drawing
+
+      // PDF Background and Title
+      doc.setFillColor(255,255,255);
+      doc.rect(0,0,pageW,pageH,'F');
+      doc.setFontSize(18).setFont('helvetica','bold').setTextColor(0);
+      const title = document.getElementById('analysisTitle').value.trim() || 'PESTEL Analysis';
+      doc.text(title, pageW/2, yPos, {align:'center'});
+      yPos += 14;
+      doc.setFontSize(10).setFont('helvetica','normal').setTextColor(100);
+      doc.text('Generated by Ashi Tools', pageW/2, yPos, {align:'center'});
+      yPos += 25;
+
+      const blocks = [
+        {id:'political',     title:'Political Factors'}, {id:'economic',    title:'Economic Factors'},
+        {id:'social',        title:'Social Factors'},    {id:'technological', title:'Technological Factors'},
+        {id:'environmental', title:'Environmental Factors'},{id:'legal',title:'Legal Factors'},
+      ];
+
+      doc.setLineWidth(0.5).setDrawColor(200); // Light grey lines for separation
+
+      blocks.forEach(block => {
+        if (yPos > pageH - margin - 40) { // Check for page break before drawing a new block
+            doc.addPage();
+            yPos = margin;
+            // Optional: Add header to new pages
+            doc.setFontSize(8).setTextColor(150);
+            doc.text(title, pageW/2, margin/2, {align:'center'});
+        }
+
+        // Block Title
+        doc.setFontSize(12).setFont('helvetica','bold').setTextColor(22,160,133); // Ashi primary color for titles
+        doc.text(block.title, margin, yPos);
+        yPos += 15; // Space after title
+
+        // Block Content
+        const div = document.getElementById(block.id).querySelector('.pestel-content');
+        let txt = div.textContent.trim();
+        if (div.classList.contains('is-placeholder') && txt === div.dataset.placeholder) txt = "N/A"; // Or ""
+        
+        doc.setFontSize(10).setFont('helvetica','normal').setTextColor(50); // Dark grey for content
+        const lines = doc.splitTextToSize(txt, cw);
+        lines.forEach(line => {
+          if (yPos > pageH - margin - 10) { // Check for page break within lines
+            doc.addPage();
+            yPos = margin;
+            // Optional: Add header to new pages
+             doc.setFontSize(8).setTextColor(150);
+            doc.text(title, pageW/2, margin/2, {align:'center'});
+          }
+          doc.text(line, margin + 10, yPos); // Indent content slightly
+          yPos += 10; // Approx line height for 10pt
+        });
+        yPos += 10; // Space after each block's content
+        doc.line(margin, yPos - 5, pageW - margin, yPos - 5); // Separator line
+        yPos += 10;
+      });
+
+      // Footer on each page
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let i=1; i<=totalPages; i++){
+        doc.setPage(i);
+        doc.setFontSize(8).setTextColor(150);
+        doc.text(`Page ${i} of ${totalPages}`, pageW-margin, pageH-10, {align:'right'});
+        doc.text(`Ashi Tools PESTEL Analysis | @ashish_singh_rajput_3`, margin, pageH-10);
+      }
+
+      doc.save(`PESTEL-Analysis-${title.replace(/\s+/g,'_')}.pdf`);
+    });
+  });
+  </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

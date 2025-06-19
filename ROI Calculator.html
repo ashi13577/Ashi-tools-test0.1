@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROI Calculator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #00ffd5;
+      --secondary: #00b39e;
+      --dark-bg: #0e0e0e;
+      --card-bg: #1e1e1e;
+      --text-light: #cccccc;
+      --border: #333;
+      --success: #28a745;
+      --danger: #dc3545; /* For error toasts */
+      --info-color: #6a8dff; /* A professional blue for info-box border */
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background-color: var(--dark-bg);
+      color: #ffffff;
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 50px; /* Space for toast messages and footer */
+    }
+    
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    
+    /* Header Styles */
+    header {
+      text-align: center;
+      padding: 80px 20px 40px;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+    
+    header h1 {
+      font-size: 3.5rem;
+      margin-bottom: 15px;
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(0, 255, 213, 0.3);
+      position: relative;
+      z-index: 1;
+    }
+    
+    header p { /* header-sub */
+      font-size: 1.4rem;
+      color: var(--text-light);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    /* Main Content Section */
+    section {
+      max-width: 800px; /* Adjusted for calculator form */
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    section > h2 { 
+      text-align: center;
+      font-size: 2.2rem;
+      margin: 50px 0 30px;
+      color: var(--primary);
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    section > h2::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+
+    /* Info Box */
+    .info-box {
+        background-color: #2a2a2a;
+        border-left: 5px solid var(--info-color); /* General info border */
+        padding: 15px;
+        margin-bottom: 25px;
+        border-radius: 5px;
+    }
+    .info-box h3 {
+        color: var(--secondary);
+        margin-bottom: 10px;
+        font-size: 1.3rem;
+    }
+    .info-box p {
+        margin-bottom: 10px;
+        color: var(--text-light);
+    }
+    .info-box ul {
+        list-style-type: disc;
+        margin-left: 20px;
+        color: var(--text-light);
+    }
+    .info-box ul li {
+        margin-bottom: 5px;
+    }
+
+    /* Calculator Specific Styles */
+    .calculator-container {
+        background-color: var(--card-bg);
+        padding: 30px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        margin-bottom: 40px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label.radio-label {
+        display: inline-block;
+        margin-right: 15px;
+        margin-bottom: 5px;
+        color: var(--text-light);
+        font-weight: normal;
+    }
+    .form-group input[type="radio"] {
+        width: auto;
+        margin-right: 5px;
+    }
+
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-light);
+        font-weight: 600;
+    }
+
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 12px;
+        background-color: #222;
+        border: 1px solid var(--border);
+        color: white;
+        border-radius: 5px;
+        font-size: 1.1em;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input[type="number"][readonly] {
+        background-color: #333;
+        cursor: not-allowed;
+    }
+
+
+    input[type="number"]:focus,
+    select:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 255, 213, 0.2);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .action-buttons button {
+        background-color: var(--primary);
+        color: var(--dark-bg);
+        border: none;
+        padding: 12px 25px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1.1em;
+        transition: background-color 0.3s, transform 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .action-buttons button:hover {
+        background-color: var(--secondary);
+        transform: translateY(-2px);
+    }
+
+    .action-buttons button.secondary {
+        background-color: #333;
+        color: var(--primary);
+        border: 1px solid var(--primary);
+    }
+
+    .action-buttons button.secondary:hover {
+        background-color: #444;
+        color: var(--secondary);
+        border-color: var(--secondary);
+    }
+
+    .results-area {
+        background-color: #222;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px dashed var(--primary);
+        margin-top: 30px;
+        display: none; /* Hidden by default */
+        text-align: center;
+    }
+
+    .results-area h3 {
+        color: var(--primary);
+        margin-bottom: 15px;
+        font-size: 1.6em;
+    }
+
+    .results-area p {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        color: var(--text-light);
+    }
+
+    .results-area p strong {
+        color: var(--primary);
+        font-size: 1.3em;
+    }
+
+    .formula-section {
+        margin-top: 20px;
+        text-align: left;
+        padding-top: 15px;
+        border-top: 1px dashed var(--border);
+    }
+    .formula-section h4 {
+        color: var(--secondary);
+        margin-bottom: 10px;
+        font-size: 1.1em;
+    }
+    .formula-section code {
+        display: block;
+        background-color: #1a1a1a;
+        padding: 10px;
+        border-radius: 5px;
+        font-family: monospace;
+        overflow-x: auto;
+        word-wrap: break-word;
+    }
+
+    .interpretation-section {
+        margin-top: 20px;
+        text-align: left;
+        padding-top: 15px;
+        border-top: 1px dashed var(--border);
+    }
+    .interpretation-section h4 {
+        color: var(--secondary);
+        margin-bottom: 10px;
+        font-size: 1.1em;
+    }
+    .interpretation-section p {
+        font-size: 1em;
+        margin-bottom: 5px;
+    }
+
+    /* Toast Message */
+    .toast-message {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--success);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+        z-index: 1000;
+    }
+
+    .toast-message.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Footer Styles */
+    footer {
+      text-align: center;
+      padding: 50px 10px 30px;
+      font-size: 1rem;
+      color: #666;
+      border-top: 1px solid #222;
+      margin-top: 50px;
+      background: rgba(10, 10, 10, 0.8);
+    }
+    
+    .insta-link {
+      color: var(--primary);
+      font-weight: bold;
+      position: relative;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    
+    .insta-link::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--primary);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    
+    .insta-link:hover::after {
+      transform: scaleX(1);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2.5rem;
+      }
+      header p {
+        font-size: 1.1rem;
+      }
+      section > h2 { 
+        font-size: 1.8rem;
+      }
+      .calculator-container {
+          padding: 20px;
+      }
+      .action-buttons button {
+          font-size: 1em;
+          padding: 10px 20px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      header {
+        padding: 60px 15px 30px;
+      }
+      header h1 {
+        font-size: 2rem;
+      }
+      .action-buttons {
+          flex-direction: column;
+      }
+    }
+  </style>
+
+
+            
+  <header>
+    <h1>ROI Calculator</h1>
+    <p>Measure the profitability of your investments and make informed decisions.</p>
+  </header>
+
+  <section>
+    <h2><i class="fas fa-percent"></i> Calculate Your Return on Investment</h2>
+    
+    <div class="info-box">
+        <h3>What is Return on Investment (ROI)?</h3>
+        <p>Return on Investment (ROI) is a performance measure used to evaluate the efficiency or profitability of an investment or compare the efficiency of several different investments. It directly measures the amount of return on a particular investment, relative to the investment’s cost.</p>
+        <h3>Why is ROI Used?</h3>
+        <ul>
+            <li><strong>Investment Evaluation:</strong> Helps decide whether to pursue an investment by comparing potential returns.</li>
+            <li><strong>Performance Measurement:</strong> Assesses how well an investment has performed over time.</li>
+            <li><strong>Comparative Analysis:</strong> Allows for easy comparison between different investment opportunities.</li>
+            <li><strong>Resource Allocation:</strong> Guides where to best allocate capital for maximum returns.</li>
+        </ul>
+    </div>
+
+    <div class="calculator-container">
+        <div class="info-box" style="border-left-color: var(--secondary);">
+            <h3><i class="fas fa-magic"></i> Demo Example: Marketing Campaign ROI</h3>
+            <p>To calculate a basic ROI:</p>
+            <ul>
+                <li><strong>Net Gain from Investment:</strong> $20,000 (Revenue from campaign - Cost of campaign)</li>
+                <li><strong>Cost of Investment:</strong> $5,000 (Total capital invested in campaign)</li>
+            </ul>
+            <button class="secondary" onclick="loadDemoExample()"><i class="fas fa-fill-drip"></i> Load Demo Data</button>
+        </div>
+
+        <div class="form-group">
+            <label>What do you want to calculate?</label>
+            <div>
+                <input type="radio" id="calcROI" name="calcType" value="roi" checked="" onchange="updateInputFields()">
+                <label for="calcROI" class="radio-label">Return on Investment (ROI)</label>
+                <input type="radio" id="calcNetGain" name="calcType" value="netGain" onchange="updateInputFields()">
+                <label for="calcNetGain" class="radio-label">Net Gain from Investment</label>
+                <input type="radio" id="calcCost" name="calcType" value="cost" onchange="updateInputFields()">
+                <label for="calcCost" class="radio-label">Cost of Investment</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="currencySelect">Select Currency:</label>
+            <select id="currencySelect">
+                <option value="$">US Dollar ($)</option>
+                <option value="₹">Indian Rupee (₹)</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="inputNetGain">Net Gain from Investment:</label>
+            <input type="number" id="inputNetGain" placeholder="e.g., 20000" step="0.01" required="">
+        </div>
+        <div class="form-group">
+            <label for="inputCostOfInvestment">Cost of Investment:</label>
+            <input type="number" id="inputCostOfInvestment" placeholder="e.g., 5000" min="0" step="0.01" required="">
+        </div>
+        <div class="form-group" id="targetRoiGroup" style="display: none;">
+            <label for="inputTargetROI">Target ROI (%):</label>
+            <input type="number" id="inputTargetROI" placeholder="e.g., 25" step="0.01" required="">
+        </div>
+        
+        <div class="action-buttons">
+            <button onclick="calculateROI()"><i class="fas fa-play"></i> Calculate</button>
+            <button type="button" class="secondary" onclick="clearForm()"><i class="fas fa-redo"></i> Clear Form</button>
+        </div>
+
+        <div id="resultsArea" class="results-area" style="display: none;">
+            <h3><i class="fas fa-chart-pie"></i> Calculation Result</h3>
+            <p id="roiCalcResultDisplay">Return on Investment (ROI): <strong id="roiResult">--</strong></p>
+
+            <div class="formula-section">
+                <h4>Formula Used:</h4>
+                <p id="formulaDisplay"><code>ROI (%) = (Net Gain from Investment / Cost of Investment) * 100</code></p>
+            </div>
+            
+            <div class="interpretation-section">
+                <h4>Interpretation:</h4>
+                <p id="interpretationText">Enter values and select what to calculate to see the interpretation.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastMessage" class="toast-message" style="background-color: var(--success);">Form cleared!</div>
+
+  </section>
+
+  <footer>
+    Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+    Connect with me: 
+    <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank">
+      @ashish_singh_rajput_3
+    </a>
+  </footer>
+
+  <script>
+    // Global variable for currency symbol
+    let currentCurrencySymbol = '$';
+
+    // --- Utility Functions ---
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toastMessage');
+        toast.textContent = message;
+        toast.className = 'toast-message show'; // Reset classes and add 'show'
+
+        if (type === 'error') {
+            toast.style.backgroundColor = 'var(--danger)'; // Use danger color for errors
+        } else {
+            toast.style.backgroundColor = 'var(--success)'; // Green for success
+        }
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000); // Hide after 3 seconds
+    }
+
+    // --- Currency Selection ---
+    document.getElementById('currencySelect').addEventListener('change', function() {
+        currentCurrencySymbol = this.value;
+        // Re-calculate to update displayed currency if results are already showing
+        if (document.getElementById('resultsArea').style.display === 'block') {
+            calculateROI(); // Recalculate to update currency symbols in results
+        }
+    });
+
+    // --- Dynamic Input Fields ---
+    function updateInputFields() {
+        const calcType = document.querySelector('input[name="calcType"]:checked').value;
+        const inputNetGain = document.getElementById('inputNetGain');
+        const inputCostOfInvestment = document.getElementById('inputCostOfInvestment');
+        const inputTargetROI = document.getElementById('inputTargetROI');
+        const targetRoiGroup = document.getElementById('targetRoiGroup');
+        const roiCalcResultDisplay = document.getElementById('roiCalcResultDisplay');
+        const formulaDisplay = document.getElementById('formulaDisplay');
+
+
+        // Reset readonly and clear values
+        inputNetGain.readOnly = false;
+        inputCostOfInvestment.readOnly = false;
+        inputTargetROI.readOnly = false;
+        inputNetGain.value = '';
+        inputCostOfInvestment.value = '';
+        inputTargetROI.value = '';
+        
+        // Reset result area
+        document.getElementById('roiResult').textContent = '--';
+        document.getElementById('interpretationText').textContent = 'Enter values and select what to calculate to see the interpretation.';
+        document.getElementById('resultsArea').style.display = 'none';
+
+        targetRoiGroup.style.display = 'none'; // Hide target ROI by default
+
+        if (calcType === 'roi') {
+            // All inputs active for user input
+            roiCalcResultDisplay.innerHTML = 'Return on Investment (ROI): <strong id="roiResult">--</strong>';
+            formulaDisplay.innerHTML = '<code>ROI (%) = (Net Gain from Investment / Cost of Investment) * 100</code>';
+
+        } else if (calcType === 'netGain') {
+            inputNetGain.readOnly = true; // Net Gain will be calculated
+            targetRoiGroup.style.display = 'block'; // Target ROI needed
+            roiCalcResultDisplay.innerHTML = 'Calculated Net Gain: <strong id="roiResult">--</strong>';
+            formulaDisplay.innerHTML = '<code>Net Gain = (Target ROI / 100) * Cost of Investment</code>';
+
+        } else if (calcType === 'cost') {
+            inputCostOfInvestment.readOnly = true; // Cost of Investment will be calculated
+            targetRoiGroup.style.display = 'block'; // Target ROI needed
+            roiCalcResultDisplay.innerHTML = 'Calculated Cost of Investment: <strong id="roiResult">--</strong>';
+            formulaDisplay.innerHTML = '<code>Cost of Investment = Net Gain / (Target ROI / 100)</code>';
+        }
+    }
+
+    // --- Demo Example Loader ---
+    function loadDemoExample() {
+        // Ensure ROI calculation mode is selected for demo
+        document.getElementById('calcROI').checked = true;
+        updateInputFields(); // Reset fields for ROI mode
+
+        document.getElementById('inputNetGain').value = '20000';
+        document.getElementById('inputCostOfInvestment').value = '5000';
+        document.getElementById('currencySelect').value = '$'; // Set to USD for demo
+        currentCurrencySymbol = '$';
+        calculateROI();
+        showToast('Demo data loaded!');
+    }
+
+    // --- Calculator Logic ---
+    function calculateROI() {
+        const calcType = document.querySelector('input[name="calcType"]:checked').value;
+        let netGain = parseFloat(document.getElementById('inputNetGain').value);
+        let costOfInvestment = parseFloat(document.getElementById('inputCostOfInvestment').value);
+        let targetROI = parseFloat(document.getElementById('inputTargetROI').value);
+        
+        const resultsArea = document.getElementById('resultsArea');
+        const roiResult = document.getElementById('roiResult');
+        const interpretationText = document.getElementById('interpretationText');
+
+        // Reset result display before new calculation
+        roiResult.textContent = '--';
+        interpretationText.textContent = 'Enter values and select what to calculate to see the interpretation.';
+        resultsArea.style.display = 'none';
+
+        // Common validation for all types
+        if (calcType === 'roi') {
+            if (isNaN(netGain) || isNaN(costOfInvestment)) {
+                showToast('Please enter valid numbers for Net Gain and Cost of Investment.', 'error');
+                return;
+            }
+            if (costOfInvestment === 0) {
+                showToast('Cost of Investment cannot be zero for ROI calculation.', 'error');
+                return;
+            }
+        } else { // calcNetGain or calcCost
+            if (isNaN(targetROI)) {
+                showToast('Please enter a valid Target ROI (%).', 'error');
+                return;
+            }
+            if (calcType === 'netGain') {
+                if (isNaN(costOfInvestment)) {
+                    showToast('Please enter a valid Cost of Investment.', 'error');
+                    return;
+                }
+            } else { // calcCost
+                if (isNaN(netGain)) {
+                    showToast('Please enter a valid Net Gain.', 'error');
+                    return;
+                }
+            }
+        }
+
+        let calculatedValue;
+        let interpretation = '';
+
+        if (calcType === 'roi') {
+            calculatedValue = (netGain / costOfInvestment) * 100;
+            roiResult.textContent = `${calculatedValue.toFixed(2)}%`;
+            if (calculatedValue > 0) {
+                interpretation = `A positive ROI of <strong>${calculatedValue.toFixed(2)}%</strong> indicates that the investment yielded a gain, relative to its cost. This is generally a good sign.`;
+            } else if (calculatedValue < 0) {
+                interpretation = `A negative ROI of <strong>${calculatedValue.toFixed(2)}%</strong> means the investment resulted in a net loss. The costs exceeded the gains.`;
+            } else {
+                interpretation = `An ROI of <strong>0%</strong> indicates that the investment broke even, covering its costs but generating no profit or loss.`;
+            }
+
+        } else if (calcType === 'netGain') {
+            if (costOfInvestment <= 0) { // Should be greater than 0, if not already caught by input type
+                 showToast('Cost of Investment must be greater than zero.', 'error');
+                 return;
+            }
+            calculatedValue = (targetROI / 100) * costOfInvestment;
+            document.getElementById('inputNetGain').value = calculatedValue.toFixed(2); // Set calculated value back to input field
+            roiResult.textContent = `${currentCurrencySymbol}${calculatedValue.toFixed(2)}`; // Show currency with result
+            interpretation = `To achieve a ${targetROI.toFixed(2)}% ROI with an investment of ${currentCurrencySymbol}${costOfInvestment.toFixed(2)}, you need a Net Gain of <strong>${currentCurrencySymbol}${calculatedValue.toFixed(2)}</strong>.`;
+
+        } else if (calcType === 'cost') {
+            if (targetROI === 0) {
+                showToast('Target ROI cannot be zero when calculating Cost of Investment.', 'error');
+                return;
+            }
+            calculatedValue = netGain / (targetROI / 100);
+            document.getElementById('inputCostOfInvestment').value = calculatedValue.toFixed(2); // Set calculated value back to input field
+            roiResult.textContent = `${currentCurrencySymbol}${calculatedValue.toFixed(2)}`; // Show currency with result
+            interpretation = `To achieve a ${targetROI.toFixed(2)}% ROI with a Net Gain of ${currentCurrencySymbol}${netGain.toFixed(2)}, you should target a Cost of Investment of <strong>${currentCurrencySymbol}${calculatedValue.toFixed(2)}</strong>.`;
+        }
+
+        document.getElementById('interpretationText').innerHTML = interpretation;
+        resultsArea.style.display = 'block';
+        showToast('Calculation complete!');
+    }
+
+    function clearForm() {
+        document.getElementById('calcROI').checked = true; // Reset to default calculation type
+        updateInputFields(); // This will clear most fields and reset state
+
+        // Clear remaining fields not covered by updateInputFields default reset (like the result displays)
+        document.getElementById('roiResult').textContent = '--';
+        document.getElementById('interpretationText').textContent = 'Enter values and select what to calculate to see the interpretation.';
+        document.getElementById('resultsArea').style.display = 'none';
+        
+        showToast('Form cleared!');
+    }
+
+    // --- Initial Load ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Set default currency symbol on load
+        currentCurrencySymbol = document.getElementById('currencySelect').value;
+        updateInputFields(); // Initialize form state based on default radio selection
+    });
+  </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Assumption Mapping – Ashi Tools</title>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- jsPDF for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+  :root {
+    --primary: #f1c40f;
+    --primary-dark: #f39c12;
+    --dark-bg: #1c1e22;
+    --card-bg: #282c34;
+    --text-light: #f0f2f5;
+    --border-light: rgba(240,242,245,0.2);
+    --map-bg: #22262c;
+    --axis-color: rgba(255,255,255,0.3);
+    --note-bg: #fdfcb3;
+    --note-border: #e0d94d;
+    --transition: all 0.3s ease;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
+
+  body {
+    background: var(--dark-bg);
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: auto;           /* allow page scrolling */
+    line-height:1.4;
+  }
+
+  header {
+    text-align:center;
+    padding:20px;
+    border-bottom:1px solid var(--border-light);
+    flex-shrink:0;
+  }
+  .logo-container {
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    margin-bottom:4px;
+  }
+  .logo-icon {
+    background:var(--primary);
+    color:#333;
+    width:48px; height:48px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.6rem;
+  }
+  h1 { font-size:1.9rem; color:var(--primary); }
+  .header-sub {
+    font-size:0.9rem; color:#bdc3c7; max-width:600px; margin:4px auto 0;
+  }
+
+  .main-layout {
+    display:flex;
+    flex-grow:1;
+    /* overflow:hidden removed so layout doesn't clip content */
+  }
+  .controls-sidebar {
+    width:300px; flex-shrink:0;
+    background: var(--card-bg);
+    border-right:1px solid var(--border-light);
+    padding:20px; display:flex; flex-direction:column; gap:20px;
+    overflow-y:auto;
+  }
+  .control-group {
+    background: var(--dark-bg);
+    border:1px solid var(--border-light);
+    border-radius:6px;
+    padding:15px;
+  }
+  .control-group h3 {
+    font-size:1.05rem; color:var(--primary);
+    margin-bottom:10px; padding-bottom:6px;
+    border-bottom:1px solid var(--border-light);
+    display:flex; align-items:center; gap:8px;
+  }
+  .control-group label {
+    display:block; font-size:0.9rem; margin-bottom:6px;
+  }
+  .control-group input[type="text"] {
+    width:100%; padding:8px; border-radius:4px;
+    border:1px solid var(--border-light);
+    background: var(--dark-bg);
+    color: var(--text-light);
+    font-size:0.95rem;
+  }
+  .control-group input[type="text"]:focus {
+    outline:none; border-color:var(--primary);
+  }
+  .btn {
+    margin-top:8px;
+    width:100%; padding:10px;
+    background:var(--primary); color:#333;
+    border:none; border-radius:6px;
+    font-size:0.95rem; font-weight:600;
+    cursor:pointer; transition:var(--transition);
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .btn:hover { background:var(--primary-dark); }
+  .btn i { margin-right:4px; }
+  .btn-secondary { background:#555!important; color:#eee!important; }
+
+  .instructions {
+    font-size:0.85rem; color:#95a5a6; line-height:1.4;
+  }
+
+  .map-area-wrapper {
+    flex-grow:1;
+    background: var(--map-bg);
+    display:flex; align-items:center; justify-content:center;
+    padding:20px; position:relative; overflow:auto;
+  }
+
+  #mapping-canvas {
+    position:relative;
+    width:600px; height:600px;
+    background:var(--map-bg);
+    border:1px solid var(--axis-color);
+    box-shadow:0 0 20px rgba(0,0,0,0.3);
+    background-image:
+      linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size:20px 20px;
+    cursor:default;
+  }
+  .axis-line {
+    position:absolute; background:var(--axis-color); z-index:1;
+  }
+  .x-axis { top:50%; left:0; width:100%; height:0; border-top:2px solid var(--axis-color); }
+  .y-axis { left:50%; top:0; height:100%; width:0; border-left:2px solid var(--axis-color); }
+
+  .axis-label {
+    position:absolute;
+    font-weight:bold;
+    font-size:0.85rem;
+    color:var(--text-light);
+    z-index:2;
+  }
+  .x-axis-left  { left:8px;    top:50%; transform:translateY(-50%) rotate(-90deg); }
+  .x-axis-right { right:8px;   top:50%; transform:translateY(-50%) rotate(-90deg); }
+  .y-axis-top   { left:50%;    top:8px; transform:translateX(-50%);           }
+  .y-axis-bottom{ left:50%;    bottom:8px; transform:translateX(-50%);         }
+
+  .canvas-item {
+    position:absolute;
+    width:160px; min-height:60px;
+    padding:8px;
+    background:var(--note-bg);
+    color:var(--dark-bg);
+    border:1px solid var(--note-border);
+    border-radius:4px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.2);
+    transform:translate(-50%,-50%);
+    cursor:grab;
+    user-select:none;
+    font-size:0.85rem;
+    line-height:1.2;
+    overflow:auto;
+    z-index:2;
+  }
+  .canvas-item.dragging { cursor:grabbing; z-index:999; }
+
+  .canvas-item-delete {
+    position:absolute;
+    top:-6px; right:-6px;
+    width:18px; height:18px;
+    background:#e74c3c; color:#fff;
+    border-radius:50%;
+    display:none;
+    align-items:center; justify-content:center;
+    font-size:0.75rem; cursor:pointer;
+    border:1px solid #fff;
+    z-index:3;
+  }
+  .canvas-item:hover .canvas-item-delete { display:flex; }
+
+  footer {
+    text-align:center;
+    padding:12px;
+    border-top:1px solid var(--border-light);
+    background:var(--dark-bg);
+    flex-shrink:0;
+    font-size:0.9rem;
+    color:#aaa;
+  }
+  .insta-link { color:var(--primary); text-decoration:none; }
+  .insta-link:hover { text-decoration:underline; }
+
+  @media(max-width:900px) {
+    .controls-sidebar { width:100%; flex-direction:row; flex-wrap:wrap; }
+    .control-group { flex:1 1 45%; }
+    #mapping-canvas { width:90vw; height:90vw; max-width:600px; max-height:600px; }
+  }
+  </style>
+
+
+
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon"><i class="fas fa-lightbulb"></i></div>
+      <h1>Assumption Mapping</h1>
+    </div>
+    <p class="header-sub">Map your assumptions by importance vs. evidence&nbsp;— then export your framework as a PDF report.</p>
+  </header>
+
+  <div class="main-layout">
+    <div class="controls-sidebar">
+      <div class="control-group">
+        <h3><i class="fas fa-cog"></i> Canvas Setup</h3>
+        <label for="canvasTitle">Canvas Title:</label>
+        <input type="text" id="canvasTitle" value="Assumption Mapping">
+        <button class="btn" id="updateLabelsBtn"><i class="fas fa-sync-alt"></i> Update Title</button>
+      </div>
+      <div class="control-group">
+        <h3><i class="fas fa-plus-circle"></i> Add Assumption</h3>
+        <label for="itemName">Assumption Text:</label>
+        <input type="text" id="itemName" placeholder="e.g. Users want feature&nbsp;X">
+        <button class="btn" id="addItemBtn"><i class="fas fa-plus"></i> Add to Canvas</button>
+      </div>
+      <div class="control-group">
+        <h3><i class="fas fa-file-export"></i> Export</h3>
+        <button class="btn" id="exportPdfBtn"><i class="fas fa-file-pdf"></i> Export as PDF</button>
+      </div>
+      <div class="instructions">
+        <p><i class="fas fa-info-circle"></i> Click “Add to Canvas,” then click on the canvas to place your assumption.</p>
+        <p><i class="fas fa-arrows-alt"></i> Drag items to refine their position (importance&nbsp;⇅ / evidence&nbsp;⇆).</p>
+        <p><i class="fas fa-times"></i> Hover an item and click “×” to delete it.</p>
+      </div>
+    </div>
+
+    <div class="map-area-wrapper">
+      <div id="mapping-canvas">
+        <div class="axis-line x-axis"></div>
+        <div class="axis-line y-axis"></div>
+        <div class="axis-label x-axis-left">EVIDENCE ⬆︎</div>
+        <div class="axis-label x-axis-right">⬇︎ NO EVIDENCE</div>
+        <div class="axis-label y-axis-top">IMPORTANT ⬆︎</div>
+        <div class="axis-label y-axis-bottom">⬇︎ UNIMPORTANT</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Assumption Mapping&nbsp;–&nbsp;Ashi&nbsp;Tools | Connect
+    <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="insta-link">
+      @ashish_singh_rajput_3
+    </a>
+  </footer>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', ()=> {
+    const canvas       = document.getElementById('mapping-canvas');
+    const titleInput   = document.getElementById('canvasTitle');
+    const itemInput    = document.getElementById('itemName');
+    const addBtn       = document.getElementById('addItemBtn');
+    const updBtn       = document.getElementById('updateLabelsBtn');
+    const exportBtn    = document.getElementById('exportPdfBtn');
+
+    let items = [], nextId = 0, adding = false, dragItem = null, dx = 0, dy = 0;
+
+    // Update document title
+    function updateDocTitle(){
+      const t = titleInput.value.trim() || 'Assumption Mapping';
+      document.title = t + ' – Ashi Tools';
+    }
+    updBtn.addEventListener('click', e=>{
+      e.preventDefault();
+      updateDocTitle();
+    });
+    updateDocTitle();
+
+    // Enter add mode
+    addBtn.addEventListener('click', e=>{
+      e.preventDefault();
+      adding = true;
+      canvas.style.cursor = 'crosshair';
+      addBtn.innerHTML = '<i class="fas fa-mouse-pointer"></i> Click Canvas';
+      addBtn.style.background = '#e74c3c';
+    });
+
+    // Place item on canvas click
+    canvas.addEventListener('click', e=>{
+      if(!adding || e.target !== canvas) return;
+      const r = canvas.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      const txt = itemInput.value.trim() || 'Assumption';
+      const itm = { id: nextId++, name: txt, x, y };
+      items.push(itm);
+      renderItem(itm);
+      adding = false;
+      canvas.style.cursor = 'default';
+      addBtn.innerHTML = '<i class="fas fa-plus"></i> Add to Canvas';
+      addBtn.style.background = '';
+    });
+
+    // Render a sticky‑note card
+    function renderItem(itm){
+      const div = document.createElement('div');
+      div.className = 'canvas-item';
+      div.dataset.id = itm.id;
+      div.style.left = itm.x + 'px';
+      div.style.top  = itm.y + 'px';
+      div.textContent = itm.name;
+      const del = document.createElement('div');
+      del.className = 'canvas-item-delete';
+      del.textContent = '×';
+      del.title = 'Delete';
+      del.addEventListener('click', ev=>{
+        ev.stopPropagation();
+        removeItem(itm.id);
+      });
+      div.appendChild(del);
+      div.addEventListener('mousedown', ev=>{
+        if(ev.target === del) return;
+        dragItem = itm;
+        div.classList.add('dragging');
+        const rect = div.getBoundingClientRect();
+        dx = ev.clientX - (rect.left + rect.width/2);
+        dy = ev.clientY - (rect.top + rect.height/2);
+        ev.preventDefault();
+      });
+      canvas.appendChild(div);
+    }
+
+    function removeItem(id){
+      items = items.filter(i=>i.id!==id);
+      document.querySelectorAll('.canvas-item').forEach(n=>n.remove());
+      items.forEach(renderItem);
+    }
+
+    document.addEventListener('mousemove', ev=>{
+      if(!dragItem) return;
+      const r = canvas.getBoundingClientRect();
+      let nx = ev.clientX - r.left - dx;
+      let ny = ev.clientY - r.top - dy;
+      const el = document.querySelector(`.canvas-item[data-id="${dragItem.id}"]`);
+      const w = el.offsetWidth, h = el.offsetHeight;
+      nx = Math.max(w/2, Math.min(nx, canvas.clientWidth - w/2));
+      ny = Math.max(h/2, Math.min(ny, canvas.clientHeight - h/2));
+      dragItem.x = nx; dragItem.y = ny;
+      el.style.left = nx+'px'; el.style.top = ny+'px';
+    });
+    document.addEventListener('mouseup', ()=> {
+      if(dragItem){
+        const el = document.querySelector(`.canvas-item[data-id="${dragItem.id}"]`);
+        el.classList.remove('dragging');
+        dragItem = null;
+      }
+    });
+
+    // Export PDF
+    exportBtn.addEventListener('click', ()=>{
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('p','pt','a4');
+      const m = 40;
+      const pw = doc.internal.pageSize.getWidth();
+      const ph = doc.internal.pageSize.getHeight();
+      const cw = pw - 2*m, ch = ph - 2*m -30;
+
+      doc.setFillColor(255); doc.rect(0,0,pw,ph,'F');
+      doc.setTextColor(30);
+
+      const ttl = titleInput.value.trim() || 'Assumption Mapping';
+      doc.setFont('helvetica','bold').setFontSize(18);
+      doc.text(ttl, m, m);
+      doc.setFont('helvetica','normal').setFontSize(10);
+      doc.text('Generated by Ashi Tools', m, m+14);
+
+      doc.setDrawColor(220).setLineWidth(0.3);
+      for(let x=m; x<=m+cw; x+=20) doc.line(x, m+30, x, m+30+ch);
+      for(let y=m+30; y<=m+30+ch; y+=20) doc.line(m, y, m+cw, y);
+
+      doc.setDrawColor(0).setLineWidth(1);
+      doc.line(m, m+30+ch/2, m+cw, m+30+ch/2);
+      doc.line(m+cw/2, m+30, m+cw/2, m+30+ch);
+
+      doc.setFont('helvetica','bold').setFontSize(9);
+      doc.text('EVIDENCE', m, m+30+ch/2 -6);
+      doc.text('NO EVIDENCE', m+cw-doc.getTextWidth('NO EVIDENCE'), m+30+ch/2 -6);
+      doc.text('IMPORTANT', m+cw/2 - doc.getTextWidth('IMPORTANT')/2, m+30+12);
+      doc.text('UNIMPORTANT', m+cw/2 - doc.getTextWidth('UNIMPORTANT')/2, m+30+ch+12);
+
+      doc.setFont('helvetica','normal').setFontSize(10);
+      items.forEach(itm=>{
+        const fx = m + (itm.x / canvas.clientWidth)*cw;
+        const fy = m+30 + (itm.y / canvas.clientHeight)*ch;
+        doc.setFillColor(253,252,179).setDrawColor(224,217,77);
+        doc.rect(fx-60, fy-30, 120, 60, 'FD');
+        const lines = doc.splitTextToSize(itm.name, 110);
+        doc.setTextColor(30);
+        doc.text(lines, fx-55, fy-15, { maxWidth:110 });
+      });
+
+      const pages = doc.internal.getNumberOfPages();
+      for(let i=1;i<=pages;i++){
+        doc.setPage(i);
+        doc.setFontSize(8).setTextColor(120);
+        doc.text(`Page ${i} of ${pages}`, pw-m, ph-10, { align:'right' });
+        doc.text('Ashi Tools Assumption Mapping', m, ph-10);
+      }
+
+      doc.save(`Assumption-Mapping-${ttl.replace(/\s+/g,'_')}.pdf`);
+    });
+  });
+  </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

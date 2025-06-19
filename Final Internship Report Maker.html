@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <title>Final Internship Report Maker | Ashi&nbsp;Tools</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- Icons & jsPDF for PDF export -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+  :root {
+    --primary: #00ffd5;
+    --primary-dark: #00ccb3;
+    --dark-bg: #121212;
+    --card-bg: #1e1e1e;
+    --text-light: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --border: #333;
+    --success: #28a745;
+    --danger: #ff6b6b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
+  body { background:var(--dark-bg); color:var(--text-light); min-height:100vh; display:flex; flex-direction:column; }
+  header, footer { text-align:center; padding:1.5rem; border-color:var(--border); }
+  header { border-bottom:1px solid var(--border); }
+  footer { border-top:1px solid var(--border); margin-top:2rem; color:var(--text-muted); }
+  h1 { color:var(--primary); font-size:1.8rem; }
+  .header-sub { color:var(--text-muted); margin-top:.5rem; }
+  .container { flex:1; max-width:1200px; margin:2rem auto; padding:0 1rem; }
+
+  .progress-container { margin-bottom:1rem; }
+  .progress-bar { background:#333; border-radius:4px; overflow:hidden; height:8px; }
+  .progress-fill { background:var(--success); height:100%; width:0; transition:width .3s; }
+
+  .tiles { display:grid; grid-template-columns:repeat(2,1fr); gap:1.5rem; margin-bottom:2rem; }
+  .tile { background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:1rem; }
+  .tile h2 { font-size:1.1rem; color:var(--primary); margin-bottom:.75rem; }
+
+  .form-group { margin-bottom:1rem; }
+  .form-group label { display:block; margin-bottom:.5rem; color:var(--text-light); font-weight:500; }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width:100%; padding:.75rem; background:#2d2d2d; border:1px solid var(--border);
+    border-radius:5px; color:var(--text-light); transition:.2s;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color:var(--primary); outline:none; background:#252525;
+  }
+  textarea { min-height:100px; resize:vertical; }
+
+  .export-buttons { display:flex; gap:1rem; justify-content:flex-end; }
+  .btn {
+    padding:.6rem 1.2rem; border:none; border-radius:5px; cursor:pointer;
+    font-size:.9rem; font-weight:500; transition:.2s;
+  }
+  .btn-primary { background:var(--primary); color:black; }
+  .btn-primary:hover { background:var(--primary-dark); }
+  .btn-secondary { background:#333; color:var(--text-light); }
+  .btn-secondary:hover { background:#444; }
+
+  .toast {
+    position:fixed; top:20px; right:20px; padding:1rem; border-radius:5px;
+    border-left:4px solid var(--success); background:var(--dark-bg); color:var(--text-light);
+    transform:translateX(120%); transition:transform .3s; z-index:1000;
+  }
+  .toast.show { transform:translateX(0); }
+  .toast.error { border-left-color:var(--danger); }
+  </style>
+
+
+
+<header>
+  <i class="fas fa-briefcase fa-2x" style="color:var(--primary)"></i>
+  <h1>Final Internship Report Maker</h1>
+  <p class="header-sub">Fill each section, then export your PDF</p>
+</header>
+
+<div class="container">
+  <div class="progress-container">
+    <div class="progress-bar"><div id="progress" class="progress-fill" style="width: 88.8889%;"></div></div>
+  </div>
+
+  <!-- Tiles for each report section -->
+  <div class="tiles">
+    <div class="tile">
+      <h2>Title Page</h2>
+      <div class="form-group"><label>Student Name *</label><input id="studentName"></div>
+      <div class="form-group"><label>College/University *</label><input id="college"></div>
+      <div class="form-group"><label>Internship Period *</label><input id="period"></div>
+      <div class="form-group"><label>Company Name *</label><input id="company"></div>
+    </div>
+
+    <div class="tile">
+      <h2>Acknowledgement</h2>
+      <div class="form-group"><textarea id="ack">I would like to express my gratitude to…</textarea></div>
+    </div>
+
+    <div class="tile">
+      <h2>Executive Summary</h2>
+      <div class="form-group"><textarea id="summary" placeholder="Brief internship overview"></textarea></div>
+    </div>
+
+    <div class="tile">
+      <h2>Company Profile</h2>
+      <div class="form-group"><textarea id="profile" placeholder="Company background &amp; mission"></textarea></div>
+    </div>
+
+    <div class="tile">
+      <h2>Work Undertaken</h2>
+      <div class="form-group"><textarea id="work" placeholder="Detailed description of your tasks"></textarea></div>
+    </div>
+
+    <div class="tile">
+      <h2>Learning Outcomes</h2>
+      <div class="form-group"><textarea id="learning" placeholder="Skills and knowledge gained"></textarea></div>
+    </div>
+
+    <div class="tile">
+      <h2>Challenges</h2>
+      <div class="form-group"><textarea id="challenges" placeholder="Obstacles faced"></textarea></div>
+    </div>
+
+    <div class="tile">
+      <h2>Recommendations</h2>
+      <div class="form-group"><textarea id="recommend" placeholder="Your suggestions"></textarea></div>
+    </div>
+
+    <div class="tile">
+      <h2>Annexures<br><small>(Upload Images)</small></h2>
+      <div class="form-group">
+        <input type="file" id="images" multiple="" accept="image/*">
+      </div>
+    </div>
+  </div>
+
+  <!-- Export button -->
+  <div class="export-buttons">
+    <button id="exportPdf" class="btn btn-primary"><i class="fas fa-file-pdf"></i> Export PDF</button>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" class="toast"></div>
+
+<footer>
+  <p>Built with ❤️ by Ashi Tools</p>
+  <p><a href="https://www.instagram.com/ashish_singh_rajput_3" style="color:var(--primary);text-decoration:none;">
+    @ashish_singh_rajput_3</a></p>
+</footer>
+
+<script>
+  // Progress bar update
+  const sections = document.querySelectorAll('.tile');
+  function updateProgress(){
+    let done = 0;
+    sections.forEach(t=>{
+      const inputs = t.querySelectorAll('input,textarea');
+      if([...inputs].every(i=>i.value.trim() !== '')) done++;
+    });
+    document.getElementById('progress').style.width = (done/sections.length*100) + '%';
+  }
+
+  // Autosave & restore
+  const fieldIds = ['studentName','college','period','company','ack','summary','profile','work','learning','challenges','recommend'];
+  const data = JSON.parse(localStorage.getItem('finalInternData')||'{}');
+  fieldIds.forEach(id=>{ if(data[id]) document.getElementById(id).value = data[id]; });
+  let images = JSON.parse(localStorage.getItem('finalInternImgs')||'[]');
+
+  document.querySelectorAll('input,textarea').forEach(inp=>{
+    inp.oninput = () => {
+      data[inp.id] = inp.value;
+      localStorage.setItem('finalInternData', JSON.stringify(data));
+      updateProgress();
+    };
+  });
+
+  document.getElementById('images').onchange = async e => {
+    images = [];
+    for(const f of e.target.files){
+      images.push(await new Promise(r=>{
+        const fr=new FileReader(); fr.onload=()=>r(fr.result); fr.readAsDataURL(f);
+      }));
+    }
+    localStorage.setItem('finalInternImgs', JSON.stringify(images));
+  };
+
+  // Clear form
+  document.getElementById('exportPdf').onclick; // placeholder
+  function clearForm(){
+    fieldIds.forEach(id=>document.getElementById(id).value='');
+    images=[]; localStorage.removeItem('finalInternImgs');
+    updateProgress(); showToast('Form cleared');
+  }
+
+  // Toast
+  function showToast(msg,type='success'){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show';
+    t.style.borderLeftColor = type==='error'? 'var(--danger)' : 'var(--success)';
+    setTimeout(()=>t.className='toast',3000);
+  }
+
+  // Export to PDF
+  document.getElementById('exportPdf').onclick = () => {
+    // Validate required
+    if(!data.studentName||!data.period||!data.company){
+      return showToast('Please fill Student, Period & Company','error');
+    }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    let y = 20;
+    doc.setFontSize(18); doc.setTextColor(0);
+    doc.text(data.studentName,20,y); y+=8;
+    doc.setFontSize(14); doc.text(data.company,20,y); y+=8;
+    doc.setFontSize(12); doc.text(data.period,20,y); y+=12;
+    const sectionsArr = [
+      ['Acknowledgement',data.ack],
+      ['Executive Summary',data.summary],
+      ['Company Profile',data.profile],
+      ['Work Undertaken',data.work],
+      ['Learning Outcomes',data.learning],
+      ['Challenges',data.challenges],
+      ['Recommendations',data.recommend]
+    ];
+    doc.setTextColor(0);
+    sectionsArr.forEach(([title,txt])=>{
+      if(!txt) return;
+      doc.setFont(undefined,'bold'); doc.text(title+':',20,y); y+=7;
+      doc.setFont(undefined,'normal');
+      const lines = doc.splitTextToSize(txt,170);
+      lines.forEach(l=>{
+        if(y>270){doc.addPage(); y=20;}
+        doc.text(l,22,y); y+=6;
+      });
+      y+=4;
+    });
+    if(images.length){
+      doc.addPage(); y=20;
+      doc.setFont(undefined,'bold'); doc.text('Annexures',20,y); y+=8;
+      images.forEach(img=>{
+        if(y>200){doc.addPage(); y=20;}
+        doc.addImage(img,'JPEG',20,y,80,60);
+        y+=65;
+      });
+    }
+    doc.save('Internship_Report.pdf');
+    showToast('PDF exported');
+    updateProgress();
+  };
+
+  // Initialize
+  updateProgress();
+</script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Meeting Minutes Maker - Ashi Tools</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Roboto, sans-serif;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  color: #f3f4f6;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h1, h2 {
+  color: #3b82f6;
+}
+
+.header-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+input, button, select, textarea {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  margin: 5px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: Roboto, sans-serif;
+}
+
+input, textarea, select {
+  background: #374151;
+  color: #f3f4f6;
+  border: 2px solid #4b5563;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+button {
+  color: #fff;
+  background: #3b82f6;
+  cursor: pointer;
+  font-weight: 500;
+  border: 2px solid transparent;
+}
+
+button:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+}
+
+button:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.secondary-btn {
+  background: #059669;
+}
+
+.secondary-btn:hover {
+  background: #047857;
+}
+
+.danger-btn {
+  background: #dc2626;
+}
+
+.danger-btn:hover {
+  background: #b91c1c;
+}
+
+/* Grid Layout for Form and Preview */
+.main-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+.form-container, .preview-container {
+  background: linear-gradient(145deg, #1f2937, #111827);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid #374151;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #3b82f6;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  resize: vertical;
+}
+
+textarea {
+  min-height: 80px;
+  max-height: 150px;
+}
+
+.preview-section {
+  background: linear-gradient(145deg, #1f2937, #111827);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid #374151;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.preview-content {
+  color: #f3f4f6;
+  line-height: 1.6;
+}
+
+.preview-content h3 {
+  color: #3b82f6;
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+}
+
+.preview-content h4 {
+  color: #10b981;
+  margin: 15px 0 8px 0;
+  font-size: 1.1rem;
+}
+
+.preview-content p {
+  margin-bottom: 8px;
+}
+
+.template-selector {
+  background: #374151;
+  color: #f3f4f6;
+  border: 2px solid #4b5563;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #059669;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+  background: #1f2937;
+  margin: 5% auto;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  color: #f3f4f6;
+  position: relative;
+}
+
+.close {
+  color: #9ca3af;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  top: 15px;
+}
+
+.close:hover {
+  color: #f3f4f6;
+}
+
+.auto-save-indicator {
+  color: #10b981;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.auto-save-indicator.show {
+  opacity: 1;
+}
+
+footer {
+  text-align: center;
+  color: #6b7280;
+  margin-top: 40px;
+  padding: 20px;
+  line-height: 1.6;
+}
+
+.insta-link {
+  color: #e1306c;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.insta-link:hover {
+  color: #f56565;
+  text-shadow: 0 0 8px rgba(225, 48, 108, 0.5);
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .main-container {
+    grid-template-columns: 1fr;
+    max-width: 800px;
+  }
+  
+  .preview-section {
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-controls {
+    flex-direction: column;
+  }
+  
+  .form-container, .preview-container {
+    padding: 15px;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom scrollbar for preview */
+.preview-section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.preview-section::-webkit-scrollbar-track {
+  background: #4b5563;
+  border-radius: 3px;
+}
+
+.preview-section::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 3px;
+}
+
+.preview-section::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+</style>
+
+
+
+<header>
+  <h1><i class="fa-solid fa-file-alt"></i> Interactive Meeting Minutes Maker</h1>
+  <p>Generate professional meeting minutes with templates and smart features</p>
+  
+  <div class="header-controls">
+    <input type="text" id="meetingTitle" placeholder="Meeting Title" value="Team Meeting">
+    <select id="templateSelector" class="template-selector">
+      <option value="">Select Template</option>
+      <option value="board">Board Meeting</option>
+      <option value="team">Team Meeting</option>
+      <option value="project">Project Review</option>
+      <option value="standup">Daily Standup</option>
+      <option value="client">Client Meeting</option>
+    </select>
+  </div>
+
+  <div class="action-buttons">
+    <button onclick="generatePreview()"><i class="fa-solid fa-eye"></i> Generate Preview</button>
+    <button onclick="saveMinutes()" class="secondary-btn"><i class="fa-solid fa-save"></i> Save Minutes</button>
+    <button onclick="loadMinutes()" class="secondary-btn"><i class="fa-solid fa-upload"></i> Load Minutes</button>
+    <button onclick="exportPDF()"><i class="fa-solid fa-file-pdf"></i> Export PDF</button>
+    <button onclick="clearAll()" class="danger-btn"><i class="fa-solid fa-trash"></i> Clear All</button>
+  </div>
+
+  <div class="auto-save-indicator show" id="autoSaveIndicator">
+    <i class="fa-solid fa-check-circle"></i> Auto-saved
+  </div>
+</header>
+
+<div class="main-container">
+  <div class="form-container fade-in">
+    <h2><i class="fa-solid fa-edit"></i> Meeting Details</h2>
+    
+    <div class="form-group">
+      <label for="meetingDate"><i class="fa-solid fa-calendar-alt"></i> Meeting Date</label>
+      <input type="date" id="meetingDate" required="">
+    </div>
+    
+    <div class="form-group">
+      <label for="meetingTime"><i class="fa-solid fa-clock"></i> Meeting Time</label>
+      <input type="time" id="meetingTime">
+    </div>
+    
+    <div class="form-group">
+      <label for="location"><i class="fa-solid fa-map-marker-alt"></i> Location/Platform</label>
+      <input type="text" id="location" placeholder="Conference Room A / Zoom">
+    </div>
+    
+    <div class="form-group">
+      <label for="attendees"><i class="fa-solid fa-users"></i> Attendees</label>
+      <textarea id="attendees" placeholder="List attendees (one per line)..." oninput="autoSave()"></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="agenda"><i class="fa-solid fa-list"></i> Agenda</label>
+      <textarea id="agenda" placeholder="Meeting agenda items..." oninput="autoSave()"></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="discussion"><i class="fa-solid fa-comments"></i> Discussion Points</label>
+      <textarea id="discussion" placeholder="Key discussion points and decisions..." oninput="autoSave()"></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="actionItems"><i class="fa-solid fa-tasks"></i> Action Items</label>
+      <textarea id="actionItems" placeholder="Action items with owners and deadlines..." oninput="autoSave()"></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="nextMeeting"><i class="fa-solid fa-arrow-right"></i> Next Meeting</label>
+      <input type="text" id="nextMeeting" placeholder="Next meeting date/time">
+    </div>
+  </div>
+
+  <div class="preview-section fade-in">
+    <h2><i class="fa-solid fa-eye"></i> Live Preview</h2>
+    <div class="preview-content" id="previewContent"><p style="color: #9ca3af; text-align: center; margin-top: 50px;">Fill in the meeting details and click "Generate Preview" to see the formatted minutes.</p></div>
+  </div>
+</div>
+
+<!-- Modal for loading minutes -->
+<div id="loadModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close">×</span>
+    <h2>Load Saved Minutes</h2>
+    <div id="savedMinutes">
+      <div style="background: #374151; padding: 15px; margin: 10px 0; border-radius: 8px; cursor: pointer;" onclick="loadSpecificMinutes(0)">
+        <h3>Team Meeting</h3>
+        <p>Date: 2025-06-13</p>
+        <p>Saved: 6/13/2025</p>
+        <button onclick="event.stopPropagation(); deleteMinutes(0)" style="background: #dc2626; margin-top: 10px;">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" class="toast" style="display: block;">All content cleared!</div>
+
+<footer>
+  Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+  Connect with me: 
+  <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank">
+      @ashish_singh_rajput_3
+  </a>
+</footer>
+
+<script>
+// Meeting templates
+const templates = {
+  board: {
+    agenda: "• Welcome and Opening Remarks\n• Review of Previous Minutes\n• Financial Report\n• Strategic Updates\n• New Business\n• Closing",
+    discussion: "Board members reviewed quarterly performance and strategic initiatives. Key topics included budget allocation, market expansion, and risk management strategies.",
+    actionItems: "• CFO to prepare detailed Q4 budget analysis - Due: Next Friday\n• Marketing team to present expansion strategy - Due: Next board meeting\n• Legal to review new compliance requirements - Due: End of month"
+  },
+  team: {
+    agenda: "• Team Updates\n• Current Projects Status\n• Blockers and Challenges\n• Upcoming Deliverables\n• Team Building Activities",
+    discussion: "Team discussed current sprint progress, identified blockers, and aligned on priorities for the upcoming week. Focus areas include improving collaboration and meeting project deadlines.",
+    actionItems: "• John to resolve technical blocker - Due: Tomorrow\n• Sarah to coordinate with design team - Due: Thursday\n• Team lead to schedule one-on-ones - Due: Next week"
+  },
+  project: {
+    agenda: "• Project Status Overview\n• Milestone Review\n• Budget and Resource Updates\n• Risk Assessment\n• Next Phase Planning",
+    discussion: "Project is on track with 75% completion. Discussed resource allocation for final phase and identified potential risks. Client feedback has been positive.",
+    actionItems: "• Project manager to update timeline - Due: Tomorrow\n• Technical lead to review architecture - Due: Friday\n• Business analyst to gather requirements - Due: Next Monday"
+  },
+  standup: {
+    agenda: "• What did you accomplish yesterday?\n• What will you work on today?\n• Any blockers or impediments?",
+    discussion: "Team shared daily updates on current tasks. Sprint is progressing well with most stories on track. One blocker identified in the testing environment.",
+    actionItems: "• DevOps to fix testing environment - Due: Today\n• QA to prioritize critical test cases - Due: Tomorrow\n• Scrum master to update burndown chart - Due: End of day"
+  },
+  client: {
+    agenda: "• Project Updates\n• Client Feedback Review\n• Budget and Timeline Discussion\n• Next Deliverables\n• Q&A Session",
+    discussion: "Client expressed satisfaction with current progress. Discussed scope changes and their impact on timeline. Agreed on revised delivery schedule.",
+    actionItems: "• Account manager to send revised proposal - Due: Tomorrow\n• Development team to implement requested changes - Due: Next week\n• Client to provide final feedback - Due: Friday"
+  }
+};
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+  setupAutoSave();
+  loadAutoSave();
+  setupEventListeners();
+  
+  // Set today's date as default
+  document.getElementById('meetingDate').value = new Date().toISOString().split('T')[0];
+});
+
+// Setup event listeners
+function setupEventListeners() {
+  // Template selector
+  document.getElementById('templateSelector').addEventListener('change', function() {
+    if (this.value) {
+      loadTemplate(this.value);
+    }
+  });
+
+  // Modal controls
+  const modal = document.getElementById('loadModal');
+  const closeModal = document.querySelector('.close');
+  
+  closeModal.addEventListener('click', function() {
+    modal.style.display = 'none';
+  });
+
+  window.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+
+  // Auto-generate preview on input
+  const inputs = ['meetingTitle', 'meetingDate', 'meetingTime', 'location', 'attendees', 'agenda', 'discussion', 'actionItems', 'nextMeeting'];
+  inputs.forEach(id => {
+    document.getElementById(id).addEventListener('input', generatePreview);
+  });
+}
+
+// Load template
+function loadTemplate(type) {
+  if (templates[type]) {
+    if (confirm('This will replace existing content. Continue?')) {
+      const template = templates[type];
+      if (template.agenda) document.getElementById('agenda').value = template.agenda;
+      if (template.discussion) document.getElementById('discussion').value = template.discussion;
+      if (template.actionItems) document.getElementById('actionItems').value = template.actionItems;
+      
+      generatePreview();
+      autoSave();
+      showToast(`${type.toUpperCase()} template loaded successfully!`);
+    }
+  }
+}
+
+// Generate preview
+function generatePreview() {
+  const title = document.getElementById('meetingTitle').value || 'Meeting Minutes';
+  const date = document.getElementById('meetingDate').value;
+  const time = document.getElementById('meetingTime').value;
+  const location = document.getElementById('location').value;
+  const attendees = document.getElementById('attendees').value;
+  const agenda = document.getElementById('agenda').value;
+  const discussion = document.getElementById('discussion').value;
+  const actionItems = document.getElementById('actionItems').value;
+  const nextMeeting = document.getElementById('nextMeeting').value;
+
+  let preview = `<h3>${title}</h3>`;
+  
+  if (date) {
+    const formattedDate = new Date(date).toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    preview += `<p><strong>Date:</strong> ${formattedDate}</p>`;
+  }
+  
+  if (time) {
+    preview += `<p><strong>Time:</strong> ${time}</p>`;
+  }
+  
+  if (location) {
+    preview += `<p><strong>Location:</strong> ${location}</p>`;
+  }
+  
+  if (attendees) {
+    preview += `<h4>Attendees</h4>`;
+    const attendeeList = attendees.split('\n').filter(a => a.trim()).map(a => `<p>• ${a.trim()}</p>`).join('');
+    preview += attendeeList;
+  }
+  
+  if (agenda) {
+    preview += `<h4>Agenda</h4>`;
+    const agendaItems = agenda.split('\n').filter(a => a.trim()).map(a => `<p>${a.trim()}</p>`).join('');
+    preview += agendaItems;
+  }
+  
+  if (discussion) {
+    preview += `<h4>Discussion Points</h4>`;
+    const discussionPoints = discussion.split('\n').filter(d => d.trim()).map(d => `<p>${d.trim()}</p>`).join('');
+    preview += discussionPoints;
+  }
+  
+  if (actionItems) {
+    preview += `<h4>Action Items</h4>`;
+    const actions = actionItems.split('\n').filter(a => a.trim()).map(a => `<p>${a.trim()}</p>`).join('');
+    preview += actions;
+  }
+  
+  if (nextMeeting) {
+    preview += `<h4>Next Meeting</h4>`;
+    preview += `<p>${nextMeeting}</p>`;
+  }
+
+  document.getElementById('previewContent').innerHTML = preview;
+}
+
+// Auto-save functionality
+function setupAutoSave() {
+  setInterval(() => {
+    autoSave();
+  }, 30000); // Auto-save every 30 seconds
+}
+
+function autoSave() {
+  const data = {
+    title: document.getElementById('meetingTitle').value,
+    date: document.getElementById('meetingDate').value,
+    time: document.getElementById('meetingTime').value,
+    location: document.getElementById('location').value,
+    attendees: document.getElementById('attendees').value,
+    agenda: document.getElementById('agenda').value,
+    discussion: document.getElementById('discussion').value,
+    actionItems: document.getElementById('actionItems').value,
+    nextMeeting: document.getElementById('nextMeeting').value,
+    timestamp: new Date().toISOString()
+  };
+  
+  localStorage.setItem('meeting_autosave', JSON.stringify(data));
+  
+  const indicator = document.getElementById('autoSaveIndicator');
+  indicator.classList.add('show');
+  setTimeout(() => indicator.classList.remove('show'), 2000);
+}
+
+function loadAutoSave() {
+  const saved = localStorage.getItem('meeting_autosave');
+  if (saved) {
+    const data = JSON.parse(saved);
+    document.getElementById('meetingTitle').value = data.title || '';
+    document.getElementById('meetingDate').value = data.date || '';
+    document.getElementById('meetingTime').value = data.time || '';
+    document.getElementById('location').value = data.location || '';
+    document.getElementById('attendees').value = data.attendees || '';
+    document.getElementById('agenda').value = data.agenda || '';
+    document.getElementById('discussion').value = data.discussion || '';
+    document.getElementById('actionItems').value = data.actionItems || '';
+    document.getElementById('nextMeeting').value = data.nextMeeting || '';
+    generatePreview();
+  }
+}
+
+// Save minutes functionality
+function saveMinutes() {
+  const title = document.getElementById('meetingTitle').value || 'Untitled Meeting';
+  const data = {
+    title: title,
+    date: document.getElementById('meetingDate').value,
+    time: document.getElementById('meetingTime').value,
+    location: document.getElementById('location').value,
+    attendees: document.getElementById('attendees').value,
+    agenda: document.getElementById('agenda').value,
+    discussion: document.getElementById('discussion').value,
+    actionItems: document.getElementById('actionItems').value,
+    nextMeeting: document.getElementById('nextMeeting').value,
+    timestamp: new Date().toISOString()
+  };
+  
+  const minutes = JSON.parse(localStorage.getItem('saved_minutes') || '[]');
+  minutes.push(data);
+  localStorage.setItem('saved_minutes', JSON.stringify(minutes));
+  
+  showToast('Meeting minutes saved successfully!');
+}
+
+// Load minutes functionality
+function loadMinutes() {
+  const minutes = JSON.parse(localStorage.getItem('saved_minutes') || '[]');
+  const modal = document.getElementById('loadModal');
+  const container = document.getElementById('savedMinutes');
+  
+  if (minutes.length === 0) {
+    container.innerHTML = '<p>No saved meeting minutes found.</p>';
+  } else {
+    container.innerHTML = minutes.map((minute, index) => `
+      <div style="background: #374151; padding: 15px; margin: 10px 0; border-radius: 8px; cursor: pointer;" onclick="loadSpecificMinutes(${index})">
+        <h3>${minute.title}</h3>
+        <p>Date: ${minute.date || 'Not specified'}</p>
+        <p>Saved: ${new Date(minute.timestamp).toLocaleDateString()}</p>
+        <button onclick="event.stopPropagation(); deleteMinutes(${index})" style="background: #dc2626; margin-top: 10px;">Delete</button>
+      </div>
+    `).join('');
+  }
+  
+  modal.style.display = 'block';
+}
+
+function loadSpecificMinutes(index) {
+  const minutes = JSON.parse(localStorage.getItem('saved_minutes') || '[]');
+  const minute = minutes[index];
+  
+  if (minute) {
+    document.getElementById('meetingTitle').value = minute.title;
+    document.getElementById('meetingDate').value = minute.date || '';
+    document.getElementById('meetingTime').value = minute.time || '';
+    document.getElementById('location').value = minute.location || '';
+    document.getElementById('attendees').value = minute.attendees || '';
+    document.getElementById('agenda').value = minute.agenda || '';
+    document.getElementById('discussion').value = minute.discussion || '';
+    document.getElementById('actionItems').value = minute.actionItems || '';
+    document.getElementById('nextMeeting').value = minute.nextMeeting || '';
+    
+    generatePreview();
+    document.getElementById('loadModal').style.display = 'none';
+    showToast('Meeting minutes loaded successfully!');
+  }
+}
+
+function deleteMinutes(index) {
+  if (confirm('Are you sure you want to delete these meeting minutes?')) {
+    const minutes = JSON.parse(localStorage.getItem('saved_minutes') || '[]');
+    minutes.splice(index, 1);
+    localStorage.setItem('saved_minutes', JSON.stringify(minutes));
+    loadMinutes(); // Refresh the modal
+    showToast('Meeting minutes deleted successfully!');
+  }
+}
+
+// Clear all functionality
+function clearAll() {
+  if (confirm('Are you sure you want to clear all content? This cannot be undone.')) {
+    document.getElementById('meetingTitle').value = 'Team Meeting';
+    document.getElementById('meetingDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('meetingTime').value = '';
+    document.getElementById('location').value = '';
+    document.getElementById('attendees').value = '';
+    document.getElementById('agenda').value = '';
+    document.getElementById('discussion').value = '';
+    document.getElementById('actionItems').value = '';
+    document.getElementById('nextMeeting').value = '';
+    
+    document.getElementById('previewContent').innerHTML = '<p style="color: #9ca3af; text-align: center; margin-top: 50px;">Fill in the meeting details and click "Generate Preview" to see the formatted minutes.</p>';
+    
+    autoSave();
+    showToast('All content cleared!');
+  }
+}
+
+// Toast notification
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.style.display = 'block';
+  setTimeout(() => {
+    toast.style.display = 'none';
+  }, 3000);
+}
+
+// Enhanced PDF Export
+function exportPDF() {
+  const title = document.getElementById('meetingTitle').value || 'Meeting Minutes';
+  
+  if (!document.getElementById('meetingDate').value) {
+    showToast('Please fill in the meeting date before exporting.');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 20;
+  
+  // Title
+  doc.setFontSize(20);
+  doc.setTextColor('#2563eb');
+  doc.text('Meeting Minutes', 20, y);
+  y += 15;
+  
+  // Meeting Title
+  doc.setFontSize(16);
+  doc.setTextColor('#111827');
+  doc.text(title, 20, y);
+  y += 15;
+  
+  // Date and Time
+  const date = document.getElementById('meetingDate').value;
+  const time = document.getElementById('meetingTime').value;
+  const location = document.getElementById('location').value;
+  
+  if (date) {
+    const formattedDate = new Date(date).toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    doc.setFontSize(12);
+    doc.setTextColor('#6b7280');
+    doc.text(`Date: ${formattedDate}`, 20, y);
+    y += 10;
+  }
+  
+  if (time) {
+    doc.text(`Time: ${time}`, 20, y);
+    y += 10;
+  }
+  
+  if (location) {
+    doc.text(`Location: ${location}`, 20, y);
+    y += 15;
+  } else {
+    y += 10;
+  }
+
+  // Sections
+  const sections = [
+    { title: 'Attendees', content: document.getElementById('attendees').value },
+    { title: 'Agenda', content: document.getElementById('agenda').value },
+    { title: 'Discussion Points', content: document.getElementById('discussion').value },
+    { title: 'Action Items', content: document.getElementById('actionItems').value },
+    { title: 'Next Meeting', content: document.getElementById('nextMeeting').value }
+  ];
+
+  sections.forEach(section => {
+    if (section.content.trim()) {
+      if (y > 250) {
+        doc.addPage();
+        y = 20;
+      }
+      
+      // Section title
+      doc.setFontSize(14);
+      doc.setTextColor('#2563eb');
+      doc.text(section.title, 20, y);
+      y += 12;
+      
+      // Section content
+      doc.setFontSize(11);
+      doc.setTextColor('#111827');
+      const splitContent = doc.splitTextToSize(section.content.trim(), 170);
+      doc.text(splitContent, 20, y);
+      y += splitContent.length * 5 + 15;
+    }
+  });
+
+  // Footer
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(10);
+    doc.setTextColor('#9ca3af');
+    doc.text(`Page ${i} of ${pageCount} | Generated by Ashi Tools`, 20, 290);
+  }
+
+  doc.save(`${title.replace(/[^a-z0-9]/gi, '_')}_Minutes.pdf`);
+  showToast('PDF exported successfully!');
+}
+</script>
+
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

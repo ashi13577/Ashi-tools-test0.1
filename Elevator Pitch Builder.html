@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        <style type="text/css">.lf-progress {
+  -webkit-appearance: none;
+  -moz-apperance: none;
+  width: 100%;
+  /* margin: 0 10px; */
+  height: 4px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.lf-progress:focus {
+  outline: none;
+  border: none;
+}
+.lf-progress::-moz-range-track {
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+}
+.lf-progress::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress::-moz-range-thumb {
+  -moz-appearance: none !important;
+  height: 13px;
+  width: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress::-ms-track {
+  width: 100%;
+  height: 3px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.lf-progress::-ms-fill-lower {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lf-progress::-ms-fill-upper {
+  background: #ccc;
+  border-radius: 3px;
+}
+.lf-progress::-ms-thumb {
+  border: 0;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #0fccce;
+  cursor: pointer;
+}
+.lf-progress:focus::-ms-fill-lower {
+  background: #ccc;
+}
+.lf-progress:focus::-ms-fill-upper {
+  background: #ccc;
+}
+.lf-player-container :focus {
+  outline: 0;
+}
+.lf-popover {
+  position: relative;
+}
+
+.lf-popover-content {
+  display: inline-block;
+  position: absolute;
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+}
+
+.lf-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lf-player-btn-container {
+  display: flex;
+  align-items: center;
+}
+.lf-player-btn {
+  cursor: pointer;
+  fill: #999;
+  width: 14px;
+}
+
+.lf-player-btn.active {
+  fill: #555;
+}
+
+.lf-popover {
+  position: relative;
+}
+
+.lf-popover-content {
+  display: inline-block;
+  position: absolute;
+  background-color: #ffffff;
+  opacity: 1;
+
+  transform: translate(0, -10px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+  padding: 10px;
+}
+
+.lf-popover-content.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0, 0px);
+}
+
+.lf-arrow {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  bottom: -9px;
+  border-style: solid;
+  border-width: 10px 10px 0px 10px;
+}
+
+.lf-left-align,
+.lf-left-align .lfarrow {
+  left: 0;
+  right: unset;
+}
+
+.lf-right-align,
+.lf-right-align .lf-arrow {
+  right: 0;
+  left: unset;
+}
+
+.lf-text-input {
+  border: 1px #ccc solid;
+  border-radius: 5px;
+  padding: 3px;
+  width: 60px;
+  margin: 0;
+}
+
+.lf-color-picker {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 90px;
+}
+
+.lf-color-selectors {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lf-color-component {
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.lf-color-component strong {
+  width: 40px;
+}
+
+.lf-color-component input[type='range'] {
+  margin: 0 0 0 10px;
+}
+
+.lf-color-component input[type='number'] {
+  width: 50px;
+  margin: 0 0 0 10px;
+}
+
+.lf-color-preview {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 5px;
+}
+
+.lf-preview {
+  height: 60px;
+  width: 60px;
+}
+
+.lf-popover-snapshot {
+  width: 150px;
+}
+.lf-popover-snapshot h5 {
+  margin: 5px 0 10px 0;
+  font-size: 0.75rem;
+}
+.lf-popover-snapshot a {
+  display: block;
+  text-decoration: none;
+}
+.lf-popover-snapshot a:before {
+  content: '⥼';
+  margin-right: 5px;
+}
+.lf-popover-snapshot .lf-note {
+  display: block;
+  margin-top: 10px;
+  color: #999;
+}
+.lf-player-controls > div {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.lf-player-controls > div:first-child {
+  margin-left: 0px;
+}
+.lf-player-controls > div:last-child {
+  margin-right: 0px;
+}
+</style></head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1239.0">
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevator Pitch Builder | Ashi Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #9c27b0;
+            --primary-dark: #7b1fa2;
+            --primary-light: rgba(156, 39, 176, 0.1);
+            --secondary: #e91e63;
+            --accent: #00bcd4;
+            --dark-bg: #1c1e22;
+            --card-bg: #282c34;
+            --text-light: #f0f2f5;
+            --text-muted: #bdc3c7;
+            --border-light: rgba(240, 242, 245, 0.2);
+            --input-bg: rgba(240, 242, 245, 0.05);
+            --transition: all 0.3s ease;
+            --success: #4caf50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+        
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            background: var(--dark-bg);
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+        
+        .logo-icon {
+            background: var(--primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            color: var(--primary);
+        }
+        
+        .header-sub {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 10px auto 0;
+        }
+        
+        .main-content {
+            flex-grow: 1;
+            padding: 30px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .builder-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .builder-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-section, .preview-section {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 30px;
+            border: 1px solid var(--border-light);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            background: var(--primary-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-light);
+            background-color: var(--input-bg);
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .char-count {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 5px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 6px;
+            border: none;
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-export {
+            background-color: var(--secondary);
+        }
+        
+        .btn-export:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-reset {
+            background-color: var(--text-muted);
+        }
+        
+        .btn-reset:hover {
+            background-color: #5a6268;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .pitch-preview {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            min-height: 300px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        
+        .pitch-placeholder {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .pitch-content {
+            display: none;
+        }
+        
+        .pitch-content p {
+            margin-bottom: 15px;
+        }
+        
+        .pitch-highlight {
+            background-color: rgba(156, 39, 176, 0.2);
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #e1bee7;
+        }
+        
+        .pitch-section {
+            margin-bottom: 20px;
+        }
+        
+        .pitch-section-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .action-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .tip-box {
+            background-color: var(--primary-light);
+            border-left: 3px solid var(--primary);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .tip-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--dark-bg);
+            border-top: 1px solid var(--border-light);
+            font-size: 0.9em;
+            flex-shrink: 0;
+            color: var(--text-muted);
+        }
+        
+        .insta-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .insta-link:hover {
+            text-decoration: underline;
+        }
+        
+        .progress-container {
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--border-light);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: var(--border-light);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .word-count {
+            text-align: right;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+    </style>
+
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon"><i class="fas fa-microphone-alt"></i></div>
+            <div class="logo-text">
+                <h1>Elevator Pitch Builder</h1>
+            </div>
+        </div>
+        <p class="header-sub">Craft a compelling elevator pitch in minutes with our guided template</p>
+    </header>
+    
+    <div class="main-content">
+        <div class="progress-container">
+            <div class="progress-text">Your Pitch Progress: <span id="progressPercent">0%</span></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+            </div>
+        </div>
+        
+        <div class="builder-container">
+            <div class="form-section">
+                <h2 class="section-title"><i class="fas fa-edit"></i> Build Your Pitch</h2>
+                
+                <div class="form-group">
+                    <label for="companyName"><i class="fas fa-building"></i> Company/Product Name</label>
+                    <input type="text" id="companyName" class="form-control" placeholder="Enter your company or product name">
+                    <div class="char-count"><span id="nameCount">0</span>/40 characters</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="problem"><i class="fas fa-exclamation-circle"></i> The Problem</label>
+                    <textarea id="problem" class="form-control" placeholder="What problem does your product/service solve?" data-qb-tmp-id="lt-211164" spellcheck="false" data-gramm="false"></textarea>
+                    <div class="char-count"><span id="problemCount">0</span>/200 characters</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="solution"><i class="fas fa-lightbulb"></i> Your Solution</label>
+                    <textarea id="solution" class="form-control" placeholder="How does your product/service solve this problem?" data-qb-tmp-id="lt-315688" spellcheck="false" data-gramm="false"></textarea>
+                    <div class="char-count"><span id="solutionCount">0</span>/200 characters</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="target"><i class="fas fa-users"></i> Target Market</label>
+                    <textarea id="target" class="form-control" placeholder="Who is your target customer?" data-qb-tmp-id="lt-457275" spellcheck="false" data-gramm="false"></textarea>
+                    <div class="char-count"><span id="targetCount">0</span>/120 characters</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="competition"><i class="fas fa-chess-knight"></i> Competitive Advantage</label>
+                    <textarea id="competition" class="form-control" placeholder="What makes you better than alternatives?"></textarea>
+                    <div class="char-count"><span id="competitionCount">0</span>/150 characters</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="traction"><i class="fas fa-chart-line"></i> Traction/Milestones</label>
+                    <textarea id="traction" class="form-control" placeholder="What have you achieved so far?" data-qb-tmp-id="lt-566067" spellcheck="false" data-gramm="false"></textarea>
+                    <div class="char-count"><span id="tractionCount">0</span>/150 characters</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ask"><i class="fas fa-handshake"></i> Call to Action</label>
+                    <textarea id="ask" class="form-control" placeholder="What do you want the listener to do?" data-qb-tmp-id="lt-779611" spellcheck="false" data-gramm="false"></textarea>
+                    <div class="char-count"><span id="askCount">0</span>/100 characters</div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn" id="previewBtn"><i class="fas fa-eye"></i> Update Preview</button>
+                    <button class="btn btn-reset" id="resetBtn"><i class="fas fa-redo"></i> Reset Form</button>
+                </div>
+            </div>
+            
+            <div class="preview-section">
+                <h2 class="section-title"><i class="fas fa-file-alt"></i> Pitch Preview</h2>
+                
+                <div class="tip-box">
+                    <div class="tip-title"><i class="fas fa-lightbulb"></i> Pro Tip</div>
+                    <p>A great elevator pitch should be 30-60 seconds long. Aim for 150-250 words total.</p>
+                </div>
+                
+                <div class="pitch-preview">
+                    <div class="pitch-placeholder" id="pitchPlaceholder" style="display: block;">
+                        <i class="fas fa-comment-alt" style="font-size: 3rem; margin-bottom: 15px; color: #4a4a4a;"></i>
+                        <p>Your pitch preview will appear here<br>Fill out the form and click "Update Preview"</p>
+                    </div>
+                    
+                    <div class="pitch-content" id="pitchContent" style="display: none;">
+                        <div class="pitch-section">
+                            <div class="pitch-section-title">Introduction</div>
+                            <p>Hi, I'm from <span class="pitch-highlight" id="previewName">IDEALPREPAID INDIA PRIVATE LIMITED</span>. We help <span class="pitch-highlight" id="previewTarget">pgs and hostels</span> solve the problem of <span class="pitch-highlight" id="previewProblem">provide prepaid meter </span>.</p>
+                        </div>
+                        
+                        <div class="pitch-section">
+                            <div class="pitch-section-title">Our Solution</div>
+                            <p>Our solution is <span class="pitch-highlight" id="previewSolution">tenant can recharge meter and can use afterwords so this will solve bill collection</span> which addresses this by <span class="pitch-highlight" id="previewHow">[how it works]</span>.</p>
+                        </div>
+                        
+                        <div class="pitch-section">
+                            <div class="pitch-section-title">Competitive Edge</div>
+                            <p>Unlike <span class="pitch-highlight" id="previewCompetition">we...</span>, we offer <span class="pitch-highlight" id="previewAdvantage">provide smart meter </span>.</p>
+                        </div>
+                        
+                        <div class="pitch-section">
+                            <div class="pitch-section-title">Progress</div>
+                            <p>So far, we've achieved <span class="pitch-highlight" id="previewTraction">we have 7000 happy property owners injoying our servies</span>.</p>
+                        </div>
+                        
+                        <div class="pitch-section">
+                            <div class="pitch-section-title">Call to Action</div>
+                            <p>We're looking for <span class="pitch-highlight" id="previewAsk">come join our journy and solve bill collection issue </span>. Would you be open to <span class="pitch-highlight" id="previewAction">issue </span>?</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="word-count">
+                    Word Count: <span id="wordCount">0</span> words
+                </div>
+                
+                <div class="action-section">
+                    <button class="btn btn-export" id="exportBtn"><i class="fas fa-file-pdf"></i> Export as PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Elevator Pitch Builder - Ashi Tools | Connect <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="insta-link">@ashish_singh_rajput_3</a></p>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const formInputs = {
+            companyName: document.getElementById('companyName'),
+            problem: document.getElementById('problem'),
+            solution: document.getElementById('solution'),
+            target: document.getElementById('target'),
+            competition: document.getElementById('competition'),
+            traction: document.getElementById('traction'),
+            ask: document.getElementById('ask')
+        };
+        
+        const charCounts = {
+            name: document.getElementById('nameCount'),
+            problem: document.getElementById('problemCount'),
+            solution: document.getElementById('solutionCount'),
+            target: document.getElementById('targetCount'),
+            competition: document.getElementById('competitionCount'),
+            traction: document.getElementById('tractionCount'),
+            ask: document.getElementById('askCount')
+        };
+        
+        const previewBtn = document.getElementById('previewBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const pitchPlaceholder = document.getElementById('pitchPlaceholder');
+        const pitchContent = document.getElementById('pitchContent');
+        const progressFill = document.getElementById('progressFill');
+        const progressPercent = document.getElementById('progressPercent');
+        const wordCountEl = document.getElementById('wordCount');
+        
+        // Initialize character counters
+        Object.keys(formInputs).forEach(key => {
+            formInputs[key].addEventListener('input', function() {
+                charCounts[key].textContent = this.value.length;
+                updateProgress();
+            });
+        });
+        
+        // Update progress bar
+        function updateProgress() {
+            let totalFields = 0;
+            let completedFields = 0;
+            
+            Object.values(formInputs).forEach(input => {
+                totalFields++;
+                if (input.value.trim() !== '') completedFields++;
+            });
+            
+            const percentage = Math.round((completedFields / totalFields) * 100);
+            progressFill.style.width = `${percentage}%`;
+            progressPercent.textContent = `${percentage}%`;
+        }
+        
+        // Calculate word count
+        function calculateWordCount() {
+            let totalWords = 0;
+            Object.values(formInputs).forEach(input => {
+                const words = input.value.trim().split(/\s+/).filter(word => word.length > 0);
+                totalWords += words.length;
+            });
+            wordCountEl.textContent = totalWords;
+            return totalWords;
+        }
+        
+        // Update preview
+        previewBtn.addEventListener('click', function() {
+            const hasContent = Object.values(formInputs).some(input => input.value.trim() !== '');
+            
+            if (hasContent) {
+                pitchPlaceholder.style.display = 'none';
+                pitchContent.style.display = 'block';
+                
+                // Update preview content
+                document.getElementById('previewName').textContent = 
+                    formInputs.companyName.value || '[Your Company]';
+                
+                document.getElementById('previewTarget').textContent = 
+                    formInputs.target.value || '[target customers]';
+                
+                document.getElementById('previewProblem').textContent = 
+                    formInputs.problem.value || '[the problem you solve]';
+                
+                document.getElementById('previewSolution').textContent = 
+                    formInputs.solution.value || '[your product/service]';
+                
+                document.getElementById('previewCompetition').textContent = 
+                    formInputs.competition.value ? formInputs.competition.value.split(' ')[0] + '...' : '[competitors/alternatives]';
+                
+                document.getElementById('previewAdvantage').textContent = 
+                    formInputs.competition.value ? formInputs.competition.value.split(' ').slice(1).join(' ') : '[your unique advantage]';
+                
+                document.getElementById('previewTraction').textContent = 
+                    formInputs.traction.value || '[key milestones or traction]';
+                
+                document.getElementById('previewAsk').textContent = 
+                    formInputs.ask.value || '[what you need - investment, partners, etc.]';
+                
+                document.getElementById('previewAction').textContent = 
+                    formInputs.ask.value ? formInputs.ask.value.split(' ').slice(-2).join(' ') : '[specific next step]';
+                
+                // Update word count
+                calculateWordCount();
+            } else {
+                pitchPlaceholder.style.display = 'block';
+                pitchContent.style.display = 'none';
+            }
+        });
+        
+        // Reset form
+        resetBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to reset the form? All your input will be lost.')) {
+                Object.values(formInputs).forEach(input => {
+                    input.value = '';
+                });
+                
+                Object.values(charCounts).forEach(count => {
+                    count.textContent = '0';
+                });
+                
+                pitchPlaceholder.style.display = 'block';
+                pitchContent.style.display = 'none';
+                updateProgress();
+                wordCountEl.textContent = '0';
+            }
+        });
+        
+        // Export as PDF (text-based)
+        exportBtn.addEventListener('click', function() {
+            if (pitchContent.style.display === 'none') {
+                alert('Please create a pitch preview first');
+                return;
+            }
+            
+            // Show loading state
+            const originalText = exportBtn.innerHTML;
+            exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+            exportBtn.disabled = true;
+            
+            setTimeout(() => {
+                // Extract text content from preview
+                const pitchText = `
+                    Elevator Pitch - ${formInputs.companyName.value || 'Your Company'}
+                    ===========================================
+                    
+                    Introduction:
+                    Hi, I'm from ${formInputs.companyName.value || '[Your Company]'}. We help ${formInputs.target.value || '[target customers]'} solve the problem of ${formInputs.problem.value || '[the problem you solve]'}.
+                    
+                    Our Solution:
+                    Our solution is ${formInputs.solution.value || '[your product/service]'} which addresses this by ${formInputs.solution.value ? formInputs.solution.value.split(' ').slice(0, 5).join(' ') + '...' : '[how it works]'}.
+                    
+                    Competitive Edge:
+                    Unlike ${formInputs.competition.value ? formInputs.competition.value.split(' ')[0] + '...' : '[competitors/alternatives]'}, we offer ${formInputs.competition.value ? formInputs.competition.value.split(' ').slice(1).join(' ') : '[your unique advantage]'}.
+                    
+                    Progress:
+                    So far, we've achieved ${formInputs.traction.value || '[key milestones or traction]'}.
+                    
+                    Call to Action:
+                    We're looking for ${formInputs.ask.value || '[what you need - investment, partners, etc.]'}. Would you be open to ${formInputs.ask.value ? formInputs.ask.value.split(' ').slice(-2).join(' ') : '[specific next step]'}?
+                    
+                    ===========================================
+                    Generated by Ashi Tools - Elevator Pitch Builder
+                `;
+                
+                // Create PDF
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Set styles for light background and dark text
+                doc.setFillColor(255, 255, 255); // White background
+                doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), 'F');
+                doc.setTextColor(0, 0, 0); // Black text
+                doc.setFontSize(12);
+                
+                // Split text into lines
+                const lines = doc.splitTextToSize(pitchText, 180);
+                
+                // Add text to PDF
+                doc.text(lines, 15, 15);
+                
+                // Save PDF
+                doc.save('elevator_pitch.pdf');
+                
+                // Restore button state
+                exportBtn.innerHTML = originalText;
+                exportBtn.disabled = false;
+            }, 500);
+        });
+        
+        // Initialize progress bar
+        updateProgress();
+    </script>
+
+
+            <script></script>
+        
+    
+<qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 732px; position: absolute !important; top: 635px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper" style="left: 732px; position: absolute !important; top: 822px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper qb-toolbar__wrapper--hide" style="left: 732px; position: absolute !important; top: 979px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper qb-toolbar__wrapper--hide" style="left: 732px; position: absolute !important; top: 1195px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper qb-toolbar__wrapper--hide" style="left: 732px; position: absolute !important; top: 1354px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar><qb-toolbar contenteditable="false" id="qb-toolbar-container" style="display: none;"><qb-div class="qb-toolbar__wrapper qb-toolbar__wrapper--hide" style="left: 732px; position: absolute !important; top: 1502px !important; bottom: auto !important; z-index: auto; opacity: 1 !important; pointer-events: all !important;"><div style="all: initial !important;"><qb-div style="all: initial !important;"></qb-div></div></qb-div></qb-toolbar></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

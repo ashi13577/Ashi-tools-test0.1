@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1238.0" data-gr-ext-installed="">
+            
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time-Management Matrix – Ashi Tools</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+/* -------  ROOT THEME  ------- */
+:root{
+  --p:#4a6fa5;--p-dark:#37588b;
+  --q1:#e74c3c;--q2:#2ecc71;--q3:#f39c12;--q4:#95a5a6;
+  --bg:#131a2c;--card:#1d253b;--txt:#e8f1ff;
+  --tr:all .3s ease;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:linear-gradient(135deg,var(--bg),#0a1224);color:var(--txt);min-height:100vh}
+/* ------- HEADER ------- */
+header{max-width:1200px;margin:auto;text-align:center;padding:45px 15px}
+header .icon{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;background:linear-gradient(135deg,var(--p),#6d90cb);font-size:2.5rem;color:#fff;margin:auto;box-shadow:0 8px 20px rgba(74,111,165,.4)}
+h1{font-size:2.6rem;margin:18px 0;background:linear-gradient(90deg,#6d90cb,#b3d0ff);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{max-width:650px;margin:auto;color:#9fb6d9;margin-top:8px}
+/* ------- MATRIX GRID ------- */
+.matrix{max-width:1200px;margin:30px auto;padding:0 10px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.quad{background:var(--card);border-radius:12px;padding:20px;display:flex;flex-direction:column;box-shadow:0 6px 15px rgba(0,0,0,.4)}
+.quad[data-q="1"]{border:2px solid var(--q1)}.quad[data-q="2"]{border:2px solid var(--q2)}
+.quad[data-q="3"]{border:2px solid var(--q3)}.quad[data-q="4"]{border:2px solid var(--q4)}
+.quad h2{font-size:1.4rem;margin-bottom:15px;display:flex;align-items:center;gap:10px}
+.quad[data-q="1"] h2{color:var(--q1)}.quad[data-q="2"] h2{color:var(--q2)}
+.quad[data-q="3"] h2{color:var(--q3)}.quad[data-q="4"] h2{color:var(--q4)}
+/* task item */
+ul{list-style:none;overflow-y:auto;flex:1;padding-right:6px}
+.item{background:rgba(255,255,255,.08);padding:10px 12px;border-radius:8px;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.chk{width:20px;height:20px;border:2px solid rgba(255,255,255,.5);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.chk i{display:none;color:#fff;font-size:.8rem}
+.chk.done{background:var(--q2);border-color:var(--q2)}.chk.done i{display:block}
+.txt{flex:1}.txt.done{text-decoration:line-through;opacity:.6}
+.act button{border:none;background:none;color:#9fb6d9;width:30px;height:30px;border-radius:4px;cursor:pointer;transition:var(--tr)}
+.act button:hover{background:rgba(255,255,255,.1);color:#fff}
+/* add row */
+.add{display:flex;margin-top:8px}
+.add input{flex:1;padding:10px;border:none;border-radius:8px 0 0 8px;background:rgba(255,255,255,.08);color:var(--txt)}
+.add button{padding:0 18px;border:none;border-radius:0 8px 8px 0;background:var(--p);color:#fff;cursor:pointer;transition:var(--tr)}
+.add button:hover{background:var(--p-dark)}
+/* ------- CONTROLS ------- */
+.controls{display:flex;justify-content:center;gap:18px;margin:30px 0}
+.btn{padding:14px 32px;border:none;border-radius:8px;font-size:1.05rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px;transition:var(--tr)}
+.btn-primary{background:var(--p);color:#fff}.btn-primary:hover{background:var(--p-dark)}
+.btn-sec{background:rgba(255,255,255,.05);color:var(--txt)}.btn-sec:hover{background:rgba(255,255,255,.12)}
+/* responsive */
+@media(max-width:900px){.matrix{grid-template-columns:1fr}.quad{min-height:310px}}
+</style>
+
+
+<header>
+  <div class="icon"><i class="fas fa-clock"></i></div>
+  <h1>Time-Management Matrix</h1>
+  <p class="sub">Prioritize your tasks using the Eisenhower method. Add tasks to any quadrant, mark them done, edit or delete, and export a clean PDF.</p>
+</header>
+
+<main class="matrix">
+  <!-- Quadrants -->
+  <div class="quad" data-q="1">
+      <h2><i class="fas fa-exclamation-circle"></i> Urgent &amp; Important</h2>
+      <ul id="q1"><li class="item"><div class="chk done"><i class="fas fa-check" style="display: block;"></i></div>
+                <div class="txt done">erwerherheh</div>
+                <div class="act">
+                    <button class="edit"><i class="fas fa-edit"></i></button>
+                    <button class="del"><i class="fas fa-trash"></i></button>
+                </div></li><li class="item"><div class="chk done"><i class="fas fa-check" style="display: block;"></i></div>
+                <div class="txt done">erhq3yhq3</div>
+                <div class="act">
+                    <button class="edit"><i class="fas fa-edit"></i></button>
+                    <button class="del"><i class="fas fa-trash"></i></button>
+                </div></li></ul>
+      <div class="add"><input placeholder="New task..."><button><i class="fas fa-plus"></i></button></div>
+  </div>
+  <div class="quad" data-q="2">
+      <h2><i class="fas fa-star"></i> Important, Not Urgent</h2>
+      <ul id="q2"><li class="item"><div class="chk"><i class="fas fa-check" style="display: none;"></i></div>
+                <div class="txt">erhqrhqerhqh</div>
+                <div class="act">
+                    <button class="edit"><i class="fas fa-edit"></i></button>
+                    <button class="del"><i class="fas fa-trash"></i></button>
+                </div></li></ul>
+      <div class="add"><input placeholder="New task..."><button><i class="fas fa-plus"></i></button></div>
+  </div>
+  <div class="quad" data-q="3">
+      <h2><i class="fas fa-bell"></i> Urgent, Not Important</h2>
+      <ul id="q3"><li class="item"><div class="chk"><i class="fas fa-check" style="display: none;"></i></div>
+                <div class="txt">erhqerherh</div>
+                <div class="act">
+                    <button class="edit"><i class="fas fa-edit"></i></button>
+                    <button class="del"><i class="fas fa-trash"></i></button>
+                </div></li><li class="item"><div class="chk"><i class="fas fa-check"></i></div>
+                <div class="txt">erhrh3h</div>
+                <div class="act">
+                    <button class="edit"><i class="fas fa-edit"></i></button>
+                    <button class="del"><i class="fas fa-trash"></i></button>
+                </div></li></ul>
+      <div class="add"><input placeholder="New task..."><button><i class="fas fa-plus"></i></button></div>
+  </div>
+  <div class="quad" data-q="4">
+      <h2><i class="fas fa-times-circle"></i> Not Urgent &amp; Not Important</h2>
+      <ul id="q4"><li class="item"><div class="chk"><i class="fas fa-check" style="display: none;"></i></div>
+                <div class="txt">erhqerherh</div>
+                <div class="act">
+                    <button class="edit"><i class="fas fa-edit"></i></button>
+                    <button class="del"><i class="fas fa-trash"></i></button>
+                </div></li></ul>
+      <div class="add"><input placeholder="New task..."><button><i class="fas fa-plus"></i></button></div>
+  </div>
+</main>
+
+<div class="controls">
+  <button class="btn btn-primary" id="pdf"><i class="fas fa-file-pdf"></i> Export PDF</button>
+  <button class="btn btn-sec" id="reset"><i class="fas fa-redo"></i> Reset</button>
+</div>
+
+<script>
+/* ---------- Task logic ---------- */
+document.querySelectorAll('.add button').forEach(btn=>{
+  btn.onclick=e=>{
+    const inp=btn.previousElementSibling,val=inp.value.trim();
+    if(!val) return;
+    const ul=btn.closest('.quad').querySelector('ul');
+    ul.appendChild(taskItem(val));
+    inp.value='';
+  };
+});
+document.addEventListener('click',e=>{
+  if(e.target.closest('.chk')){ // toggle done
+     const box=e.target.closest('.chk');
+     box.classList.toggle('done');
+     box.querySelector('i').style.display=box.classList.contains('done')?'block':'none';
+     box.nextElementSibling.classList.toggle('done');
+  }
+  if(e.target.closest('.del')) e.target.closest('.item').remove();
+  if(e.target.closest('.edit')){
+     const txtEl=e.target.closest('.item').querySelector('.txt');
+     const newTxt=prompt('Edit task',txtEl.textContent.trim());
+     if(newTxt) txtEl.textContent=newTxt;
+  }
+});
+function taskItem(text){
+  const li=document.createElement('li');li.className='item';
+  li.innerHTML=`<div class="chk"><i class="fas fa-check"></i></div>
+                <div class="txt">${text}</div>
+                <div class="act">
+                    <button class="edit"><i class="fas fa-edit"></i></button>
+                    <button class="del"><i class="fas fa-trash"></i></button>
+                </div>`;
+  return li;
+}
+/* reset */
+document.getElementById('reset').onclick=()=>{if(confirm('Reset all tasks?')){
+  document.querySelectorAll('ul').forEach(ul=>ul.innerHTML='');}};
+/* ---------- PDF export ---------- */
+document.getElementById('pdf').onclick=()=>{
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'p',unit:'mm',format:'a4'});
+  const margin=15, w=doc.internal.pageSize.getWidth()-margin*2,
+        box=w/2-10, startY=40;
+  doc.setFillColor(255,255,255);doc.rect(0,0,210,297,'F'); // white bg
+  doc.setFont('helvetica','bold');doc.setTextColor(0,0,0);doc.setFontSize(22);
+  doc.text('Time-Management Matrix',105,20,{align:'center'});
+  const titles=['Urgent & Important','Important,\nNot Urgent',
+        'Urgent,\nNot Important','Not Urgent &\nNot Important'];
+  const colors=[[231,76,60],[46,204,113],[243,156,18],[149,165,166]];
+  [...document.querySelectorAll('ul')].forEach((ul,i)=>{
+     const row=Math.floor(i/2),col=i%2,x=margin+col*(box+20),y=startY+row*(box+20);
+     doc.setDrawColor(...colors[i]);doc.rect(x,y,box,box);
+     doc.setFontSize(12);doc.setTextColor(...colors[i]);
+     const ttl=titles[i].split('\n');
+     ttl.forEach((l,idx)=>doc.text(l,x+box/2,y+8+idx*5,{align:'center'}));
+     doc.setFontSize(11);doc.setTextColor(0,0,0);doc.setFont('helvetica','normal');
+     let ty=y+25;
+     ul.querySelectorAll('.item').forEach(li=>{
+        const txt=li.querySelector('.txt').textContent;
+        const done=li.querySelector('.chk').classList.contains('done');
+        const t=doc.splitTextToSize(txt,box-12);
+        if(ty+ t.length*6 > y+box-8) return; // overflow
+        doc.circle(x+5,ty-2,1,'F',done?[0,0,0]:undefined);
+        t.forEach((line,j)=>doc.text(line,x+10,ty+j*6));
+        ty+=t.length*6+4;
+     });
+  });
+  doc.save('Time-Matrix-'+new Date().toISOString().slice(0,10)+'.pdf');
+};
+</script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

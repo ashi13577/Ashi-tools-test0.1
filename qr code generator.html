@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1238.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator | Ashi Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    :root {
+      --primary: #00ffe1;
+      --primary-dark: #00c4aa;
+      --secondary: #ff0077;
+      --dark-bg: #080c14;
+      --card-bg: rgba(30, 40, 60, 0.7);
+      --border: rgba(0, 255, 225, 0.3);
+      --text-light: #e0f3ff;
+      --transition: all 0.4s ease;
+    }
+    
+    body {
+      background: linear-gradient(135deg, var(--dark-bg) 0%, #081020 100%);
+      color: var(--text-light);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      padding: 0 20px;
+    }
+    
+    /* Floating background elements */
+    .floating-elements {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+    
+    .floating-elements span {
+      position: absolute;
+      background: linear-gradient(135deg, rgba(0, 255, 225, 0.1) 0%, rgba(255, 0, 119, 0.1) 100%);
+      border-radius: 50%;
+      filter: blur(30px);
+      animation: float 16s linear infinite;
+    }
+    
+    .floating-elements span:nth-child(1) {
+      width: 30vw;
+      height: 30vw;
+      top: 10%;
+      left: 5%;
+      animation-delay: 0s;
+      animation-duration: 20s;
+      background: radial-gradient(var(--primary) 0%, transparent 70%);
+    }
+    
+    .floating-elements span:nth-child(2) {
+      width: 25vw;
+      height: 25vw;
+      top: 75%;
+      left: 70%;
+      animation-delay: 4s;
+      animation-duration: 25s;
+      background: radial-gradient(var(--secondary) 0%, transparent 70%);
+    }
+    
+    .floating-elements span:nth-child(3) {
+      width: 20vw;
+      height: 20vw;
+      top: 35%;
+      left: 80%;
+      animation-delay: 8s;
+      animation-duration: 18s;
+      background: radial-gradient(var(--primary) 0%, transparent 70%);
+    }
+    
+    .floating-elements span:nth-child(4) {
+      width: 15vw;
+      height: 15vw;
+      top: 65%;
+      left: 15%;
+      animation-delay: 12s;
+      animation-duration: 22s;
+      background: radial-gradient(var(--secondary) 0%, transparent 70%);
+    }
+    
+    .floating-elements span:nth-child(5) {
+      width: 10vw;
+      height: 10vw;
+      top: 20%;
+      left: 50%;
+      animation-delay: 16s;
+      animation-duration: 15s;
+      background: radial-gradient(#6098ff 0%, transparent 70%);
+    }
+    
+    .floating-elements span:nth-child(6) {
+      width: 12vw;
+      height: 12vw;
+      top: 50%;
+      left: 30%;
+      animation-delay: 5s;
+      animation-duration: 26s;
+      background: radial-gradient(rgba(255, 204, 0, 0.4) 0%, transparent 70%);
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) rotate(0deg); 
+        opacity: 0.4;
+      }
+      50% {
+        transform: translate(50px, 100px) rotate(180deg); 
+        opacity: 0.7;
+      }
+      100% {
+        transform: translate(0, 0) rotate(360deg); 
+        opacity: 0.4;
+      }
+    }
+    
+    /* Content Container */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 0;
+      position: relative;
+      z-index: 10;
+    }
+    
+    /* Header Styles */
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow: hidden;
+      background: rgba(8, 12, 20, 0.8);
+      margin-bottom: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border);
+    }
+    
+    header::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 10%;
+      width: 80%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+    
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      color: var(--text-light);
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), #a8ffe7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      z-index: 1;
+      letter-spacing: 1px;
+    }
+    
+    header p {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      max-width: 800px;
+      margin: 0 auto;
+      opacity: 0.9;
+    }
+    
+    /* QR Generator Styles */
+    .qr-generator {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      background: rgba(8, 15, 28, 0.6);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(0, 150, 150, 0.2);
+      backdrop-filter: blur(10px);
+    }
+    
+    .qr-title {
+      grid-column: 1 / -1;
+      padding-bottom: 15px;
+      font-size: 2rem;
+      margin: 0 0 20px;
+      color: var(--text-light);
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .qr-title::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), transparent);
+    }
+    
+    .qr-title i {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .qr-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: rgba(15, 23, 37, 0.5);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid var(--border);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 500;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+    
+    .form-group input, 
+    .form-group select {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-light);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(0, 255, 225, 0.2);
+    }
+    
+    .btn {
+      background: var(--primary);
+      color: var(--dark-bg);
+      border: none;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 255, 225, 0.3);
+    }
+    
+    .qr-output {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 30px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .qr-container {
+      text-align: center;
+    }
+    
+    .qr-container canvas {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      max-width: 100%;
+      height: auto;
+    }
+    
+    .download-btn {
+      background: rgba(15, 23, 37, 0.8);
+      color: var(--text-light);
+      border: 1px solid var(--border);
+      padding: 12px 25px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      margin-top: 15px;
+    }
+    
+    .download-btn:hover {
+      background: rgba(0, 150, 150, 0.3);
+      color: var(--primary);
+      transform: translateY(-3px);
+    }
+    
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .feature {
+      background: rgba(0, 255, 225, 0.1);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* Footer Styles */
+    footer {
+      text-align: center;
+      padding: 30px 10px;
+      font-size: 1rem;
+      margin-top: 50px;
+      border-top: 1px solid rgba(0, 120, 150, 0.3);
+      position: relative;
+      z-index: 10;
+      background: rgba(8, 12, 20, 0.6);
+      border-radius: 20px;
+    }
+    
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 900px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    
+    .footer-info {
+      text-align: left;
+    }
+    
+    .footer-info h3 {
+      color: var(--primary);
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+    
+    .footer-info p {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .social-icon {
+      display: inline-flex;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 150, 150, 0.15);
+      border: 1px solid rgba(0, 220, 200, 0.3);
+      font-size: 1.2rem;
+      color: var(--text-light);
+      transition: var(--transition);
+    }
+    
+    .social-icon:hover {
+      background: var(--primary);
+      color: var(--dark-bg);
+      transform: translateY(-5px);
+    }
+    
+    .insta-link {
+      color: var(--primary);
+      font-weight: bold;
+      text-decoration: none;
+    }
+    
+    .insta-link:hover {
+      text-decoration: underline;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .qr-generator {
+        grid-template-columns: 1fr;
+      }
+      
+      header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .qr-title {
+        font-size: 1.8rem;
+      }
+      
+      .footer-content {
+        justify-content: center;
+        text-align: center;
+      }
+      
+      .footer-info {
+        text-align: center;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      header {
+        padding: 30px 15px;
+      }
+      
+      header h1 {
+        font-size: 2rem;
+      }
+      
+      .btn, .download-btn {
+        width: 100%;
+      }
+    }
+  </style>
+
+
+  <!-- Floating Background Elements -->
+  <div class="floating-elements">
+    <span style="animation-name: float;"></span>
+    <span style="animation-name: float;"></span>
+    <span style="animation-name: float;"></span>
+    <span style="animation-name: float;"></span>
+    <span style="animation-name: float;"></span>
+    <span style="animation-name: float;"></span>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>QR Code Generator</h1>
+      <p>Create custom QR codes for any content instantly. Share information seamlessly with your audience.</p>
+    </header>
+
+    <!-- QR Generator -->
+    <div class="qr-generator">
+      <h2 class="qr-title"><i class="fas fa-qrcode"></i> Generate Your QR Code</h2>
+      
+      <div class="qr-controls">
+        <div class="form-group">
+          <label for="qr-content">Content to Encode:</label>
+          <input type="text" id="qr-content" placeholder="Enter URL or text" value="https://www.instagram.com/ashish_singh_rajput_3">
+        </div>
+        
+        <div class="form-group">
+          <label for="qr-size">QR Code Size:</label>
+          <select id="qr-size">
+            <option value="200">Small (200px)</option>
+            <option value="300" selected="">Medium (300px)</option>
+            <option value="400">Large (400px)</option>
+            <option value="500">Extra Large (500px)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="qr-foreground">Foreground Color:</label>
+          <input type="color" id="qr-foreground" value="#000000">
+        </div>
+        
+        <div class="form-group">
+          <label for="qr-background">Background Color:</label>
+          <input type="color" id="qr-background" value="#ffffff">
+        </div>
+        
+        <button class="btn" id="generate-qr">
+          <i class="fas fa-bolt"></i> Generate QR Code
+        </button>
+        
+        <div class="features">
+          <span class="feature"><i class="fas fa-link"></i> URLs</span>
+          <span class="feature"><i class="fas fa-font"></i> Text</span>
+          <span class="feature"><i class="fas fa-phone"></i> Phone</span>
+          <span class="feature"><i class="fas fa-wifi"></i> Wi-Fi</span>
+          <span class="feature"><i class="fas fa-envelope"></i> Email</span>
+        </div>
+      </div>
+      
+      <div class="qr-output">
+        <div class="qr-container">
+          <canvas id="qr-canvas" height="300" width="300"></canvas>
+          <p>Scan this QR code with your phone's camera</p>
+          <button class="download-btn" id="download-qr">
+            <i class="fas fa-download"></i> Download QR Code
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-info">
+        <h3>Ashi Tools</h3>
+        <p>Created by <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank">@ashish_singh_rajput_3</a></p>
+      </div>
+      
+      <div class="social-links">
+        <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // QR Code Generator
+      const qrContent = document.getElementById('qr-content');
+      const qrSize = document.getElementById('qr-size');
+      const qrForeground = document.getElementById('qr-foreground');
+      const qrBackground = document.getElementById('qr-background');
+      const qrCanvas = document.getElementById('qr-canvas');
+      const generateBtn = document.getElementById('generate-qr');
+      const downloadBtn = document.getElementById('download-qr');
+      
+      let qr = null;
+      
+      function generateQR() {
+        const content = qrContent.value.trim();
+        const size = parseInt(qrSize.value);
+        const foreground = qrForeground.value;
+        const background = qrBackground.value;
+        
+        if (content) {
+          if (qr) {
+            qr.value = content;
+            qr.size = size;
+            qr.foreground = foreground;
+            qr.background = background;
+          } else {
+            qr = new QRious({
+              element: qrCanvas,
+              value: content,
+              size: size,
+              foreground: foreground,
+              background: background
+            });
+          }
+        }
+      }
+      
+      generateBtn.addEventListener('click', generateQR);
+      
+      // Auto-generate when parameters change
+      qrContent.addEventListener('input', generateQR);
+      qrSize.addEventListener('change', generateQR);
+      qrForeground.addEventListener('input', generateQR);
+      qrBackground.addEventListener('input', generateQR);
+      
+      downloadBtn.addEventListener('click', function() {
+        const link = document.createElement('a');
+        link.download = 'qr-code.png';
+        link.href = qrCanvas.toDataURL('image/png');
+        link.click();
+      });
+      
+      // Generate initial QR code
+      generateQR();
+      
+      // Floating elements animation reset
+      setInterval(() => {
+        document.querySelectorAll('.floating-elements span').forEach(span => {
+          span.style.animationName = 'none';
+          void span.offsetWidth;
+          span.style.animationName = 'float';
+        });
+      }, 30000);
+    });
+  </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BCG Matrix Analyzer - Ashi Tools</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+:root {
+  --primary: #00ffd5;
+  --primary-light: #96fff2;
+  --primary-dark: #00b39e;
+  --dark-bg: #101820;
+  --card-bg: #1e1e1e;
+  --text-light: #e8e8e8;
+  --border: #222;
+  
+  /* BCG Matrix colors */
+  --star-color: #ffcc00;
+  --cow-color: #0099ff;
+  --qmark-color: #ff6666;
+  --dog-color: #999999;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, var(--dark-bg), #232c38 80%);
+  color: var(--text-light);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h1 {
+  color: var(--primary);
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+p.subtitle {
+  color: var(--primary-light);
+  margin-bottom: 20px;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+.info-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #333;
+}
+
+.info-card h2 {
+  color: var(--primary);
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.info-card p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.quadrant-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.quadrant-box {
+  padding: 12px;
+  border-radius: 8px;
+  color: #000;
+  font-weight: 500;
+}
+
+.quadrant-box h3 {
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.quadrant-box p {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+.star-box {
+  background-color: var(--star-color);
+}
+
+.cow-box {
+  background-color: var(--cow-color);
+}
+
+.qmark-box {
+  background-color: var(--qmark-color);
+}
+
+.dog-box {
+  background-color: var(--dog-color);
+}
+
+.matrix-container {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #333;
+}
+
+.matrix-container h2 {
+  color: var(--primary);
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.matrix-canvas-container {
+  position: relative;
+  height: 400px;
+  margin-bottom: 20px;
+}
+
+.input-section {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #333;
+}
+
+.input-section h2 {
+  color: var(--primary);
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.business-unit-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 10px;
+  margin-bottom: 15px;
+  align-items: end;
+}
+
+@media (max-width: 768px) {
+  .business-unit-form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+input, select, button {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #2a2a2a;
+  color: white;
+  font-size: 0.9rem;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+button {
+  background-color: var(--primary);
+  color: #000;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: var(--primary-dark);
+}
+
+.add-btn {
+  background-color: #2ecc71;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+}
+
+.export-btn {
+  background-color: #3498db;
+  margin-top: 20px;
+}
+
+.business-units-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.business-units-table th, .business-units-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+
+.business-units-table th {
+  background-color: #333;
+  color: var(--primary);
+}
+
+.quadrant-label {
+  padding: 5px 10px;
+  border-radius: 15px;
+  color: #000;
+  font-weight: 500;
+  text-align: center;
+  display: inline-block;
+  min-width: 100px;
+}
+
+.axis-label {
+  position: absolute;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.y-axis-label {
+  transform: rotate(-90deg);
+  left: -40px;
+  top: 50%;
+}
+
+.x-axis-label {
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.circle-size-label {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  color: white;
+  font-size: 12px;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--primary);
+  color: #000;
+  padding: 15px 20px;
+  border-radius: 5px;
+  display: none;
+  z-index: 1000;
+}
+
+footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  color: #888;
+  border-top: 1px solid #333;
+}
+
+.insta-link {
+  color: #e1306c;
+  text-decoration: none;
+  font-weight: bold;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Demo units styling */
+.demo-units {
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(0, 255, 213, 0.1);
+  border-radius: 8px;
+  border: 1px dashed var(--primary);
+}
+
+.demo-units h3 {
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.demo-unit {
+  padding: 8px;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+}
+  </style>
+
+
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-chart-pie"></i> BCG Matrix Analyzer</h1>
+      <p class="subtitle">Analyze your business portfolio using the Boston Consulting Group matrix</p>
+    </header>
+
+    <div class="main-content">
+      <div class="left-column">
+        <div class="info-card">
+          <h2>About BCG Matrix</h2>
+          <p>The BCG Growth-Share Matrix is a portfolio management tool developed by the Boston Consulting Group. It helps companies analyze their business units or products and make strategic decisions about resource allocation.</p>
+          <p>The matrix categorizes business units into four quadrants based on market growth and market share:</p>
+          
+          <div class="quadrant-info">
+            <div class="quadrant-box star-box">
+              <h3><i class="fas fa-star"></i> Stars</h3>
+              <p>High growth, high market share. Invest to maintain position.</p>
+            </div>
+            
+            <div class="quadrant-box cow-box">
+              <h3><i class="fas fa-coins"></i> Cash Cows</h3>
+              <p>Low growth, high market share. "Milk" for cash to invest elsewhere.</p>
+            </div>
+            
+            <div class="quadrant-box qmark-box">
+              <h3><i class="fas fa-question"></i> Question Marks</h3>
+              <p>High growth, low market share. Invest or divest.</p>
+            </div>
+            
+            <div class="quadrant-box dog-box">
+              <h3><i class="fas fa-dog"></i> Dogs</h3>
+              <p>Low growth, low market share. Consider divesting.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="input-section">
+          <h2>Add Business Units</h2>
+          
+          <!-- Demo units -->
+          <div class="demo-units">
+            <h3>Sample Business Units:</h3>
+            <div class="demo-unit">
+              <strong>Product A</strong> - Growth: 15%, Market Share: 1.8, Revenue: $2.5M
+            </div>
+            <div class="demo-unit">
+              <strong>Product B</strong> - Growth: 5%, Market Share: 2.2, Revenue: $4.5M
+            </div>
+            <div class="demo-unit">
+              <strong>Product C</strong> - Growth: 18%, Market Share: 0.7, Revenue: $1.2M
+            </div>
+            <div class="demo-unit">
+              <strong>Product D</strong> - Growth: 3%, Market Share: 0.5, Revenue: $0.8M
+            </div>
+          </div>
+          
+          <div class="business-unit-form">
+            <input type="text" id="unitName" placeholder="Business Unit Name" required="">
+            <input type="number" id="growthRate" placeholder="Market Growth (%)" min="0" max="100" step="0.1" required="">
+            <input type="number" id="marketShare" placeholder="Relative Market Share" min="0" step="0.1" required="">
+            <input type="number" id="revenue" placeholder="Revenue (in millions)" min="0" step="0.1" required="">
+          </div>
+          
+          <button class="add-btn" onclick="addBusinessUnit()"><i class="fas fa-plus"></i> Add Unit</button>
+          
+          <table class="business-units-table">
+            <thead>
+              <tr>
+                <th>Business Unit</th>
+                <th>Growth Rate</th>
+                <th>Market Share</th>
+                <th>Revenue</th>
+                <th>Quadrant</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="businessUnitsTableBody"><tr>
+          <td>Product A</td>
+          <td>15%</td>
+          <td>1.8</td>
+          <td>$2.5M</td>
+          <td><span class="quadrant-label" style="background-color: var(--star-color)">Star</span></td>
+          <td><button class="delete-btn" onclick="deleteBusinessUnit(0)"><i class="fas fa-trash"></i></button></td>
+        </tr><tr>
+          <td>Product B</td>
+          <td>5%</td>
+          <td>2.2</td>
+          <td>$4.5M</td>
+          <td><span class="quadrant-label" style="background-color: var(--cow-color)">Cash Cow</span></td>
+          <td><button class="delete-btn" onclick="deleteBusinessUnit(1)"><i class="fas fa-trash"></i></button></td>
+        </tr><tr>
+          <td>Product C</td>
+          <td>18%</td>
+          <td>0.7</td>
+          <td>$1.2M</td>
+          <td><span class="quadrant-label" style="background-color: var(--qmark-color)">Question Mark</span></td>
+          <td><button class="delete-btn" onclick="deleteBusinessUnit(2)"><i class="fas fa-trash"></i></button></td>
+        </tr><tr>
+          <td>Product D</td>
+          <td>3%</td>
+          <td>0.5</td>
+          <td>$0.8M</td>
+          <td><span class="quadrant-label" style="background-color: var(--dog-color)">Dog</span></td>
+          <td><button class="delete-btn" onclick="deleteBusinessUnit(3)"><i class="fas fa-trash"></i></button></td>
+        </tr></tbody>
+          </table>
+          
+          <button class="export-btn" onclick="exportToPDF()"><i class="fas fa-file-pdf"></i> Export Analysis</button>
+        </div>
+      </div>
+      
+      <div class="right-column">
+        <div class="matrix-container">
+          <h2>BCG Matrix Visualization</h2>
+          <div class="matrix-canvas-container">
+            <canvas id="bcgMatrix" style="display: block; box-sizing: border-box; height: 400px; width: 300px;" width="300" height="400"></canvas>
+            <div class="axis-label y-axis-label">Market Growth Rate</div>
+            <div class="axis-label x-axis-label">Relative Market Share</div>
+            <div class="circle-size-label">Circle size represents revenue</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="toast" id="toast" style="display: none;">PDF exported successfully</div>
+    
+    <footer>
+      Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+      Connect with me: 
+      <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank">
+        @ashish_singh_rajput_3
+      </a>
+    </footer>
+  </div>
+
+  <script>
+    // Store business units data
+    let businessUnits = [];
+    let bcgChart = null;
+    
+    // Initialize the chart
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeChart();
+      
+      // Add demo data
+      addDemoData();
+    });
+    
+    function addDemoData() {
+      const demoUnits = [
+        { name: "Product A", growthRate: 15, marketShare: 1.8, revenue: 2.5 },
+        { name: "Product B", growthRate: 5, marketShare: 2.2, revenue: 4.5 },
+        { name: "Product C", growthRate: 18, marketShare: 0.7, revenue: 1.2 },
+        { name: "Product D", growthRate: 3, marketShare: 0.5, revenue: 0.8 }
+      ];
+      
+      demoUnits.forEach(unit => {
+        businessUnits.push(unit);
+      });
+      
+      updateTable();
+      updateChart();
+    }
+    
+    function initializeChart() {
+      const ctx = document.getElementById('bcgMatrix').getContext('2d');
+      
+      bcgChart = new Chart(ctx, {
+        type: 'bubble',
+        data: {
+          datasets: []
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              type: 'linear',
+              position: 'bottom',
+              min: 0,
+              max: 3,
+              reverse: true,
+              grid: {
+                color: '#333'
+              },
+              ticks: {
+                color: '#ccc'
+              },
+              title: {
+                display: false
+              }
+            },
+            y: {
+              min: 0,
+              max: 25,
+              grid: {
+                color: '#333'
+              },
+              ticks: {
+                color: '#ccc'
+              },
+              title: {
+                display: false
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return [
+                    `${context.raw.name}`,
+                    `Growth Rate: ${context.raw.growthRate}%`,
+                    `Market Share: ${context.raw.marketShare}`,
+                    `Revenue: $${context.raw.revenue}M`,
+                    `Quadrant: ${getQuadrant(context.raw.growthRate, context.raw.marketShare)}`
+                  ];
+                }
+              }
+            },
+            annotation: {
+              annotations: {
+                xLine: {
+                  type: 'line',
+                  xMin: 1,
+                  xMax: 1,
+                  borderColor: 'white',
+                  borderWidth: 1,
+                  borderDash: [5, 5]
+                },
+                yLine: {
+                  type: 'line',
+                  yMin: 10,
+                  yMax: 10,
+                  borderColor: 'white',
+                  borderWidth: 1,
+                  borderDash: [5, 5]
+                }
+              }
+            }
+          }
+        }
+      });
+      
+      // Draw quadrant lines manually
+      updateQuadrantLines();
+    }
+    
+    function updateQuadrantLines() {
+      const canvas = document.getElementById('bcgMatrix');
+      const ctx = canvas.getContext('2d');
+      
+      // Draw after chart render
+      bcgChart.options.animation.onComplete = function() {
+        const chartArea = bcgChart.chartArea;
+        const xAxis = bcgChart.scales.x;
+        const yAxis = bcgChart.scales.y;
+        
+        // Clear existing lines
+        ctx.save();
+        
+        // Draw vertical line at x = 1
+        const xLinePos = xAxis.getPixelForValue(1);
+        ctx.beginPath();
+        ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.moveTo(xLinePos, chartArea.top);
+        ctx.lineTo(xLinePos, chartArea.bottom);
+        ctx.stroke();
+        
+        // Draw horizontal line at y = 10
+        const yLinePos = yAxis.getPixelForValue(10);
+        ctx.beginPath();
+        ctx.moveTo(chartArea.left, yLinePos);
+        ctx.lineTo(chartArea.right, yLinePos);
+        ctx.stroke();
+        
+        // Add quadrant labels
+        ctx.font = '12px Roboto';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        
+        // Stars (top right)
+        ctx.fillText('STARS', xLinePos - 80, yLinePos - 20);
+        
+        // Cash Cows (bottom right)
+        ctx.fillText('CASH COWS', xLinePos - 90, yLinePos + 40);
+        
+        // Question Marks (top left)
+        ctx.fillText('QUESTION MARKS', xLinePos + 20, yLinePos - 20);
+        
+        // Dogs (bottom left)
+        ctx.fillText('DOGS', xLinePos + 20, yLinePos + 40);
+        
+        ctx.restore();
+      };
+    }
+    
+    function updateChart() {
+      if (!bcgChart) return;
+      
+      const datasets = [];
+      
+      // Group by quadrant
+      const stars = [];
+      const cashCows = [];
+      const questionMarks = [];
+      const dogs = [];
+      
+      businessUnits.forEach(unit => {
+        const quadrant = getQuadrant(unit.growthRate, unit.marketShare);
+        const dataPoint = {
+          x: unit.marketShare,
+          y: unit.growthRate,
+          r: getRadius(unit.revenue),
+          name: unit.name,
+          growthRate: unit.growthRate,
+          marketShare: unit.marketShare,
+          revenue: unit.revenue
+        };
+        
+        switch(quadrant) {
+          case 'Star':
+            stars.push(dataPoint);
+            break;
+          case 'Cash Cow':
+            cashCows.push(dataPoint);
+            break;
+          case 'Question Mark':
+            questionMarks.push(dataPoint);
+            break;
+          case 'Dog':
+            dogs.push(dataPoint);
+            break;
+        }
+      });
+      
+      if (stars.length > 0) {
+        datasets.push({
+          label: 'Stars',
+          data: stars,
+          backgroundColor: 'rgba(255, 204, 0, 0.7)',
+          borderColor: 'rgba(255, 204, 0, 1)',
+          borderWidth: 1
+        });
+      }
+      
+      if (cashCows.length > 0) {
+        datasets.push({
+          label: 'Cash Cows',
+          data: cashCows,
+          backgroundColor: 'rgba(0, 153, 255, 0.7)',
+          borderColor: 'rgba(0, 153, 255, 1)',
+          borderWidth: 1
+        });
+      }
+      
+      if (questionMarks.length > 0) {
+        datasets.push({
+          label: 'Question Marks',
+          data: questionMarks,
+          backgroundColor: 'rgba(255, 102, 102, 0.7)',
+          borderColor: 'rgba(255, 102, 102, 1)',
+          borderWidth: 1
+        });
+      }
+      
+      if (dogs.length > 0) {
+        datasets.push({
+          label: 'Dogs',
+          data: dogs,
+          backgroundColor: 'rgba(153, 153, 153, 0.7)',
+          borderColor: 'rgba(153, 153, 153, 1)',
+          borderWidth: 1
+        });
+      }
+      
+      bcgChart.data.datasets = datasets;
+      bcgChart.update();
+      updateQuadrantLines();
+    }
+    
+    function getRadius(revenue) {
+      // Scale radius based on revenue
+      return Math.max(Math.sqrt(revenue) * 5, 10);
+    }
+    
+    function getQuadrant(growthRate, marketShare) {
+      if (growthRate >= 10 && marketShare >= 1) {
+        return 'Star';
+      } else if (growthRate < 10 && marketShare >= 1) {
+        return 'Cash Cow';
+      } else if (growthRate >= 10 && marketShare < 1) {
+        return 'Question Mark';
+      } else {
+        return 'Dog';
+      }
+    }
+    
+    function getQuadrantColor(quadrant) {
+      switch(quadrant) {
+        case 'Star':
+          return 'var(--star-color)';
+        case 'Cash Cow':
+          return 'var(--cow-color)';
+        case 'Question Mark':
+          return 'var(--qmark-color)';
+        case 'Dog':
+          return 'var(--dog-color)';
+        default:
+          return '#999';
+      }
+    }
+    
+    function addBusinessUnit() {
+      const nameInput = document.getElementById('unitName');
+      const growthInput = document.getElementById('growthRate');
+      const shareInput = document.getElementById('marketShare');
+      const revenueInput = document.getElementById('revenue');
+      
+      const name = nameInput.value.trim();
+      const growthRate = parseFloat(growthInput.value);
+      const marketShare = parseFloat(shareInput.value);
+      const revenue = parseFloat(revenueInput.value);
+      
+      if (!name || isNaN(growthRate) || isNaN(marketShare) || isNaN(revenue)) {
+        showToast('Please fill all fields with valid values');
+        return;
+      }
+      
+      // Add to business units array
+      businessUnits.push({
+        name,
+        growthRate,
+        marketShare,
+        revenue
+      });
+      
+      // Clear inputs
+      nameInput.value = '';
+      growthInput.value = '';
+      shareInput.value = '';
+      revenueInput.value = '';
+      
+      // Update table and chart
+      updateTable();
+      updateChart();
+      
+      showToast('Business unit added successfully');
+    }
+    
+    function updateTable() {
+      const tableBody = document.getElementById('businessUnitsTableBody');
+      tableBody.innerHTML = '';
+      
+      businessUnits.forEach((unit, index) => {
+        const quadrant = getQuadrant(unit.growthRate, unit.marketShare);
+        const quadrantColor = getQuadrantColor(quadrant);
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${unit.name}</td>
+          <td>${unit.growthRate}%</td>
+          <td>${unit.marketShare}</td>
+          <td>$${unit.revenue}M</td>
+          <td><span class="quadrant-label" style="background-color: ${quadrantColor}">${quadrant}</span></td>
+          <td><button class="delete-btn" onclick="deleteBusinessUnit(${index})"><i class="fas fa-trash"></i></button></td>
+        `;
+        
+        tableBody.appendChild(row);
+      });
+    }
+    
+    function deleteBusinessUnit(index) {
+      businessUnits.splice(index, 1);
+      updateTable();
+      updateChart();
+      showToast('Business unit deleted');
+    }
+    
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.display = 'block';
+      
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3000);
+    }
+    
+    function exportToPDF() {
+      if (businessUnits.length === 0) {
+        showToast('Add business units before exporting');
+        return;
+      }
+      
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // Title
+      doc.setFontSize(20);
+      doc.setTextColor(0, 153, 153);
+      doc.text('BCG Matrix Analysis', 20, 20);
+      
+      doc.setFontSize(12);
+      doc.setTextColor(80, 80, 80);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 30);
+      
+      // Matrix image
+      const canvas = document.getElementById('bcgMatrix');
+      const imgData = canvas.toDataURL('image/png');
+      doc.addImage(imgData, 'PNG', 15, 40, 180, 100);
+      
+      // Business Units Table
+      doc.setFontSize(14);
+      doc.setTextColor(0, 153, 153);
+      doc.text('Business Units Analysis', 20, 150);
+      
+      // Table headers
+      doc.setFontSize(10);
+      doc.setTextColor(40, 40, 40);
+      doc.text('Business Unit', 20, 160);
+      doc.text('Growth Rate', 70, 160);
+      doc.text('Market Share', 110, 160);
+      doc.text('Revenue', 150, 160);
+      doc.text('Quadrant', 180, 160);
+      
+      // Draw line under headers
+      doc.setDrawColor(200, 200, 200);
+      doc.line(20, 163, 190, 163);
+      
+      // Table data
+      let y = 170;
+      businessUnits.forEach(unit => {
+        if (y > 270) {
+          doc.addPage();
+          y = 20;
+          
+          // Add headers to new page
+          doc.setFontSize(10);
+          doc.setTextColor(40, 40, 40);
+          doc.text('Business Unit', 20, y);
+          doc.text('Growth Rate', 70, y);
+          doc.text('Market Share', 110, y);
+          doc.text('Revenue', 150, y);
+          doc.text('Quadrant', 180, y);
+          
+          // Draw line under headers
+          doc.setDrawColor(200, 200, 200);
+          doc.line(20, y + 3, 190, y + 3);
+          
+          y += 10;
+        }
+        
+        const quadrant = getQuadrant(unit.growthRate, unit.marketShare);
+        
+        doc.setTextColor(40, 40, 40);
+        doc.text(unit.name, 20, y);
+        doc.text(`${unit.growthRate}%`, 70, y);
+        doc.text(unit.marketShare.toString(), 110, y);
+        doc.text(`$${unit.revenue}M`, 150, y);
+        doc.text(quadrant, 180, y);
+        
+        y += 8;
+      });
+      
+      // Strategy recommendations
+      y += 10;
+      
+      doc.setFontSize(14);
+      doc.setTextColor(0, 153, 153);
+      doc.text('Strategy Recommendations', 20, y);
+      y += 10;
+      
+      doc.setFontSize(10);
+      doc.setTextColor(40, 40, 40);
+      
+      // Count units in each quadrant
+      const stars = businessUnits.filter(u => getQuadrant(u.growthRate, u.marketShare) === 'Star');
+      const cashCows = businessUnits.filter(u => getQuadrant(u.growthRate, u.marketShare) === 'Cash Cow');
+      const questionMarks = businessUnits.filter(u => getQuadrant(u.growthRate, u.marketShare) === 'Question Mark');
+      const dogs = businessUnits.filter(u => getQuadrant(u.growthRate, u.marketShare) === 'Dog');
+      
+      // Stars recommendations
+      if (stars.length > 0) {
+        doc.setTextColor(204, 153, 0);
+        doc.text('Stars:', 20, y);
+        doc.setTextColor(40, 40, 40);
+        
+        let starNames = stars.map(s => s.name).join(', ');
+        const starText = `${starNames} ${stars.length > 1 ? 'are' : 'is'} in high-growth markets with high market share. Continue to invest in these business units to maintain leadership position and capitalize on market growth.`;
+        
+        const starLines = doc.splitTextToSize(starText, 170);
+        doc.text(starLines, 20, y + 5);
+        
+        y += starLines.length * 5 + 10;
+      }
+      
+      // Cash Cows recommendations
+      if (cashCows.length > 0) {
+        doc.setTextColor(0, 102, 204);
+        doc.text('Cash Cows:', 20, y);
+        doc.setTextColor(40, 40, 40);
+        
+        let cowNames = cashCows.map(c => c.name).join(', ');
+        const cowText = `${cowNames} ${cashCows.length > 1 ? 'are' : 'is'} in low-growth markets but with high market share. These units should be "milked" for cash to invest in Stars and promising Question Marks. Minimize investments while maintaining market position.`;
+        
+        const cowLines = doc.splitTextToSize(cowText, 170);
+        doc.text(cowLines, 20, y + 5);
+        
+        y += cowLines.length * 5 + 10;
+      }
+      
+      // Question Marks recommendations
+      if (questionMarks.length > 0) {
+        doc.setTextColor(204, 51, 51);
+        doc.text('Question Marks:', 20, y);
+        doc.setTextColor(40, 40, 40);
+        
+        let qmNames = questionMarks.map(q => q.name).join(', ');
+        const qmText = `${qmNames} ${questionMarks.length > 1 ? 'are' : 'is'} in high-growth markets but with low market share. Evaluate each carefully - either invest heavily to increase market share and turn into Stars, or divest if the investment required is too high.`;
+        
+        const qmLines = doc.splitTextToSize(qmText, 170);
+        doc.text(qmLines, 20, y + 5);
+        
+        y += qmLines.length * 5 + 10;
+      }
+      
+      // Dogs recommendations
+      if (dogs.length > 0) {
+        doc.setTextColor(102, 102, 102);
+        doc.text('Dogs:', 20, y);
+        doc.setTextColor(40, 40, 40);
+        
+        let dogNames = dogs.map(d => d.name).join(', ');
+        const dogText = `${dogNames} ${dogs.length > 1 ? 'are' : 'is'} in low-growth markets with low market share. Consider divesting or harvesting these business units, as they may be consuming resources that could be better allocated elsewhere.`;
+        
+        const dogLines = doc.splitTextToSize(dogText, 170);
+        doc.text(dogLines, 20, y + 5);
+      }
+      
+      // Footer
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text(`BCG Matrix Analysis | Page ${i} of ${pageCount} | Generated by Ashi Tools`, 20, 290);
+      }
+      
+      // Save the PDF
+      doc.save('bcg_matrix_analysis.pdf');
+      showToast('PDF exported successfully');
+    }
+  </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

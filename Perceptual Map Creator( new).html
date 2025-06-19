@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body>
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perceptual Map Creator - Ashi Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.herokuapp.com/dist/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #00ffe1;
+            --primary-dark: #00c4aa;
+            --secondary: #ff0077;
+            --dark-bg: #080c14;
+            --mid-bg: #0f1725;
+            --card-bg: rgba(30, 40, 60, 0.7);
+            --border: rgba(0, 255, 225, 0.3);
+            --text-light: #e0f3ff;
+            --transition: all 0.4s ease;
+            --grid-color: rgba(0, 255, 225, 0.2);
+            --axis-color: rgba(0, 255, 225, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #081020 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Floating background elements */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-elements span {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(0, 255, 225, 0.1) 0%, rgba(255, 0, 119, 0.1) 100%);
+            border-radius: 50%;
+            filter: blur(30px);
+            animation: float 16s linear infinite;
+        }
+
+        .floating-elements span:nth-child(1) {
+            width: 25vw;
+            height: 25vw;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+            animation-duration: 20s;
+            background: radial-gradient(var(--primary) 0%, transparent 70%);
+        }
+
+        .floating-elements span:nth-child(2) {
+            width: 20vw;
+            height: 20vw;
+            top: 70%;
+            left: 75%;
+            animation-delay: 4s;
+            animation-duration: 25s;
+            background: radial-gradient(var(--secondary) 0%, transparent 70%);
+        }
+
+        .floating-elements span:nth-child(3) {
+            width: 15vw;
+            height: 15vw;
+            top: 40%;
+            left: 80%;
+            animation-delay: 8s;
+            animation-duration: 18s;
+            background: radial-gradient(#6098ff 0%, transparent 70%);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.4;
+            }
+            50% {
+                transform: translate(50px, 100px) rotate(180deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+                opacity: 0.4;
+            }
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            background: var(--primary);
+            color: var(--dark-bg);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--primary), #a8ffe7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+
+        .header-sub {
+            font-size: 1.4rem;
+            max-width: 800px;
+            margin: 0 auto 25px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            max-width: 1600px;
+            width: 95%;
+            margin: 0 auto 40px;
+            display: flex;
+            gap: 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .sidebar {
+            width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .map-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(8, 15, 28, 0.6);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 255, 225, 0.2);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: var(--dark-bg);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 255, 225, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(15, 23, 37, 0.8);
+            color: var(--text-light);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 150, 150, 0.3);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Template Selector */
+        .template-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .template-btn {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            color: var(--text-light);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .template-btn:hover,
+        .template-btn.active {
+            background: rgba(0, 255, 225, 0.1);
+            border-color: var(--primary);
+        }
+
+        /* Object List */
+        .object-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .object-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .object-item:hover {
+            background: rgba(0, 255, 225, 0.05);
+            border-color: var(--primary);
+        }
+
+        .object-info {
+            flex: 1;
+        }
+
+        .object-name {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .object-coords {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .object-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .object-actions button {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .object-actions button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Perceptual Map */
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .perceptual-map {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 40px;
+            position: relative;
+            height: 600px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+        }
+
+        .map-canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(
+                90deg,
+                transparent 49.5%,
+                var(--axis-color) 49.5%,
+                var(--axis-color) 50.5%,
+                transparent 50.5%
+            ),
+            linear-gradient(
+                0deg,
+                transparent 49.5%,
+                var(--axis-color) 49.5%,
+                var(--axis-color) 50.5%,
+                transparent 50.5%
+            ),
+            radial-gradient(circle at 10% 10%, var(--grid-color) 1px, transparent 1px),
+            radial-gradient(circle at 10% 10%, var(--grid-color) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 50px 50px, 50px 50px;
+            background-position: 0 0, 0 0, 0 0, 25px 25px;
+        }
+
+        .axis-label {
+            position: absolute;
+            font-weight: 600;
+            color: var(--dark-bg);
+            font-size: 0.9rem;
+        }
+
+        .axis-label.x-positive {
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .axis-label.x-negative {
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .axis-label.y-positive {
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .axis-label.y-negative {
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .map-object {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            transform: translate(-50%, -50%);
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .map-object:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        .map-object.selected {
+            transform: translate(-50%, -50%) scale(1.3);
+            box-shadow: 0 0 15px rgba(0, 255, 225, 0.8);
+        }
+
+        .object-label {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            transform: translate(-50%, -120%);
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        /* Revision History */
+        .revision-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .revision-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .revision-item:hover {
+            background: rgba(0, 255, 225, 0.05);
+        }
+
+        .revision-info {
+            flex: 1;
+        }
+
+        .revision-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .revision-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .revision-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        /* Add Object Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .color-picker {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .color-option:hover,
+        .color-option.selected {
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 10px;
+            font-size: 1rem;
+            margin-top: auto;
+            border-top: 1px solid rgba(0, 120, 150, 0.3);
+            position: relative;
+            z-index: 10;
+            background: rgba(8, 12, 20, 0.9);
+        }
+
+        .insta-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .insta-link:hover {
+            text-decoration: underline;
+            color: var(--primary-dark);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .template-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .map-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .perceptual-map {
+                height: 400px;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .header-sub {
+                font-size: 1.1rem;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+
+
+    <!-- Floating Background Elements -->
+    <div class="floating-elements">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon"><i class="fas fa-map-marked-alt"></i></div>
+            <div>
+                <h1>Perceptual Map Creator</h1>
+                <p class="header-sub">Create professional perceptual maps to visualize competitive positioning and market insights with comprehensive analysis tools</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Template Selection -->
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-layer-group"></i> Choose Template</h3>
+                <div class="template-buttons">
+                    <button class="template-btn" onclick="loadTemplate('smartphone')">
+                        <i class="fas fa-mobile-alt"></i><br>Smartphone Brands
+                    </button>
+                    <button class="template-btn" onclick="loadTemplate('automotive')">
+                        <i class="fas fa-car"></i><br>Automotive
+                    </button>
+                    <button class="template-btn active" onclick="loadTemplate('restaurants')">
+                        <i class="fas fa-utensils"></i><br>Restaurants
+                    </button>
+                    <button class="template-btn" onclick="loadTemplate('fashion')">
+                        <i class="fas fa-tshirt"></i><br>Fashion Brands
+                    </button>
+                    <button class="template-btn" onclick="loadTemplate('airlines')">
+                        <i class="fas fa-plane active"></i><br>Airlines
+                    </button>
+                    <button class="template-btn" onclick="loadTemplate('custom')">
+                        <i class="fas fa-edit"></i><br>Custom
+                    </button>
+                </div>
+            </div>
+
+            <!-- Axis Configuration -->
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-crosshairs"></i> Axis Configuration</h3>
+                <div class="form-group">
+                    <label for="x-axis-label">X-Axis (Horizontal)</label>
+                    <input type="text" id="x-axis-label" placeholder="e.g., Price" value="Price">
+                </div>
+                <div class="form-group">
+                    <label for="y-axis-label">Y-Axis (Vertical)</label>
+                    <input type="text" id="y-axis-label" placeholder="e.g., Quality" value="Quality">
+                </div>
+                <div class="form-group">
+                    <label for="x-left-label">Left Label (Low)</label>
+                    <input type="text" id="x-left-label" placeholder="e.g., Affordable" value="Affordable">
+                </div>
+                <div class="form-group">
+                    <label for="x-right-label">Right Label (High)</label>
+                    <input type="text" id="x-right-label" placeholder="e.g., Premium" value="Premium">
+                </div>
+                <div class="form-group">
+                    <label for="y-bottom-label">Bottom Label (Low)</label>
+                    <input type="text" id="y-bottom-label" placeholder="e.g., Basic" value="Basic">
+                </div>
+                <div class="form-group">
+                    <label for="y-top-label">Top Label (High)</label>
+                    <input type="text" id="y-top-label" placeholder="e.g., Premium" value="Premium">
+                </div>
+                <button class="btn btn-full" onclick="updateAxisLabels()">
+                    <i class="fas fa-sync-alt"></i> Update Axes
+                </button>
+            </div>
+
+            <!-- Object List -->
+            <div class="card">
+                <h3 class="card-title">
+                    <i class="fas fa-list"></i> Objects 
+                    <span style="margin-left: auto;">
+                        <button class="btn btn-small" onclick="openAddObjectModal()">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </span>
+                </h3>
+                <div class="object-list" id="object-list"><div class="object-item">
+                    <div class="object-info">
+                        <div class="object-name" style="color: #f39c12">McDonald's</div>
+                        <div class="object-coords">Fast Food • (-80, -60)</div>
+                    </div>
+                    <div class="object-actions">
+                        <button onclick="editObject(0)" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteObject(0)" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div><div class="object-item">
+                    <div class="object-info">
+                        <div class="object-name" style="color: #2ecc71">Olive Garden</div>
+                        <div class="object-coords">Casual Dining • (-20, 20)</div>
+                    </div>
+                    <div class="object-actions">
+                        <button onclick="editObject(1)" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteObject(1)" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div><div class="object-item">
+                    <div class="object-info">
+                        <div class="object-name" style="color: #9b59b6">The French Laundry</div>
+                        <div class="object-coords">Fine Dining • (90, 95)</div>
+                    </div>
+                    <div class="object-actions">
+                        <button onclick="editObject(2)" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteObject(2)" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div><div class="object-item">
+                    <div class="object-info">
+                        <div class="object-name" style="color: #3498db">Cheesecake Factory</div>
+                        <div class="object-coords">Casual Dining • (10, 30)</div>
+                    </div>
+                    <div class="object-actions">
+                        <button onclick="editObject(3)" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteObject(3)" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div><div class="object-item">
+                    <div class="object-info">
+                        <div class="object-name" style="color: #e74c3c">Ruth's Chris</div>
+                        <div class="object-coords">Steakhouse • (75, 80)</div>
+                    </div>
+                    <div class="object-actions">
+                        <button onclick="editObject(4)" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteObject(4)" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div><div class="object-item">
+                    <div class="object-info">
+                        <div class="object-name" style="color: #1abc9c">Chipotle</div>
+                        <div class="object-coords">Fast Casual • (-50, -20)</div>
+                    </div>
+                    <div class="object-actions">
+                        <button onclick="editObject(5)" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteObject(5)" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div><div class="object-item">
+                    <div class="object-info">
+                        <div class="object-name" style="color: #34495e">Applebee's</div>
+                        <div class="object-coords">Casual Dining • (-30, 10)</div>
+                    </div>
+                    <div class="object-actions">
+                        <button onclick="editObject(6)" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteObject(6)" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div></div>
+            </div>
+
+            <!-- Revision History -->
+            <div class="card">
+                <h3 class="card-title">
+                    <i class="fas fa-history"></i> Revision History
+                    <span style="margin-left: auto;">
+                        <button class="btn btn-small" onclick="saveRevision()">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                    </span>
+                </h3>
+                <div class="revision-list" id="revision-list">
+                    <!-- Revisions will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div class="map-container">
+            <!-- Map Header -->
+            <div class="card">
+                <div class="map-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-map"></i> <span id="map-title">Restaurant Market Positioning</span>
+                    </h3>
+                    <div class="map-controls">
+                        <button class="btn btn-secondary" onclick="clearMap()">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                        <button class="btn" onclick="exportToPDF()">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                        <button class="btn" onclick="exportToPNG()">
+                            <i class="fas fa-image"></i> PNG
+                        </button>
+                        <button class="btn" onclick="exportToJPG()">
+                            <i class="fas fa-camera"></i> JPG
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Perceptual Map -->
+            <div class="card">
+                <div class="perceptual-map" id="perceptual-map">
+                    <div class="map-canvas" id="map-canvas">
+                        <!-- Axis Labels -->
+                        <div class="axis-label x-positive" id="x-positive-label">Fine Dining</div>
+                        <div class="axis-label x-negative" id="x-negative-label">Budget Friendly</div>
+                        <div class="axis-label y-positive" id="y-positive-label">Premium Service</div>
+                        <div class="axis-label y-negative" id="y-negative-label">Casual Service</div>
+                    <div class="map-object" data-index="0" style="background-color: rgb(243, 156, 18); left: 10%; top: 80%;"><div class="object-label">McDonald's</div></div><div class="map-object" data-index="1" style="background-color: rgb(46, 204, 113); left: 40%; top: 40%;"><div class="object-label">Olive Garden</div></div><div class="map-object" data-index="2" style="background-color: rgb(155, 89, 182); left: 95%; top: 2.5%;"><div class="object-label">The French Laundry</div></div><div class="map-object" data-index="3" style="background-color: rgb(52, 152, 219); left: 55%; top: 35%;"><div class="object-label">Cheesecake Factory</div></div><div class="map-object" data-index="4" style="background-color: rgb(231, 76, 60); left: 87.5%; top: 10%;"><div class="object-label">Ruth's Chris</div></div><div class="map-object" data-index="5" style="background-color: rgb(26, 188, 156); left: 25%; top: 60%;"><div class="object-label">Chipotle</div></div><div class="map-object" data-index="6" style="background-color: rgb(52, 73, 94); left: 35%; top: 45%;"><div class="object-label">Applebee's</div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Object Modal -->
+    <div class="modal" id="add-object-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Object</h3>
+                <button class="close-btn" onclick="closeAddObjectModal()">×</button>
+            </div>
+            <div class="form-group">
+                <label for="object-name">Object Name</label>
+                <input type="text" id="object-name" placeholder="e.g., iPhone 15">
+            </div>
+            <div class="form-group">
+                <label for="object-category">Category (Optional)</label>
+                <input type="text" id="object-category" placeholder="e.g., Smartphone">
+            </div>
+            <div class="form-group">
+                <label for="object-x">X Position (-100 to 100)</label>
+                <input type="range" id="object-x" min="-100" max="100" value="0">
+                <span id="x-value">0</span>
+            </div>
+            <div class="form-group">
+                <label for="object-y">Y Position (-100 to 100)</label>
+                <input type="range" id="object-y" min="-100" max="100" value="0">
+                <span id="y-value">0</span>
+            </div>
+            <div class="form-group">
+                <label>Color</label>
+                <div class="color-picker">
+                    <div class="color-option selected" style="background: #3498db" data-color="#3498db"></div>
+                    <div class="color-option" style="background: #e74c3c" data-color="#e74c3c"></div>
+                    <div class="color-option" style="background: #2ecc71" data-color="#2ecc71"></div>
+                    <div class="color-option" style="background: #f39c12" data-color="#f39c12"></div>
+                    <div class="color-option" style="background: #9b59b6" data-color="#9b59b6"></div>
+                    <div class="color-option" style="background: #1abc9c" data-color="#1abc9c"></div>
+                    <div class="color-option" style="background: #34495e" data-color="#34495e"></div>
+                    <div class="color-option" style="background: #e67e22" data-color="#e67e22"></div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn" onclick="addObject()">
+                    <i class="fas fa-plus"></i> Add Object
+                </button>
+                <button class="btn btn-secondary" onclick="closeAddObjectModal()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Perceptual Map Creator - Ashi Tools | Connect <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="insta-link">@ashish_singh_rajput_3</a></p>
+        <div style="margin-top: 10px; color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">
+            © 2025 Ashi Tools. Empowering tomorrow's management leaders.
+        </div>
+    </footer>
+
+    <script>
+        // Templates data
+        const templates = {
+            smartphone: {
+                title: "Smartphone Market Positioning",
+                xAxis: "Price",
+                yAxis: "Quality",
+                xLeft: "Affordable",
+                xRight: "Premium",
+                yBottom: "Basic",
+                yTop: "Premium",
+                objects: [
+                    { name: "iPhone 15 Pro", category: "Premium", x: 80, y: 90, color: "#3498db" },
+                    { name: "Samsung Galaxy S24", category: "Premium", x: 75, y: 85, color: "#e74c3c" },
+                    { name: "Google Pixel 8", category: "Mid-range", x: 40, y: 70, color: "#2ecc71" },
+                    { name: "OnePlus 12", category: "Mid-range", x: 35, y: 75, color: "#f39c12" },
+                    { name: "Xiaomi 14", category: "Budget", x: -20, y: 60, color: "#9b59b6" },
+                    { name: "Nothing Phone 2", category: "Mid-range", x: 10, y: 65, color: "#1abc9c" },
+                    { name: "Samsung Galaxy A54", category: "Budget", x: -40, y: 45, color: "#34495e" }
+                ]
+            },
+            automotive: {
+                title: "Automotive Market Positioning",
+                xAxis: "Price Range",
+                yAxis: "Performance",
+                xLeft: "Economy",
+                xRight: "Luxury",
+                yBottom: "Practical",
+                yTop: "High Performance",
+                objects: [
+                    { name: "Ferrari F8", category: "Supercar", x: 95, y: 95, color: "#e74c3c" },
+                    { name: "BMW M3", category: "Sports", x: 70, y: 80, color: "#3498db" },
+                    { name: "Toyota Camry", category: "Sedan", x: -20, y: 40, color: "#2ecc71" },
+                    { name: "Honda Civic", category: "Compact", x: -40, y: 35, color: "#f39c12" },
+                    { name: "Tesla Model S", category: "Electric", x: 60, y: 85, color: "#9b59b6" },
+                    { name: "Audi A4", category: "Luxury", x: 50, y: 60, color: "#1abc9c" },
+                    { name: "Ford F-150", category: "Truck", x: 20, y: 70, color: "#34495e" }
+                ]
+            },
+            restaurants: {
+                title: "Restaurant Market Positioning",
+                xAxis: "Price Point",
+                yAxis: "Service Quality",
+                xLeft: "Budget Friendly",
+                xRight: "Fine Dining",
+                yBottom: "Casual Service",
+                yTop: "Premium Service",
+                objects: [
+                    { name: "McDonald's", category: "Fast Food", x: -80, y: -60, color: "#f39c12" },
+                    { name: "Olive Garden", category: "Casual Dining", x: -20, y: 20, color: "#2ecc71" },
+                    { name: "The French Laundry", category: "Fine Dining", x: 90, y: 95, color: "#9b59b6" },
+                    { name: "Cheesecake Factory", category: "Casual Dining", x: 10, y: 30, color: "#3498db" },
+                    { name: "Ruth's Chris", category: "Steakhouse", x: 75, y: 80, color: "#e74c3c" },
+                    { name: "Chipotle", category: "Fast Casual", x: -50, y: -20, color: "#1abc9c" },
+                    { name: "Applebee's", category: "Casual Dining", x: -30, y: 10, color: "#34495e" }
+                ]
+            },
+            fashion: {
+                title: "Fashion Brand Positioning",
+                xAxis: "Price Range",
+                yAxis: "Brand Prestige",
+                xLeft: "Affordable",
+                xRight: "Luxury",
+                yBottom: "Mass Market",
+                yTop: "High Fashion",
+                objects: [
+                    { name: "Chanel", category: "Luxury", x: 95, y: 95, color: "#9b59b6" },
+                    { name: "Gucci", category: "Luxury", x: 90, y: 90, color: "#e74c3c" },
+                    { name: "Zara", category: "Fast Fashion", x: -30, y: 20, color: "#3498db" },
+                    { name: "H&M", category: "Fast Fashion", x: -60, y: -10, color: "#2ecc71" },
+                    { name: "Nike", category: "Sportswear", x: 20, y: 60, color: "#f39c12" },
+                    { name: "Uniqlo", category: "Casual", x: -40, y: 30, color: "#1abc9c" },
+                    { name: "Ralph Lauren", category: "Premium", x: 70, y: 75, color: "#34495e" }
+                ]
+            },
+            airlines: {
+                title: "Airlines Market Positioning",
+                xAxis: "Price Level",
+                yAxis: "Service Quality",
+                xLeft: "Budget",
+                xRight: "Premium",
+                yBottom: "Basic Service",
+                yTop: "Luxury Service",
+                objects: [
+                    { name: "Singapore Airlines", category: "Full Service", x: 60, y: 95, color: "#9b59b6" },
+                    { name: "Emirates", category: "Full Service", x: 70, y: 90, color: "#e74c3c" },
+                    { name: "Southwest", category: "Low Cost", x: -70, y: 30, color: "#3498db" },
+                    { name: "Ryanair", category: "Ultra Low Cost", x: -90, y: -20, color: "#f39c12" },
+                    { name: "Delta", category: "Legacy", x: 20, y: 60, color: "#2ecc71" },
+                    { name: "JetBlue", category: "Low Cost", x: -40, y: 50, color: "#1abc9c" },
+                    { name: "United", category: "Legacy", x: 30, y: 55, color: "#34495e" }
+                ]
+            },
+            custom: {
+                title: "Custom Perceptual Map",
+                xAxis: "X-Axis",
+                yAxis: "Y-Axis",
+                xLeft: "Low X",
+                xRight: "High X",
+                yBottom: "Low Y",
+                yTop: "High Y",
+                objects: []
+            }
+        };
+
+        // Global variables
+        let currentObjects = [];
+        let selectedObject = null;
+        let selectedColor = '#3498db';
+        let revisionHistory = [];
+        let currentTemplate = 'smartphone';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTemplate('smartphone');
+            setupEventListeners();
+            updateRevisionHistory();
+        });
+
+        function setupEventListeners() {
+            // Color picker
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedColor = this.dataset.color;
+                });
+            });
+
+            // Range sliders
+            document.getElementById('object-x').addEventListener('input', function() {
+                document.getElementById('x-value').textContent = this.value;
+            });
+
+            document.getElementById('object-y').addEventListener('input', function() {
+                document.getElementById('y-value').textContent = this.value;
+            });
+
+            // Map canvas click
+            document.getElementById('map-canvas').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    const rect = this.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 200 - 100;
+                    const y = -(((e.clientY - rect.top) / rect.height) * 200 - 100);
+                    openAddObjectModalWithPosition(Math.round(x), Math.round(y));
+                }
+            });
+        }
+
+        function loadTemplate(templateName) {
+            const template = templates[templateName];
+            currentTemplate = templateName;
+            currentObjects = [...template.objects];
+            
+            // Update UI
+            document.getElementById('map-title').textContent = template.title;
+            document.getElementById('x-axis-label').value = template.xAxis;
+            document.getElementById('y-axis-label').value = template.yAxis;
+            document.getElementById('x-left-label').value = template.xLeft;
+            document.getElementById('x-right-label').value = template.xRight;
+            document.getElementById('y-bottom-label').value = template.yBottom;
+            document.getElementById('y-top-label').value = template.yTop;
+            
+            // Update template buttons
+            document.querySelectorAll('.template-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            updateAxisLabels();
+            renderObjects();
+            renderObjectList();
+        }
+
+        function updateAxisLabels() {
+            document.getElementById('x-positive-label').textContent = document.getElementById('x-right-label').value;
+            document.getElementById('x-negative-label').textContent = document.getElementById('x-left-label').value;
+            document.getElementById('y-positive-label').textContent = document.getElementById('y-top-label').value;
+            document.getElementById('y-negative-label').textContent = document.getElementById('y-bottom-label').value;
+        }
+
+        function renderObjects() {
+            const canvas = document.getElementById('map-canvas');
+            // Clear existing objects
+            canvas.querySelectorAll('.map-object').forEach(obj => obj.remove());
+            
+            currentObjects.forEach((obj, index) => {
+                const objectElement = document.createElement('div');
+                objectElement.className = 'map-object';
+                objectElement.style.backgroundColor = obj.color;
+                objectElement.style.left = ((obj.x + 100) / 200) * 100 + '%';
+                objectElement.style.top = ((-obj.y + 100) / 200) * 100 + '%';
+                objectElement.dataset.index = index;
+                
+                const label = document.createElement('div');
+                label.className = 'object-label';
+                label.textContent = obj.name;
+                objectElement.appendChild(label);
+                
+                objectElement.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    selectObject(index);
+                });
+                
+                canvas.appendChild(objectElement);
+            });
+        }
+
+        function renderObjectList() {
+            const list = document.getElementById('object-list');
+            list.innerHTML = '';
+            
+            currentObjects.forEach((obj, index) => {
+                const item = document.createElement('div');
+                item.className = 'object-item';
+                item.innerHTML = `
+                    <div class="object-info">
+                        <div class="object-name" style="color: ${obj.color}">${obj.name}</div>
+                        <div class="object-coords">${obj.category || 'No category'} • (${obj.x}, ${obj.y})</div>
+                    </div>
+                    <div class="object-actions">
+                        <button onclick="editObject(${index})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteObject(${index})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function selectObject(index) {
+            // Clear previous selection
+            document.querySelectorAll('.map-object').forEach(obj => obj.classList.remove('selected'));
+            
+            // Select new object
+            const objectElement = document.querySelector(`[data-index="${index}"]`);
+            objectElement.classList.add('selected');
+            selectedObject = index;
+        }
+
+        function openAddObjectModal() {
+            document.getElementById('add-object-modal').classList.add('active');
+            document.getElementById('object-name').value = '';
+            document.getElementById('object-category').value = '';
+            document.getElementById('object-x').value = 0;
+            document.getElementById('object-y').value = 0;
+            document.getElementById('x-value').textContent = '0';
+            document.getElementById('y-value').textContent = '0';
+        }
+
+        function openAddObjectModalWithPosition(x, y) {
+            openAddObjectModal();
+            document.getElementById('object-x').value = x;
+            document.getElementById('object-y').value = y;
+            document.getElementById('x-value').textContent = x.toString();
+            document.getElementById('y-value').textContent = y.toString();
+        }
+
+        function closeAddObjectModal() {
+            document.getElementById('add-object-modal').classList.remove('active');
+        }
+
+        function addObject() {
+            const name = document.getElementById('object-name').value.trim();
+            if (!name) {
+                alert('Please enter an object name');
+                return;
+            }
+            
+            const newObject = {
+                name: name,
+                category: document.getElementById('object-category').value.trim() || 'Uncategorized',
+                x: parseInt(document.getElementById('object-x').value),
+                y: parseInt(document.getElementById('object-y').value),
+                color: selectedColor
+            };
+            
+            currentObjects.push(newObject);
+            renderObjects();
+            renderObjectList();
+            closeAddObjectModal();
+        }
+
+        function editObject(index) {
+            const obj = currentObjects[index];
+            document.getElementById('object-name').value = obj.name;
+            document.getElementById('object-category').value = obj.category;
+            document.getElementById('object-x').value = obj.x;
+            document.getElementById('object-y').value = obj.y;
+            document.getElementById('x-value').textContent = obj.x.toString();
+            document.getElementById('y-value').textContent = obj.y.toString();
+            
+            // Set color
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('selected');
+                if (option.dataset.color === obj.color) {
+                    option.classList.add('selected');
+                    selectedColor = obj.color;
+                }
+            });
+            
+            // Remove object and open modal for editing
+            currentObjects.splice(index, 1);
+            document.getElementById('add-object-modal').classList.add('active');
+            renderObjects();
+            renderObjectList();
+        }
+
+        function deleteObject(index) {
+            if (confirm('Are you sure you want to delete this object?')) {
+                currentObjects.splice(index, 1);
+                renderObjects();
+                renderObjectList();
+            }
+        }
+
+        function clearMap() {
+            if (confirm('Are you sure you want to clear all objects?')) {
+                currentObjects = [];
+                renderObjects();
+                renderObjectList();
+            }
+        }
+
+        function saveRevision() {
+            const name = prompt('Enter revision name:') || `Revision ${revisionHistory.length + 1}`;
+            const revision = {
+                id: Date.now(),
+                name: name,
+                timestamp: new Date(),
+                objects: [...currentObjects],
+                template: currentTemplate,
+                mapTitle: document.getElementById('map-title').textContent,
+                axes: {
+                    xAxis: document.getElementById('x-axis-label').value,
+                    yAxis: document.getElementById('y-axis-label').value,
+                    xLeft: document.getElementById('x-left-label').value,
+                    xRight: document.getElementById('x-right-label').value,
+                    yBottom: document.getElementById('y-bottom-label').value,
+                    yTop: document.getElementById('y-top-label').value
+                }
+            };
+            
+            revisionHistory.unshift(revision);
+            updateRevisionHistory();
+        }
+
+        function updateRevisionHistory() {
+            const list = document.getElementById('revision-list');
+            list.innerHTML = '';
+            
+            revisionHistory.forEach((revision, index) => {
+                const item = document.createElement('div');
+                item.className = 'revision-item';
+                item.innerHTML = `
+                    <div class="revision-info">
+                        <div class="revision-name">${revision.name}</div>
+                        <div class="revision-time">${revision.timestamp.toLocaleString()}</div>
+                    </div>
+                    <div class="revision-actions">
+                        <button onclick="loadRevision(${index})" title="Load">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        <button onclick="deleteRevision(${index})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function loadRevision(index) {
+            if (confirm('Load this revision? Current work will be lost if not saved.')) {
+                const revision = revisionHistory[index];
+                currentObjects = [...revision.objects];
+                
+                // Restore settings
+                document.getElementById('map-title').textContent = revision.mapTitle;
+                document.getElementById('x-axis-label').value = revision.axes.xAxis;
+                document.getElementById('y-axis-label').value = revision.axes.yAxis;
+                document.getElementById('x-left-label').value = revision.axes.xLeft;
+                document.getElementById('x-right-label').value = revision.axes.xRight;
+                document.getElementById('y-bottom-label').value = revision.axes.yBottom;
+                document.getElementById('y-top-label').value = revision.axes.yTop;
+                
+                updateAxisLabels();
+                renderObjects();
+                renderObjectList();
+            }
+        }
+
+        function deleteRevision(index) {
+            if (confirm('Delete this revision?')) {
+                revisionHistory.splice(index, 1);
+                updateRevisionHistory();
+            }
+        }
+
+        // Export functions
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4');
+            
+            // Page dimensions
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const margin = 20;
+            
+            // Colors
+            const primaryColor = [0, 200, 180];
+            const darkBg = [8, 12, 20];
+            const lightBg = [248, 249, 250];
+            const darkText = [33, 37, 41];
+            
+            // Header
+            doc.setFillColor(...darkBg);
+            doc.rect(0, 0, pageWidth, 35, 'F');
+            
+            doc.setFillColor(...primaryColor);
+            doc.circle(25, 17, 8, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(12);
+            doc.text('', 25, 21, { align: 'center' });
+            
+            doc.setTextColor(...primaryColor);
+            doc.setFontSize(24);
+            doc.text('Perceptual Map Analysis', 40, 22);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(200, 200, 200);
+            doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth - 15, 15, { align: 'right' });
+            
+            // Content background
+            doc.setFillColor(...lightBg);
+            doc.rect(0, 35, pageWidth, pageHeight - 35, 'F');
+            
+            // Map title
+            doc.setTextColor(...darkText);
+            doc.setFontSize(18);
+            doc.text(document.getElementById('map-title').textContent, pageWidth/2, 55, { align: 'center' });
+            
+            // Draw map area
+            const mapX = margin;
+            const mapY = 70;
+            const mapWidth = pageWidth - margin * 2;
+            const mapHeight = 120;
+            
+            // Map background
+            doc.setFillColor(255, 255, 255);
+            doc.rect(mapX, mapY, mapWidth, mapHeight, 'F');
+            doc.setDrawColor(200, 200, 200);
+            doc.rect(mapX, mapY, mapWidth, mapHeight, 'S');
+            
+            // Draw axes
+            doc.setDrawColor(...primaryColor);
+            doc.setLineWidth(1);
+            doc.line(mapX + mapWidth/2, mapY, mapX + mapWidth/2, mapY + mapHeight);
+            doc.line(mapX, mapY + mapHeight/2, mapX + mapWidth, mapY + mapHeight/2);
+            
+            // Axis labels
+            doc.setFontSize(10);
+            doc.setTextColor(...darkText);
+            doc.text(document.getElementById('x-negative-label').textContent, mapX + 5, mapY + mapHeight/2 - 5);
+            doc.text(document.getElementById('x-positive-label').textContent, mapX + mapWidth - 5, mapY + mapHeight/2 - 5, { align: 'right' });
+            doc.text(document.getElementById('y-positive-label').textContent, mapX + mapWidth/2, mapY + 10, { align: 'center' });
+            doc.text(document.getElementById('y-negative-label').textContent, mapX + mapWidth/2, mapY + mapHeight - 5, { align: 'center' });
+            
+            // Plot objects
+            currentObjects.forEach(obj => {
+                const x = mapX + ((obj.x + 100) / 200) * mapWidth;
+                const y = mapY + ((-obj.y + 100) / 200) * mapHeight;
+                
+                // Convert hex color to RGB
+                const hexToRgb = (hex) => {
+                    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                    return result ? [
+                        parseInt(result[1], 16),
+                        parseInt(result[2], 16),
+                        parseInt(result[3], 16)
+                    ] : [0, 0, 0];
+                };
+                
+                const rgb = hexToRgb(obj.color);
+                doc.setFillColor(...rgb);
+                doc.circle(x, y, 3, 'F');
+                
+                // Object label
+                doc.setFontSize(8);
+                doc.text(obj.name, x + 5, y - 2);
+            });
+            
+            // Object list
+            let listY = mapY + mapHeight + 20;
+            doc.setFontSize(14);
+            doc.text('Objects List:', margin, listY);
+            listY += 10;
+            
+            doc.setFontSize(9);
+            currentObjects.forEach((obj, index) => {
+                if (listY > pageHeight - 20) return;
+                doc.text(`${index + 1}. ${obj.name} (${obj.category}) - Position: (${obj.x}, ${obj.y})`, margin + 5, listY);
+                listY += 6;
+            });
+            
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(108, 117, 125);
+            doc.text('© 2025 Ashi Tools - Perceptual Map Creator', pageWidth/2, pageHeight - 10, { align: 'center' });
+            doc.text('Connect with us: instagram.com/ashish_singh_rajput_3', pageWidth/2, pageHeight - 5, { align: 'center' });
+            
+            // Save
+            const fileName = `Perceptual-Map-${document.getElementById('map-title').textContent.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.pdf`;
+            doc.save(fileName);
+        }
+
+        function exportToPNG() {
+            const mapElement = document.getElementById('perceptual-map');
+            html2canvas(mapElement, {
+                backgroundColor: '#ffffff',
+                scale: 2
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `perceptual-map-${Date.now()}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        function exportToJPG() {
+            const mapElement = document.getElementById('perceptual-map');
+            html2canvas(mapElement, {
+                backgroundColor: '#ffffff',
+                scale: 2
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `perceptual-map-${Date.now()}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click();
+            });
+        }
+
+        // Make functions global
+        window.loadTemplate = loadTemplate;
+        window.updateAxisLabels = updateAxisLabels;
+        window.openAddObjectModal = openAddObjectModal;
+        window.closeAddObjectModal = closeAddObjectModal;
+        window.addObject = addObject;
+        window.editObject = editObject;
+        window.deleteObject = deleteObject;
+        window.clearMap = clearMap;
+        window.saveRevision = saveRevision;
+        window.loadRevision = loadRevision;
+        window.deleteRevision = deleteRevision;
+        window.exportToPDF = exportToPDF;
+        window.exportToPNG = exportToPNG;
+        window.exportToJPG = exportToJPG;
+    </script>
+
+
+            <script></script>
+        
+    
+</body>

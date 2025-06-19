@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
+            
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ashi tools: Time Value of Money (TVM) Calculator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #00ffd5;
+      --secondary: #00b39e;
+      --dark-bg: #0e0e0e;
+      --card-bg: #1e1e1e;
+      --text-light: #cccccc;
+      --border: #333;
+      --success: #28a745;
+      --danger: #dc3545;
+      --info-color: #6a8dff;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      background-color: var(--dark-bg);
+      color: #ffffff;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+      position: relative;
+    }
+    
+    header h2 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(0, 255, 213, 0.3);
+    }
+    
+    header p {
+      color: var(--text-light);
+      font-size: 1.1rem;
+    }
+    
+    header::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-light);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    select, input, button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      font-size: 1rem;
+      background-color: #222;
+      border: 1px solid var(--border);
+      color: white;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    select:focus, input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 255, 213, 0.2);
+    }
+    
+    button {
+      background-color: var(--primary);
+      color: var(--dark-bg);
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    button:hover {
+      background-color: var(--secondary);
+      transform: translateY(-2px);
+    }
+    
+    button.secondary {
+      background-color: #333;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      margin-top: 10px;
+    }
+    
+    button.secondary:hover {
+      background-color: #444;
+      color: var(--secondary);
+      border-color: var(--secondary);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .button-group button {
+      flex: 1;
+    }
+    
+    .info-box {
+      background-color: #2a2a2a;
+      border-left: 5px solid var(--info-color);
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+    
+    .info-box h3 {
+      color: var(--secondary);
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+    
+    .info-box p {
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+    
+    .result {
+      background: #1a1a1a;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 8px;
+      border: 1px dashed var(--primary);
+    }
+    
+    .result h3 {
+      color: var(--primary);
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 1.3rem;
+    }
+    
+    .formula {
+      background-color: #222;
+      padding: 10px;
+      margin: 10px 0;
+      font-family: monospace;
+      border-radius: 5px;
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+    
+    .value {
+      font-size: 1.8rem;
+      text-align: center;
+      padding: 15px 0;
+      color: var(--primary);
+      font-weight: bold;
+    }
+    
+    .explanation {
+      color: var(--text-light);
+      font-style: italic;
+      border-top: 1px dotted #333;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+    
+    .saved-results {
+      background: #222;
+      margin-top: 30px;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    
+    .saved-results h4 {
+      color: var(--primary);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.2rem;
+    }
+    
+    .saved-item {
+      background-color: #1a1a1a;
+      padding: 12px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    
+    .saved-item-content {
+      margin-right: 70px;
+    }
+    
+    .saved-item-type {
+      color: var(--primary);
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .saved-item-value {
+      font-size: 1.1rem;
+    }
+    
+    .saved-item-time {
+      font-size: 0.8rem;
+      color: #888;
+      font-style: italic;
+    }
+    
+    .saved-item-actions {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 8px;
+    }
+    
+    .saved-item-actions button {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      background-color: #333;
+      color: var(--text-light);
+    }
+    
+    .validation-error {
+      color: var(--danger);
+      font-size: 0.9rem;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+        margin: 10px;
+      }
+      
+      header h2 {
+        font-size: 1.8rem;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+
+
+  <div class="container">
+    <header>
+      <h2><i class="fas fa-calculator"></i> Time Value of Money Calculator</h2>
+      <p>Master financial calculations for management decisions</p>
+    </header>
+
+    <div class="info-box">
+      <h3>About Time Value of Money (TVM)</h3>
+      <p>TVM is a fundamental finance concept that calculates the present or future value of cash flows by accounting for interest and compounding. Use this calculator for various applications including bonds, annuities, perpetuities, loans, and investment analysis.</p>
+    </div>
+
+    <!-- Updated Dropdown with New Options -->
+    <label for="calcType">What would you like to calculate?</label>
+    <select id="calcType">
+      <option value="fv">Future Value (FV)</option>
+      <option value="pv">Present Value (PV)</option>
+      <option value="rate">Rate of Return</option>
+      <option value="time">Number of Periods (Years)</option>
+      <option value="pmt">Annuity Payment (PMT)</option>
+      <option value="fvdue">Annuity Due (FV)</option>
+      <option value="pvdue">Annuity Due (PV)</option>
+      <option value="perp">Perpetuity</option>
+      <option value="gannuity">Growing Annuity</option>
+      <option value="gperp">Growing Perpetuity</option>
+      <option value="loan">Loan Amortization Schedule</option>
+      <option value="npv">Net Present Value (NPV)</option>
+      <option value="irr">Internal Rate of Return (IRR)</option>
+    </select>
+
+    <div id="inputFields"><label for="pv">Present Value (PV):</label><input type="number" id="pv" placeholder="Initial investment amount" step="any"><label for="rate">Annual Interest Rate (%):</label><input type="number" id="rate" placeholder="e.g., 5" step="any"><label for="time">Number of Periods (Years):</label><input type="number" id="time" placeholder="e.g., 10" step="any"><label for="freq">Compounding Frequency:</label><select id="freq"><option value="1">Annually (1x per year)</option><option value="2">Semi-Annually (2x per year)</option><option value="4">Quarterly (4x per year)</option><option value="12">Monthly (12x per year)</option><option value="365">Daily (365x per year)</option></select></div>
+    
+    <div class="button-group">
+      <button onclick="calculate()"><i class="fas fa-play"></i> Calculate</button>
+      <button class="secondary" onclick="clearInputs()"><i class="fas fa-redo"></i> Clear</button>
+    </div>
+
+    <div class="result" id="resultBox" style="display: none;">
+      <h3>Results</h3>
+      <div id="resultContent">
+        <div class="formula"><strong>Formula:</strong> NPV = Σ [CF<sub>t</sub> / (1+r)<sup>t</sup>] - C₀</div>
+        <div class="value">₹2,33,723.60</div>
+        <div class="explanation">With an initial investment of -₹1,20,000.00 and future cash flows 30000, 30000, 30000, 30000, 30000, at a discount rate of 10.00%, the NPV is ₹2,33,723.60.</div>
+      </div>
+    </div>
+
+    <div class="saved-results">
+      <h4><i class="fas fa-bookmark"></i> Saved Calculations</h4>
+      <div id="savedResults"><p style="color: var(--text-light);">No saved calculations yet.</p></div>
+    </div>
+  </div>
+
+  <script>
+    // Global element references
+    const inputFields = document.getElementById('inputFields');
+    const resultBox = document.getElementById('resultBox');
+    const resultContent = document.getElementById('resultContent');
+    const savedResults = document.getElementById('savedResults');
+    const calcTypeSelector = document.getElementById('calcType');
+    
+    // Update fields when the calculation type changes
+    calcTypeSelector.addEventListener('change', updateFields);
+    
+    // Field definitions for each calculation type
+    const fieldDefinitions = {
+      fv: [
+        { id: 'pv', label: 'Present Value (PV)', placeholder: 'Initial investment amount' },
+        { id: 'rate', label: 'Annual Interest Rate (%)', placeholder: 'e.g., 5' },
+        { id: 'time', label: 'Number of Periods (Years)', placeholder: 'e.g., 10' },
+        { id: 'freq', label: 'Compounding Frequency', type: 'select', options: [
+          { value: '1', text: 'Annually (1x per year)' },
+          { value: '2', text: 'Semi-Annually (2x per year)' },
+          { value: '4', text: 'Quarterly (4x per year)' },
+          { value: '12', text: 'Monthly (12x per year)' },
+          { value: '365', text: 'Daily (365x per year)' }
+        ]}
+      ],
+      pv: [
+        { id: 'fv', label: 'Future Value (FV)', placeholder: 'Target amount' },
+        { id: 'rate', label: 'Annual Interest Rate (%)', placeholder: 'e.g., 5' },
+        { id: 'time', label: 'Number of Periods (Years)', placeholder: 'e.g., 10' },
+        { id: 'freq', label: 'Compounding Frequency', type: 'select', options: [
+          { value: '1', text: 'Annually (1x per year)' },
+          { value: '2', text: 'Semi-Annually (2x per year)' },
+          { value: '4', text: 'Quarterly (4x per year)' },
+          { value: '12', text: 'Monthly (12x per year)' },
+          { value: '365', text: 'Daily (365x per year)' }
+        ]}
+      ],
+      rate: [
+        { id: 'pv', label: 'Present Value (PV)', placeholder: 'Initial investment amount' },
+        { id: 'fv', label: 'Future Value (FV)', placeholder: 'Target amount' },
+        { id: 'time', label: 'Number of Years', placeholder: 'e.g., 10' },
+        { id: 'freq', label: 'Compounding Frequency', type: 'select', options: [
+          { value: '1', text: 'Annually (1x per year)' },
+          { value: '2', text: 'Semi-Annually (2x per year)' },
+          { value: '4', text: 'Quarterly (4x per year)' },
+          { value: '12', text: 'Monthly (12x per year)' },
+          { value: '365', text: 'Daily (365x per year)' }
+        ]}
+      ],
+      time: [
+        { id: 'pv', label: 'Present Value (PV)', placeholder: 'Initial investment amount' },
+        { id: 'fv', label: 'Future Value (FV)', placeholder: 'Target amount' },
+        { id: 'rate', label: 'Annual Interest Rate (%)', placeholder: 'e.g., 5' },
+        { id: 'freq', label: 'Compounding Frequency', type: 'select', options: [
+          { value: '1', text: 'Annually (1x per year)' },
+          { value: '2', text: 'Semi-Annually (2x per year)' },
+          { value: '4', text: 'Quarterly (4x per year)' },
+          { value: '12', text: 'Monthly (12x per year)' },
+          { value: '365', text: 'Daily (365x per year)' }
+        ]}
+      ],
+      pmt: [
+        { id: 'fv', label: 'Future Value (FV)', placeholder: 'Target amount' },
+        { id: 'rate', label: 'Annual Interest Rate (%)', placeholder: 'e.g., 5' },
+        { id: 'time', label: 'Number of Periods (Years)', placeholder: 'e.g., 10' },
+        { id: 'freq', label: 'Payment Frequency', type: 'select', options: [
+          { value: '1', text: 'Annually (1x per year)' },
+          { value: '2', text: 'Semi-Annually (2x per year)' },
+          { value: '4', text: 'Quarterly (4x per year)' },
+          { value: '12', text: 'Monthly (12x per year)' }
+        ]}
+      ],
+      fvdue: [
+        { id: 'pmt', label: 'Payment per Period', placeholder: 'Regular payment amount' },
+        { id: 'rate', label: 'Annual Interest Rate (%)', placeholder: 'e.g., 5' },
+        { id: 'time', label: 'Number of Periods (Years)', placeholder: 'e.g., 10' },
+        { id: 'freq', label: 'Payment Frequency', type: 'select', options: [
+          { value: '1', text: 'Annually (1x per year)' },
+          { value: '2', text: 'Semi-Annually (2x per year)' },
+          { value: '4', text: 'Quarterly (4x per year)' },
+          { value: '12', text: 'Monthly (12x per year)' }
+        ]}
+      ],
+      pvdue: [
+        { id: 'pmt', label: 'Payment per Period', placeholder: 'Regular payment amount' },
+        { id: 'rate', label: 'Annual Interest Rate (%)', placeholder: 'e.g., 5' },
+        { id: 'time', label: 'Number of Periods (Years)', placeholder: 'e.g., 10' },
+        { id: 'freq', label: 'Payment Frequency', type: 'select', options: [
+          { value: '1', text: 'Annually (1x per year)' },
+          { value: '2', text: 'Semi-Annually (2x per year)' },
+          { value: '4', text: 'Quarterly (4x per year)' },
+          { value: '12', text: 'Monthly (12x per year)' }
+        ]}
+      ],
+      perp: [
+        { id: 'cf', label: 'Annual Cash Flow (C)', placeholder: 'e.g., 1000' },
+        { id: 'rate', label: 'Annual Interest Rate (%)', placeholder: 'e.g., 5' }
+      ],
+      gannuity: [
+        { id: 'pmt', label: 'Initial Payment (PMT)', placeholder: 'e.g., 1000' },
+        { id: 'rate', label: 'Annual Interest Rate (%)', placeholder: 'e.g., 5' },
+        { id: 'growth', label: 'Annual Growth Rate (%)', placeholder: 'e.g., 2' },
+        { id: 'time', label: 'Number of Periods (Years)', placeholder: 'e.g., 10' }
+      ],
+      gperp: [
+        { id: 'pmt', label: 'Initial Payment (PMT)', placeholder: 'e.g., 1000' },
+        { id: 'rate', label: 'Annual Interest Rate (%)', placeholder: 'e.g., 5' },
+        { id: 'growth', label: 'Annual Growth Rate (%)', placeholder: 'e.g., 2' }
+      ],
+      loan: [
+        { id: 'loan', label: 'Loan Amount (Principal)', placeholder: 'e.g., 100000' },
+        { id: 'rate', label: 'Annual Interest Rate (%)', placeholder: 'e.g., 5' },
+        { id: 'time', label: 'Loan Term (Years)', placeholder: 'e.g., 30' },
+        { id: 'freq', label: 'Payment Frequency', type: 'select', options: [
+          { value: '12', text: 'Monthly (12x per year)' },
+          { value: '4', text: 'Quarterly (4x per year)' },
+          { value: '1', text: 'Annually (1x per year)' }
+        ]}
+      ],
+      npv: [
+        { id: 'initial', label: 'Initial Investment (C₀)', placeholder: 'e.g., -50000' },
+        { id: 'cashflows', label: 'Future Cash Flows (comma separated)', placeholder: 'e.g., 10000,15000,20000', type: 'text' },
+        { id: 'rate', label: 'Discount Rate (%)', placeholder: 'e.g., 10' }
+      ],
+      irr: [
+        { id: 'cashflows', label: 'Cash Flow Series (comma separated; include initial investment)', placeholder: 'e.g., -50000,10000,15000,20000', type: 'text' }
+      ]
+    };
+    
+    // Update fields based on selected calculation type
+    function updateFields() {
+      const type = calcTypeSelector.value;
+      const fields = fieldDefinitions[type];
+      
+      if (!fields) {
+        inputFields.innerHTML = '<p class="validation-error">Invalid calculation type selected</p>';
+        return;
+      }
+      
+      let html = '';
+      fields.forEach(field => {
+        html += `<label for="${field.id}">${field.label}:</label>`;
+        if (field.type === 'select') {
+          html += `<select id="${field.id}">`;
+          field.options.forEach(option => {
+            html += `<option value="${option.value}">${option.text}</option>`;
+          });
+          html += `</select>`;
+        } else if (field.type === 'text') {
+          html += `<input type="text" id="${field.id}" placeholder="${field.placeholder}" />`;
+        } else {
+          html += `<input type="number" id="${field.id}" placeholder="${field.placeholder}" step="any" />`;
+        }
+      });
+      inputFields.innerHTML = html;
+    }
+    
+    // Validate required inputs
+    function validateInputs(type) {
+      const fields = fieldDefinitions[type] || [];
+      let valid = true;
+      let missingFields = [];
+      
+      fields.forEach(field => {
+        const element = document.getElementById(field.id);
+        if (!element) return;
+        // For text fields (e.g., cash flow series) do not validate as number
+        if (field.type !== 'text' && (element.value === '' || isNaN(parseFloat(element.value)))) {
+          valid = false;
+          missingFields.push(field.label);
+          element.style.borderColor = 'var(--danger)';
+        } else {
+          element.style.borderColor = 'var(--border)';
+        }
+      });
+      
+      if (!valid) {
+        const errorMsg = `Please provide valid values for: ${missingFields.join(', ')}`;
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'validation-error';
+        errorDiv.textContent = errorMsg;
+        // Remove any existing errors and append new one
+        const existingErrors = inputFields.querySelectorAll('.validation-error');
+        existingErrors.forEach(el => el.remove());
+        inputFields.appendChild(errorDiv);
+      }
+      return valid;
+    }
+    
+    // Get field value or a default
+    function getFieldValue(id, defaultValue = 0) {
+      const element = document.getElementById(id);
+      if (!element) return defaultValue;
+      const value = parseFloat(element.value);
+      return isNaN(value) ? defaultValue : value;
+    }
+    
+    // Clear input fields and hide result
+    function clearInputs() {
+      const inputs = inputFields.querySelectorAll('input');
+      inputs.forEach(input => input.value = '');
+      resultBox.style.display = 'none';
+    }
+    
+    // Format a number as currency
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(amount);
+    }
+    
+    // Convert frequency value to text
+    function getPaymentFrequency(freq) {
+      const freqMap = { "1": "annually", "2": "semi-annually", "4": "quarterly", "12": "monthly", "365": "daily" };
+      return freqMap[freq] || `${freq}x per year`;
+    }
+    
+    // Main calculation function
+    function calculate() {
+      const type = calcTypeSelector.value;
+      if (!validateInputs(type)) return;
+      
+      let result, formula, explanation, inputs = {};
+      // Common inputs
+      let r = getFieldValue('rate') / 100;
+      let t = getFieldValue('time');
+      let n = getFieldValue('freq');
+      let periodicRate = n ? r / n : r;
+      let totalPeriods = n ? n * t : t;
+      
+      switch (type) {
+        case 'fv': {
+          const pv = getFieldValue('pv');
+          inputs = { pv, rate: r, time: t, compounding: n };
+          result = pv * Math.pow(1 + periodicRate, totalPeriods);
+          formula = `FV = PV × (1 + r/n)<sup>n×t</sup>`;
+          explanation = `Starting with ${formatCurrency(pv)} at an annual rate of ${(r * 100).toFixed(2)}% compounded ${getPaymentFrequency(n)}, after ${t} years you get ${formatCurrency(result)}.`;
+          break;
+        }
+        case 'pv': {
+          const fv = getFieldValue('fv');
+          inputs = { fv, rate: r, time: t, compounding: n };
+          result = fv / Math.pow(1 + periodicRate, totalPeriods);
+          formula = `PV = FV / (1 + r/n)<sup>n×t</sup>`;
+          explanation = `To accumulate ${formatCurrency(fv)} after ${t} years at ${(r * 100).toFixed(2)}% compounded ${getPaymentFrequency(n)}, you need to invest ${formatCurrency(result)} today.`;
+          break;
+        }
+        case 'rate': {
+          const pvVal = getFieldValue('pv');
+          const fvVal = getFieldValue('fv');
+          inputs = { pv: pvVal, fv: fvVal, time: t, compounding: n };
+          let annualRate = n * (Math.pow(fvVal / pvVal, 1 / (n * t)) - 1);
+          result = annualRate * 100; // percentage
+          formula = `r = n × [(FV / PV)<sup>1/(n×t)</sup> - 1] × 100%`;
+          explanation = `For ${formatCurrency(pvVal)} to grow to ${formatCurrency(fvVal)} over ${t} years with ${getPaymentFrequency(n)} compounding, the required annual rate is ${result.toFixed(2)}%.`;
+          break;
+        }
+        case 'time': {
+          const pvVal = getFieldValue('pv');
+          const fvVal = getFieldValue('fv');
+          inputs = { pv: pvVal, fv: fvVal, rate: r, compounding: n };
+          result = Math.log(fvVal / pvVal) / (n * Math.log(1 + periodicRate));
+          formula = `t = ln(FV / PV) / [n × ln(1 + r/n)]`;
+          explanation = `For ${formatCurrency(pvVal)} to grow to ${formatCurrency(fvVal)} at ${(r * 100).toFixed(2)}% compounded ${getPaymentFrequency(n)}, it takes ${result.toFixed(2)} years.`;
+          break;
+        }
+        case 'pmt': {
+          const fvPmt = getFieldValue('fv');
+          inputs = { fv: fvPmt, rate: r, time: t, compounding: n };
+          result = fvPmt * periodicRate / (Math.pow(1 + periodicRate, totalPeriods) - 1);
+          formula = `PMT = FV × (r/n) / [(1 + r/n)<sup>n×t</sup> - 1]`;
+          explanation = `To accumulate ${formatCurrency(fvPmt)} over ${t} years at ${(r * 100).toFixed(2)}% interest, you need ${getPaymentFrequency(n)} payments of ${formatCurrency(result)}.`;
+          break;
+        }
+        case 'fvdue': {
+          const pmtFvDue = getFieldValue('pmt');
+          inputs = { pmt: pmtFvDue, rate: r, time: t, compounding: n };
+          result = pmtFvDue * (((Math.pow(1 + periodicRate, totalPeriods) - 1) / periodicRate) * (1 + periodicRate));
+          formula = `FV (Due) = PMT × {[(1 + r/n)<sup>n×t</sup> - 1] / (r/n)} × (1 + r/n)`;
+          explanation = `With payments of ${formatCurrency(pmtFvDue)} at the beginning of each period, in ${t} years at ${(r * 100).toFixed(2)}%, you'll accumulate ${formatCurrency(result)}.`;
+          break;
+        }
+        case 'pvdue': {
+          const pmtPvDue = getFieldValue('pmt');
+          inputs = { pmt: pmtPvDue, rate: r, time: t, compounding: n };
+          result = pmtPvDue * ((1 - 1 / Math.pow(1 + periodicRate, totalPeriods)) / periodicRate) * (1 + periodicRate);
+          formula = `PV (Due) = PMT × [1 - 1/(1 + r/n)<sup>n×t</sup>] / (r/n) × (1 + r/n)`;
+          explanation = `The present value of ${getPaymentFrequency(n)} payments of ${formatCurrency(pmtPvDue)} (paid at the beginning) over ${t} years at ${(r * 100).toFixed(2)}% is ${formatCurrency(result)}.`;
+          break;
+        }
+        case 'perp': {
+          // Perpetuity: PV = C / r
+          const cf = getFieldValue('cf');
+          inputs = { cf, rate: r };
+          result = cf / r;
+          formula = `PV = C / r`;
+          explanation = `A perpetuity paying ${formatCurrency(cf)} annually at an interest rate of ${(r * 100).toFixed(2)}% has a present value of ${formatCurrency(result)}.`;
+          break;
+        }
+        case 'gannuity': {
+          // Growing annuity: PV = PMT/(r - g) * [1 - ((1+g)/(1+r))^t]
+          const pmt = getFieldValue('pmt');
+          const growth = getFieldValue('growth') / 100;
+          const timeVal = getFieldValue('time');
+          inputs = { pmt, rate: r, growth, time: timeVal };
+          if (r <= growth) {
+            result = NaN;
+            formula = 'Invalid input: r must be greater than g';
+            explanation = 'For a growing annuity, the interest rate must be greater than the growth rate.';
+            break;
+          }
+          result = pmt / (r - growth) * (1 - Math.pow((1 + growth)/(1 + r), timeVal));
+          formula = `PV = PMT/(r - g) × [1 - ((1+g)/(1+r))<sup>t</sup>]`;
+          explanation = `A growing annuity with an initial payment of ${formatCurrency(pmt)}, growing at ${(growth*100).toFixed(2)}% over ${timeVal} years and an interest rate of ${(r*100).toFixed(2)}% has a present value of ${formatCurrency(result)}.`;
+          break;
+        }
+        case 'gperp': {
+          // Growing perpetuity: PV = PMT / (r - g)
+          const pmt = getFieldValue('pmt');
+          const growth = getFieldValue('growth') / 100;
+          inputs = { pmt, rate: r, growth };
+          if (r <= growth) {
+            result = NaN;
+            formula = 'Invalid input: r must be greater than g';
+            explanation = 'For a growing perpetuity, the interest rate must be greater than the growth rate.';
+            break;
+          }
+          result = pmt / (r - growth);
+          formula = `PV = PMT / (r - g)`;
+          explanation = `A growing perpetuity with an initial payment of ${formatCurrency(pmt)} growing at ${(growth*100).toFixed(2)}% yields a present value of ${formatCurrency(result)} at an interest rate of ${(r*100).toFixed(2)}%.`;
+          break;
+        }
+        case 'loan': {
+          // Loan amortization schedule: Calculate EMI then build a schedule
+          const loanAmount = getFieldValue('loan');
+          const freqLoan = getFieldValue('freq');
+          inputs = { loan: loanAmount, rate: r, time: t, compounding: freqLoan };
+          const totalPayments = t * freqLoan;
+          const periodicRateLoan = r / freqLoan;
+          const EMI = loanAmount * periodicRateLoan / (1 - Math.pow(1 + periodicRateLoan, -totalPayments));
+          
+          let scheduleHTML = `<table border="1" width="100%" style="border-collapse: collapse; text-align: center;">
+            <thead>
+              <tr>
+                <th>Payment #</th>
+                <th>Payment</th>
+                <th>Principal</th>
+                <th>Interest</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody>`;
+          let balance = loanAmount;
+          for (let i = 1; i <= totalPayments; i++) {
+            let interestPayment = balance * periodicRateLoan;
+            let principalPayment = EMI - interestPayment;
+            balance -= principalPayment;
+            if (balance < 0.01) balance = 0;
+            scheduleHTML += `<tr>
+              <td>${i}</td>
+              <td>${formatCurrency(EMI)}</td>
+              <td>${formatCurrency(principalPayment)}</td>
+              <td>${formatCurrency(interestPayment)}</td>
+              <td>${formatCurrency(balance)}</td>
+            </tr>`;
+          }
+          scheduleHTML += `</tbody></table>`;
+          result = EMI;
+          formula = `EMI = P × (r/n) / [1 - (1 + r/n)<sup>-n×t</sup>]`;
+          explanation = `For a loan of ${formatCurrency(loanAmount)} over ${t} years at an annual interest rate of ${(r*100).toFixed(2)}% (compounded ${getPaymentFrequency(freqLoan)}), the EMI is ${formatCurrency(EMI)}. Below is the amortization schedule:`;
+          resultContent.innerHTML = `
+            <div class="formula"><strong>Formula:</strong> ${formula}</div>
+            <div class="value">${formatCurrency(result)}</div>
+            <div class="explanation">${explanation}</div>
+            <div>${scheduleHTML}</div>
+          `;
+          resultBox.style.display = 'block';
+          saveResult(type, result, inputs);
+          return;
+        }
+        case 'npv': {
+          const initialInvestment = getFieldValue('initial');
+          const cashflowText = document.getElementById('cashflows').value;
+          let cashflowsArr = cashflowText.split(',').map(s => parseFloat(s.trim())).filter(s => !isNaN(s));
+          inputs = { initial: initialInvestment, cashflows: cashflowsArr, rate: r };
+          let npvValue = -initialInvestment; // subtract initial (assuming investment is negative)
+          cashflowsArr.forEach((cf, index) => {
+            npvValue += cf / Math.pow(1 + r, index + 1);
+          });
+          result = npvValue;
+          formula = `NPV = Σ [CF<sub>t</sub> / (1+r)<sup>t</sup>] - C₀`;
+          explanation = `With an initial investment of ${formatCurrency(initialInvestment)} and future cash flows ${cashflowText}, at a discount rate of ${(r*100).toFixed(2)}%, the NPV is ${formatCurrency(result)}.`;
+          break;
+        }
+        case 'irr': {
+          const cashflowText = document.getElementById('cashflows').value;
+          let cashflowsArr = cashflowText.split(',').map(s => parseFloat(s.trim())).filter(s => !isNaN(s));
+          if (cashflowsArr.length < 2) {
+            result = NaN;
+            formula = 'Invalid cash flow series';
+            explanation = 'Provide at least two cash flow values (including initial investment).';
+            break;
+          }
+          // Use bisection method to approximate IRR such that NPV = 0
+          const npvAtRate = (rateVal) => {
+            let npv = 0;
+            cashflowsArr.forEach((cf, i) => {
+              npv += cf / Math.pow(1 + rateVal, i);
+            });
+            return npv;
+          };
+          let irrLow = -0.99, irrHigh = 1, irrMid = 0;
+          const tolerance = 1e-6;
+          let iterations = 0, maxIterations = 100;
+          while (iterations < maxIterations) {
+            irrMid = (irrLow + irrHigh) / 2;
+            let npvMid = npvAtRate(irrMid);
+            if (Math.abs(npvMid) < tolerance) break;
+            if (npvMid > 0) {
+              irrLow = irrMid;
+            } else {
+              irrHigh = irrMid;
+            }
+            iterations++;
+          }
+          result = irrMid * 100; // as percentage
+          formula = `IRR is the rate that makes NPV = 0`;
+          explanation = `For the cash flow series ${cashflowText}, the IRR is approximately ${result.toFixed(2)}%.`;
+          break;
+        }
+      }
+      
+      displayResult(type, result, formula, explanation);
+      saveResult(type, result, inputs);
+    }
+    
+    // Display the result in the result box
+    function displayResult(type, value, formula, explanation) {
+      const calculationTypeMap = {
+        fv: 'Future Value',
+        pv: 'Present Value',
+        rate: 'Interest Rate',
+        time: 'Time Period',
+        pmt: 'Payment Amount',
+        fvdue: 'Future Value (Annuity Due)',
+        pvdue: 'Present Value (Annuity Due)',
+        perp: 'Perpetuity',
+        gannuity: 'Growing Annuity',
+        gperp: 'Growing Perpetuity',
+        loan: 'Loan Amortization',
+        npv: 'Net Present Value',
+        irr: 'Internal Rate of Return'
+      };
+      const typeName = calculationTypeMap[type] || type;
+      const displayValue = (type === "rate" || type === "irr") ? `${parseFloat(value).toFixed(2)}%` : formatCurrency(value);
+      
+      resultContent.innerHTML = `
+        <div class="formula"><strong>Formula:</strong> ${formula}</div>
+        <div class="value">${displayValue}</div>
+        <div class="explanation">${explanation}</div>
+      `;
+      resultBox.style.display = 'block';
+      resultBox.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Save the result in localStorage and update the saved list
+    function saveResult(type, value, inputs) {
+      const calculationTypeMap = {
+        fv: 'Future Value',
+        pv: 'Present Value',
+        rate: 'Interest Rate',
+        time: 'Time Period',
+        pmt: 'Payment Amount',
+        fvdue: 'Future Value (Annuity Due)',
+        pvdue: 'Present Value (Annuity Due)',
+        perp: 'Perpetuity',
+        gannuity: 'Growing Annuity',
+        gperp: 'Growing Perpetuity',
+        loan: 'Loan Amortization',
+        npv: 'Net Present Value',
+        irr: 'Internal Rate of Return'
+      };
+      const typeName = calculationTypeMap[type] || type;
+      const displayValue = (type === "rate" || type === "irr") ? `${parseFloat(value).toFixed(2)}%` : formatCurrency(value);
+      
+      const existing = JSON.parse(localStorage.getItem("tvmResults") || "[]");
+      const newEntry = {
+        id: Date.now(),
+        type: typeName,
+        value: displayValue,
+        rawValue: value,
+        inputs: inputs,
+        timestamp: new Date().toLocaleString()
+      };
+      if (existing.length >= 10) existing.pop();
+      existing.unshift(newEntry);
+      localStorage.setItem("tvmResults", JSON.stringify(existing));
+      showSaved();
+    }
+    
+    // Load a saved calculation into the form
+    function loadCalculation(id) {
+      const saved = JSON.parse(localStorage.getItem("tvmResults") || "[]");
+      const calc = saved.find(item => item.id === id);
+      if (!calc) return;
+      
+      const typeMap = {
+        "Future Value": "fv",
+        "Present Value": "pv",
+        "Interest Rate": "rate",
+        "Time Period": "time",
+        "Payment Amount": "pmt",
+        "Future Value (Annuity Due)": "fvdue",
+        "Present Value (Annuity Due)": "pvdue",
+        "Perpetuity": "perp",
+        "Growing Annuity": "gannuity",
+        "Growing Perpetuity": "gperp",
+        "Loan Amortization": "loan",
+        "Net Present Value": "npv",
+        "Internal Rate of Return": "irr"
+      };
+      const calcType = typeMap[calc.type] || "fv";
+      calcTypeSelector.value = calcType;
+      updateFields();
+      
+      setTimeout(() => {
+        if (calc.inputs) {
+          for (const key in calc.inputs) {
+            const elem = document.getElementById(key);
+            if (elem) elem.value = calc.inputs[key];
+          }
+        }
+        calculate();
+      }, 100);
+    }
+    
+    // Delete a saved calculation by id
+    function deleteCalculation(id) {
+      const saved = JSON.parse(localStorage.getItem("tvmResults") || "[]");
+      const filtered = saved.filter(item => item.id !== id);
+      localStorage.setItem("tvmResults", JSON.stringify(filtered));
+      showSaved();
+    }
+    
+    // Display saved calculations
+    function showSaved() {
+      const list = JSON.parse(localStorage.getItem("tvmResults") || "[]");
+      if (list.length === 0) {
+        savedResults.innerHTML = `<p style="color: var(--text-light);">No saved calculations yet.</p>`;
+        return;
+      }
+      savedResults.innerHTML = list.map(item => `
+        <div class="saved-item">
+          <div class="saved-item-content">
+            <div class="saved-item-type">${item.type}</div>
+            <div class="saved-item-value">${item.value}</div>
+            <div class="saved-item-time">${item.timestamp}</div>
+          </div>
+          <div class="saved-item-actions">
+            <button title="Load" onclick="loadCalculation(${item.id})"><i class="fas fa-download"></i></button>
+            <button title="Delete" onclick="deleteCalculation(${item.id})"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `).join("");
+    }
+    
+    // Initialize
+    updateFields();
+    showSaved();
+  </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

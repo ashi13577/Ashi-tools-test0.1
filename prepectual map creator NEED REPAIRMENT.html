@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1238.0" data-gr-ext-installed="">
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perceptual Map Creator - Ashi Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #3498db; /* Blue for mapping tools */
+            --primary-dark: #2980b9;
+            --secondary: #9b59b6; /* Purple for item accents */
+            --dark-bg: #1c1e22;
+            --card-bg: #282c34;
+            --text-light: #f0f2f5;
+            --border-light: rgba(240, 242, 245, 0.2);
+            --input-bg: rgba(240, 242, 245, 0.05);
+            --map-bg: #22262c; /* Slightly darker for map area */
+            --axis-color: rgba(255, 255, 255, 0.3);
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+            overflow: hidden; /* Prevent body scroll; map area will scroll */
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background: var(--dark-bg);
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+        .logo-container {
+            display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px;
+        }
+        .logo-icon {
+            background: var(--primary); color: white; width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+        }
+        h1 { font-size: 2rem; color: var(--primary); }
+        .header-sub { font-size: 0.9rem; color: #bdc3c7; max-width: 600px; margin: 5px auto 0; }
+
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .controls-sidebar {
+            width: 300px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+        .control-group {
+            background: var(--dark-bg); padding: 15px; border-radius: 8px;
+            border: 1px solid var(--border-light);
+        }
+        .control-group h3 {
+            font-size: 1.1rem; color: var(--primary); margin-bottom: 12px;
+            padding-bottom: 8px; border-bottom: 1px solid var(--border-light);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .control-group label { display: block; font-size: 0.9em; margin-bottom: 5px; color: var(--text-light); }
+        .control-group input[type="text"] {
+            width: 100%; padding: 10px; border-radius: 4px; border: 1px solid var(--border-light);
+            background: var(--input-bg); color: var(--text-light); font-size: 0.95rem;
+        }
+        .control-group input[type="text"]:focus { outline: none; border-color: var(--primary); }
+        .btn {
+            padding: 10px 15px; border:none; border-radius: 6px; font-size: 0.95rem;
+            font-weight: 600; cursor: pointer; transition: var(--transition);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: var(--primary); color: white; width: 100%; margin-top:10px;
+        }
+        .btn:hover { background: var(--primary-dark); }
+        .btn i { margin-right: 5px; }
+        .instructions { font-size: 0.85em; color: #95a5a6; padding: 10px 0;  }
+
+        .map-area-wrapper {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: auto;
+        }
+        
+        /* Axis Labels */
+        .axis-label {
+            position: absolute;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .x-axis-left {
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .x-axis-right {
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .y-axis-top {
+            left: 50%;
+            top: 10px;
+            transform: translateX(-50%);
+        }
+        
+        .y-axis-bottom {
+            left: 50%;
+            bottom: 10px;
+            transform: translateX(-50%);
+        }
+
+        #positioning-canvas {
+            width: 600px;
+            height: 600px;
+            background-color: var(--map-bg);
+            border: 1px solid var(--axis-color);
+            position: relative;
+            cursor: crosshair;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+
+        /* Axis Lines */
+        .axis-line {
+            position: absolute;
+            background-color: var(--axis-color);
+        }
+        
+        .x-axis {
+            width: 100%;
+            height: 1px;
+            top: 50%;
+            left: 0;
+            border-top: 2px dashed var(--axis-color);
+        }
+        
+        .y-axis {
+            width: 1px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+            border-left: 2px dashed var(--axis-color);
+        }
+
+        .canvas-item {
+            position: absolute;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translate(-50%, -50%); /* Center on cursor */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            font-weight: bold;
+            color: white;
+            font-size: 0.8rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+        }
+        .canvas-item.dragging { cursor: grabbing; z-index: 1000; }
+        
+        .canvas-item-label {
+            position: absolute;
+            top: 110%; /* Position below the circle */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0,0,0,0.7);
+            color: var(--text-light);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            font-weight: normal;
+        }
+        
+        .canvas-item-delete {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e74c3c;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: none; /* Show on hover */
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            cursor: pointer;
+            border: 1px solid white;
+            z-index: 10;
+        }
+        .canvas-item:hover .canvas-item-delete { display: flex; }
+
+        footer {
+            text-align: center; padding: 15px; background: var(--dark-bg);
+            border-top: 1px solid var(--card-bg); font-size: 0.9em; flex-shrink: 0;
+        }
+        .insta-link { color: var(--primary); text-decoration: none; font-weight: bold; }
+
+    </style>
+
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon"><i class="fas fa-bullseye"></i></div>
+            <div class="logo-text"><h1>Perceptual Map Creator</h1></div>
+        </div>
+        <p class="header-sub">Plot and visualize your brands, products, or competitors based on key attributes.</p>
+    </header>
+
+    <div class="main-layout">
+        <div class="controls-sidebar">
+            <div class="control-group">
+                <h3><i class="fas fa-cog"></i> Canvas Setup</h3>
+                <div>
+                    <label for="canvasTitle">Canvas Title:</label>
+                    <input type="text" id="canvasTitle" value="Brand Positioning Map">
+                </div>
+                <div>
+                    <label for="xAxisLabelLeft">X-Axis Left Label:</label>
+                    <input type="text" id="xAxisLabelLeft" value="[Text]">
+                </div>
+                <div>
+                    <label for="xAxisLabelRight">X-Axis Right Label:</label>
+                    <input type="text" id="xAxisLabelRight" value="[Text]">
+                </div>
+                <div>
+                    <label for="yAxisLabelTop">Y-Axis Top Label:</label>
+                    <input type="text" id="yAxisLabelTop" value="[Text]">
+                </div>
+                <div>
+                    <label for="yAxisLabelBottom">Y-Axis Bottom Label:</label>
+                    <input type="text" id="yAxisLabelBottom" value="[Text]">
+                </div>
+                <button class="btn" id="updateLabelsBtn"><i class="fas fa-sync-alt"></i> Update Labels</button>
+            </div>
+            <div class="control-group">
+                <h3><i class="fas fa-plus-circle"></i> Add Item</h3>
+                <div>
+                    <label for="itemName">Item Name:</label>
+                    <input type="text" id="itemName" value="Brand" placeholder="e.g., Brand A">
+                </div>
+                <button class="btn" id="addItemBtn" style=""><i class="fas fa-plus"></i> Add to Canvas</button>
+            </div>
+            <div class="control-group">
+                <h3><i class="fas fa-file-export"></i> Export</h3>
+                <button class="btn" id="exportPdfBtn"><i class="fas fa-file-pdf"></i> Export as PDF</button>
+            </div>
+            <div class="instructions">
+                <p><i class="fas fa-info-circle"></i> Click "Add to Canvas" then click on the canvas to position.</p>
+                <p><i class="fas fa-arrows-alt"></i> Drag items to reposition.</p>
+                <p><i class="fas fa-times"></i> Hover over item for delete (×) button.</p>
+            </div>
+        </div>
+
+        <div class="map-area-wrapper">
+            <div id="positioning-canvas" style="cursor: default;">
+                <!-- Axis Lines -->
+                <div class="axis-line x-axis"></div>
+                <div class="axis-line y-axis"></div>
+                
+                <!-- Axis Labels -->
+                <div class="axis-label x-axis-left" id="x-left">hnrtn</div>
+                <div class="axis-label x-axis-right" id="x-right">[Text]trnrt</div>
+                <div class="axis-label y-axis-top" id="y-top">[Text]trnrtnrtn</div>
+                <div class="axis-label y-axis-bottom" id="y-bottom">[Text]trnrtnrtn</div>
+                
+                <!-- Canvas Items will be added here -->
+            <div class="canvas-item" data-id="item-0" style="background-color: rgb(52, 152, 219); left: 71.75px; top: 166.68px;">B<span class="canvas-item-label">Brand 1</span><div class="canvas-item-delete" title="Delete item">×</div></div><div class="canvas-item" data-id="item-1" style="background-color: rgb(46, 204, 113); left: 388.75px; top: 358.68px;">t<span class="canvas-item-label">thrwth 2</span><div class="canvas-item-delete" title="Delete item">×</div></div></div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Perceptual Map Creator - Ashi Tools | Connect <a href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank" class="insta-link">@ashish_singh_rajput_3</a></p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const canvas = document.getElementById('positioning-canvas');
+        const canvasTitleInput = document.getElementById('canvasTitle');
+        const xAxisLabelLeftInput = document.getElementById('xAxisLabelLeft');
+        const xAxisLabelRightInput = document.getElementById('xAxisLabelRight');
+        const yAxisLabelTopInput = document.getElementById('yAxisLabelTop');
+        const yAxisLabelBottomInput = document.getElementById('yAxisLabelBottom');
+        const itemNameInput = document.getElementById('itemName');
+        const addItemBtn = document.getElementById('addItemBtn');
+        const updateLabelsBtn = document.getElementById('updateLabelsBtn');
+        const exportPdfBtn = document.getElementById('exportPdfBtn');
+        
+        // References to axis label elements
+        const xLeftLabel = document.getElementById('x-left');
+        const xRightLabel = document.getElementById('x-right');
+        const yTopLabel = document.getElementById('y-top');
+        const yBottomLabel = document.getElementById('y-bottom');
+        
+        let items = [];
+        let nextItemId = 0;
+        let isAdding = false;
+        let draggedItemData = null;
+        let dragOffsetX, dragOffsetY;
+        
+        // Predefined colors for items (similar to the screenshot)
+        const itemColors = [
+            '#3498db', // Blue
+            '#2ecc71', // Green
+            '#e74c3c', // Red
+            '#f39c12', // Orange
+            '#9b59b6', // Purple
+            '#1abc9c', // Turquoise
+            '#d35400', // Pumpkin
+            '#c0392b', // Pomegranate
+            '#16a085', // Green Sea
+            '#8e44ad', // Wisteria
+            '#f1c40f', // Sunflower
+            '#273c75', // Dark Blue
+            '#e84118', // Orange Red
+            '#6ab04c'  // Mint Leaf
+        ];
+        
+        // Update axis labels from input fields
+        function updateAxisLabels() {
+            xLeftLabel.textContent = xAxisLabelLeftInput.value;
+            xRightLabel.textContent = xAxisLabelRightInput.value;
+            yTopLabel.textContent = yAxisLabelTopInput.value;
+            yBottomLabel.textContent = yAxisLabelBottomInput.value;
+        }
+        
+        // Initialize with default values
+        updateAxisLabels();
+        
+        // Update labels button click
+        updateLabelsBtn.addEventListener('click', updateAxisLabels);
+        
+        // Add Item Mode
+        addItemBtn.addEventListener('click', function() {
+            isAdding = true;
+            canvas.style.cursor = 'crosshair';
+            addItemBtn.textContent = 'Click on Canvas to Place';
+            addItemBtn.style.backgroundColor = '#e74c3c'; // Red to indicate active adding mode
+        });
+        
+        // Canvas click to add item
+        canvas.addEventListener('click', function(e) {
+            if (!isAdding || e.target !== canvas) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const itemName = itemNameInput.value.trim() || 'Brand';
+            const itemNumber = nextItemId + 1;
+            
+            addItem(itemName + ' ' + itemNumber, x, y);
+            
+            // Reset adding mode
+            isAdding = false;
+            canvas.style.cursor = 'default';
+            addItemBtn.innerHTML = '<i class="fas fa-plus"></i> Add to Canvas';
+            addItemBtn.style.backgroundColor = ''; // Reset to default
+        });
+        
+        function addItem(name, x, y) {
+            const colorIndex = nextItemId % itemColors.length;
+            const newItem = {
+                id: `item-${nextItemId++}`,
+                name: name,
+                x: x,
+                y: y,
+                color: itemColors[colorIndex]
+            };
+            
+            items.push(newItem);
+            renderItem(newItem);
+        }
+        
+        function renderItem(itemData) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'canvas-item';
+            itemDiv.setAttribute('data-id', itemData.id);
+            itemDiv.style.backgroundColor = itemData.color;
+            itemDiv.style.left = `${itemData.x}px`;
+            itemDiv.style.top = `${itemData.y}px`;
+            
+            // Item letter (first letter of name)
+            itemDiv.textContent = itemData.name.charAt(0);
+            
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'canvas-item-label';
+            labelSpan.textContent = itemData.name;
+            
+            const deleteBtn = document.createElement('div');
+            deleteBtn.className = 'canvas-item-delete';
+            deleteBtn.innerHTML = '&times;';
+            deleteBtn.title = "Delete item";
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                items = items.filter(it => it.id !== itemData.id);
+                itemDiv.remove();
+            });
+            
+            itemDiv.appendChild(labelSpan);
+            itemDiv.appendChild(deleteBtn);
+            canvas.appendChild(itemDiv);
+            
+            // Drag functionality
+            itemDiv.addEventListener('mousedown', function(e) {
+                if (e.target === deleteBtn) return; // Don't drag if clicking delete
+                e.preventDefault(); // Prevent text selection during drag
+                e.stopPropagation();
+                draggedItemData = itemData;
+                itemDiv.classList.add('dragging');
+                
+                // Calculate offset from top-left of item to mousedown point
+                const itemRect = itemDiv.getBoundingClientRect();
+                dragOffsetX = e.clientX - (itemRect.left + itemRect.width / 2);
+                dragOffsetY = e.clientY - (itemRect.top + itemRect.height / 2);
+            });
+        }
+        
+        document.addEventListener('mousemove', function(e) {
+            if (!draggedItemData) return;
+            
+            const canvasRect = canvas.getBoundingClientRect();
+            // Calculate new CENTER position relative to canvas
+            let newX = e.clientX - canvasRect.left - dragOffsetX;
+            let newY = e.clientY - canvasRect.top - dragOffsetY;
+            
+            // Constrain within canvas boundaries (considering item is centered via transform)
+            const itemElem = document.querySelector(`.canvas-item[data-id="${draggedItemData.id}"]`);
+            const itemWidth = itemElem ? itemElem.offsetWidth : 40;
+            const itemHeight = itemElem ? itemElem.offsetHeight : 40;
+            
+            newX = Math.max(itemWidth / 2, Math.min(newX, canvas.offsetWidth - itemWidth / 2));
+            newY = Math.max(itemHeight / 2, Math.min(newY, canvas.offsetHeight - itemHeight / 2));
+            
+            draggedItemData.x = newX;
+            draggedItemData.y = newY;
+            itemElem.style.left = `${newX}px`;
+            itemElem.style.top = `${newY}px`;
+        });
+        
+        document.addEventListener('mouseup', function() {
+            if (draggedItemData) {
+                const itemElem = document.querySelector(`.canvas-item[data-id="${draggedItemData.id}"]`);
+                if(itemElem) itemElem.classList.remove('dragging');
+                draggedItemData = null;
+            }
+        });
+        
+        // PDF Export
+        exportPdfBtn.addEventListener('click', () => {
+            if (items.length === 0 && !confirm("The canvas is empty. Do you want to export an empty canvas template?")) {
+                return;
+            }
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'pt', 'a4'); // Landscape
+            
+            const pageMargin = 40;
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const canvasAreaWidth = pageWidth - 2 * pageMargin;
+            const canvasAreaHeight = pageHeight - 2 * pageMargin - 30;
+            
+            // PDF Styling - White background, dark text
+            doc.setFillColor(255, 255, 255);
+            doc.rect(0, 0, pageWidth, pageHeight, 'F');
+            doc.setTextColor(30, 30, 30);
+            
+            // Canvas Title
+            const canvasUserTitle = canvasTitleInput.value.trim() || "Perceptual Map Creator";
+            doc.setFontSize(18);
+            doc.setFont("helvetica", "bold");
+            doc.text(canvasUserTitle, pageWidth / 2, pageMargin, { align: 'center' });
+            doc.setFont("helvetica", "normal");
+            
+            // Calculate canvas center for positioning
+            const centerX = pageMargin + canvasAreaWidth / 2;
+            const centerY = pageMargin + canvasAreaHeight / 2 + 10; // +10 for title space
+            
+            // Draw Axes (Dashed lines for better visibility)
+            doc.setDrawColor(0, 0, 0);
+            doc.setLineWidth(0.75);
+            
+            // X-axis
+            doc.setLineDashPattern([5, 5], 0); // Dashed line
+            doc.line(pageMargin, centerY, pageMargin + canvasAreaWidth, centerY);
+            
+            // Y-axis
+            doc.line(centerX, pageMargin + 10, centerX, pageMargin + canvasAreaHeight + 10);
+            
+            // Axis Labels
+            doc.setFontSize(10);
+            // X-axis labels
+            doc.text(xLeftLabel.textContent, pageMargin + 10, centerY - 5);
+            doc.text(xRightLabel.textContent, pageWidth - pageMargin - 10, centerY - 5, { align: 'right' });
+            
+            // Y-axis labels
+            doc.text(yTopLabel.textContent, centerX, pageMargin + 20, { align: 'center' });
+            doc.text(yBottomLabel.textContent, centerX, pageHeight - pageMargin - 10, { align: 'center' });
+            
+            // Plot Items
+            const webCanvasWidth = canvas.offsetWidth;
+            const webCanvasHeight = canvas.offsetHeight;
+            
+            items.forEach(item => {
+                // Scale item's position from web canvas to PDF canvas area
+                const pdfItemX = pageMargin + (item.x / webCanvasWidth) * canvasAreaWidth;
+                const pdfItemY = pageMargin + 10 + (item.y / webCanvasHeight) * canvasAreaHeight;
+                
+                // Draw colored circle
+                const hexColor = item.color;
+                const r = parseInt(hexColor.slice(1, 3), 16);
+                const g = parseInt(hexColor.slice(3, 5), 16);
+                const b = parseInt(hexColor.slice(5, 7), 16);
+                
+                doc.setFillColor(r, g, b);
+                doc.circle(pdfItemX, pdfItemY, 15, 'F');
+                
+                // Add item letter (first character of name)
+                doc.setTextColor(255, 255, 255); // White text for contrast
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(12);
+                const letter = item.name.charAt(0);
+                const letterWidth = doc.getTextWidth(letter);
+                doc.text(letter, pdfItemX - letterWidth/2, pdfItemY + 4);
+                
+                // Add item label below
+                doc.setTextColor(0, 0, 0); // Black text for label
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(9);
+                doc.text(item.name, pdfItemX, pdfItemY + 25, { align: 'center' });
+            });
+            
+            // PDF Footer
+            doc.setFontSize(8);
+            doc.setTextColor(120, 120, 120);
+            doc.text(`Exported from Ashi Tools Perceptual Map Creator | @ashish_singh_rajput_3`,
+                        pageWidth / 2, pageHeight - 10, { align: 'center' });
+            
+            doc.save(`Perceptual-Map-${canvasUserTitle.replace(/\s+/g, '_') || 'AshiTools'}.pdf`);
+        });
+    });
+    </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>

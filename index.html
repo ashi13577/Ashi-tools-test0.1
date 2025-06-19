@@ -1,0 +1,2509 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <style></style>
+        </head>
+        <body data-new-gr-c-s-check-loaded="14.1240.0" data-gr-ext-installed="">
+            
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashi Tools - Empowering Tomorrow's Management Leaders</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@400;700&amp;display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #00ffd5;
+            --primary-dark: #00b39e;
+            --secondary: #00e6c7;
+            --accent: #facc15;
+            --dark-bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --card-hover: #242424;
+            --text-light: #e5e5e5;
+            --text-muted: #a3a3a3;
+            --border: #333333;
+            --border-light: #404040;
+            --gradient-primary: linear-gradient(135deg, #00ffd5 0%, #00b39e 100%);
+            --gradient-dark: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 20px rgba(0, 255, 213, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* OPTIMIZED Header Styles - Much more compact */
+        header {
+            text-align: center;
+            padding: 60px 20px 30px;
+            background: var(--gradient-dark);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        header::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 213, 0.03) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 8px;
+            color: var(--primary);
+            text-shadow: 0 0 30px rgba(0, 255, 213, 0.4);
+            position: relative;
+            z-index: 2;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header-sub {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            margin-top: 12px;
+            color: var(--text-muted);
+            font-style: italic;
+            font-weight: 300;
+        }
+        
+        /* Quote Rotator - More compact */
+        #quote-rotator {
+            margin: 25px auto 15px;
+            padding: 20px;
+            background: rgba(0, 255, 213, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 213, 0.1);
+            max-width: 800px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        #sanskritQuote {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 255, 213, 0.3);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        #englishQuote {
+            font-size: clamp(0.8rem, 1.8vw, 1rem);
+            color: var(--text-muted);
+            font-style: italic;
+            line-height: 1.5;
+        }
+        
+        /* OPTIMIZED: Horizontal compact layout for stats and CTAs */
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 30px auto 0;
+            max-width: 1000px;
+            position: relative;
+            z-index: 2;
+            align-items: center;
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: flex-start;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .stat:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .stat-number {
+            display: block;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 700;
+            color: var(--primary);
+            text-shadow: 0 0 15px rgba(0, 255, 213, 0.4);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        
+        /* OPTIMIZED: Compact CTA section */
+        .cta-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        
+        .cta-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        
+        .cta-button {
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+            background: var(--primary-dark);
+        }
+
+        .social-icon {
+            font-size: 1rem;
+        }
+        
+        .cta-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 5px;
+        }
+        
+        /* OPTIMIZED: More compact search bar */
+        .search-container {
+            max-width: 600px;
+            margin: 25px auto 0;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .search-box {
+            display: flex;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-soft);
+        }
+        
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 25px rgba(0, 255, 213, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 15px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .search-box input:focus {
+            outline: none;
+        }
+        
+        .search-box button {
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+            border: none;
+            padding: 0 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box button:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        /* Clear Search Button */
+        .clear-search {
+            position: absolute;
+            right: 70px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .clear-search.visible {
+            opacity: 1;
+        }
+        
+        .clear-search:hover {
+            color: var(--primary);
+        }
+        
+        /* Enhanced Category Navigation */
+        .category-nav {
+            max-width: 1400px;
+            margin: 40px auto 30px;
+            padding: 0 20px;
+        }
+        
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .category-tab {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-tab.active {
+            background: var(--gradient-primary);
+            color: var(--dark-bg) !important;
+            border-color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .category-tab:hover:not(.active) {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
+            color: var(--text-light);
+        }
+        
+        /* Responsive adjustments for the new layout */
+        @media (max-width: 768px) {
+            header {
+                padding: 40px 15px 25px;
+            }
+            
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            
+            .hero-stats {
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .cta-section {
+                align-items: center;
+            }
+            
+            .cta-container {
+                justify-content: center;
+            }
+            
+            .cta-text {
+                text-align: center;
+            }
+            
+            .stat {
+                min-width: 100px;
+                padding: 12px 15px;
+            }
+            
+            #quote-rotator {
+                margin: 20px auto 10px;
+                padding: 15px;
+            }
+            
+            .search-container {
+                margin: 20px auto 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stat {
+                min-width: auto;
+                width: 100%;
+                max-width: 200px;
+                margin: 0 auto;
+            }
+            
+            .cta-container {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .cta-button {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+        }
+        
+        /* Search Results Styling */
+        .search-results-header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 255, 213, 0.1);
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 1px solid rgba(0, 255, 213, 0.3);
+        }
+        
+        .search-results-text {
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .search-term {
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .no-results i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .no-results p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        /* Enhanced Section Styles */
+        section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        section h2 {
+            text-align: center;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin: 60px 0 40px;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        section h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+            box-shadow: var(--shadow-glow);
+        }
+        
+        /* Enhanced Card Grid */
+        .tool-container, .framework-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 30px 0;
+            overflow: visible;
+        }
+        
+        .tool-card, .framework-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 45px 25px 35px 25px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 180px;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Highlight search matches */
+        .tool-card.search-match, .framework-card.search-match {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-glow);
+            transform: scale(1.02);
+        }
+        
+        .tool-card.search-match .card-icon, .framework-card.search-match .card-icon {
+            color: var(--primary);
+            text-shadow: 0 0 15px rgba(0, 255, 213, 0.6);
+        }
+        
+        .search-highlight {
+            background: rgba(0, 255, 213, 0.3);
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+        
+        .tool-card::before, .framework-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        
+        .tool-card::after, .framework-card::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(0, 255, 213, 0.1) 0%, transparent 70%);
+            transition: all 0.4s ease;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+        
+        .tool-card:hover, .framework-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), var(--shadow-glow);
+            border-color: var(--primary);
+            background: var(--card-hover);
+        }
+        
+        .tool-card:hover::before, .framework-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .tool-card:hover::after, .framework-card:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .tool-card:hover .card-icon, .framework-card:hover .card-icon {
+            transform: scale(1.2) rotate(5deg);
+            text-shadow: 0 0 20px rgba(0, 255, 213, 0.6);
+        }
+        
+        .tool-card h3, .framework-card h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--text-light);
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+            line-height: 1.3;
+        }
+        
+        /* Enhanced Special Sections */
+        .most-used {
+            background: linear-gradient(135deg, rgba(0, 255, 213, 0.05) 0%, rgba(26, 26, 26, 0.8) 100%);
+            border-radius: 25px;
+            padding: 50px 30px;
+            margin: 60px 0;
+            border: 1px solid rgba(0, 255, 213, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .recently-added {
+            background: linear-gradient(135deg, rgba(0, 179, 158, 0.08) 0%, rgba(26, 26, 26, 0.8) 100%);
+            border-radius: 25px;
+            padding: 50px 30px;
+            margin: 60px 0;
+            border: 1px solid rgba(0, 179, 158, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .popular-badge, .new-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow-soft);
+            z-index: 3;
+        }
+        
+        .popular-badge {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+        }
+        
+        .new-badge {
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+        }
+        
+        /* Enhanced Analytics Section */
+        .analytics-section {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(30, 30, 30, 0.9) 100%);
+            border-radius: 25px;
+            padding: 50px 30px;
+            margin: 60px 0;
+            border: 1px solid var(--border-light);
+            backdrop-filter: blur(10px);
+        }
+        
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .analytics-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 35px;
+            transition: all 0.3s ease;
+        }
+        
+        .analytics-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .analytics-card h3 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .usage-bar {
+            background: rgba(0, 255, 213, 0.15);
+            height: 12px;
+            border-radius: 6px;
+            margin: 15px 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .usage-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 6px;
+            transition: width 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 0 10px rgba(0, 255, 213, 0.4);
+        }
+        
+        .category-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        /* User stats specific styling */
+        .user-stat-item {
+            background: rgba(0, 255, 213, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid rgba(0, 255, 213, 0.2);
+        }
+        
+        .user-stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+        
+        .user-stat-value {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        /* Enhanced Footer */
+        footer {
+            text-align: center;
+            padding: 60px 20px 40px;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            border-top: 2px solid var(--border);
+            margin-top: 80px;
+            background: var(--gradient-dark);
+            position: relative;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: var(--gradient-primary);
+        }
+        
+        .insta-link {
+            color: var(--primary);
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+            margin: 15px 10px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .insta-link:hover {
+            background: rgba(0, 255, 213, 0.1);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        /* Category sections visibility */
+        .category-section {
+            display: none;
+        }
+        
+        .category-section.active {
+            display: block;
+        }
+        
+        /* Hidden sections during search */
+        .section-hidden {
+            display: none !important;
+        }
+        
+        /* Enhanced Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .tool-card, .framework-card {
+            animation: fadeIn 0.3s ease forwards;
+            opacity: 0;
+        }
+        
+        /* Animation delays */
+        .tool-card:nth-child(1), .framework-card:nth-child(1) { animation-delay: 0.05s; }
+        .tool-card:nth-child(2), .framework-card:nth-child(2) { animation-delay: 0.1s; }
+        .tool-card:nth-child(3), .framework-card:nth-child(3) { animation-delay: 0.15s; }
+        .tool-card:nth-child(4), .framework-card:nth-child(4) { animation-delay: 0.2s; }
+        .tool-card:nth-child(5), .framework-card:nth-child(5) { animation-delay: 0.25s; }
+        .tool-card:nth-child(6), .framework-card:nth-child(6) { animation-delay: 0.3s; }
+        .tool-card:nth-child(7), .framework-card:nth-child(7) { animation-delay: 0.35s; }
+        .tool-card:nth-child(8), .framework-card:nth-child(8) { animation-delay: 0.4s; }
+        .tool-card:nth-child(9), .framework-card:nth-child(9) { animation-delay: 0.45s; }
+        .tool-card:nth-child(10), .framework-card:nth-child(10) { animation-delay: 0.5s; }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .tool-container, .framework-container {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 25px;
+            }
+            
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .category-tabs {
+                gap: 10px;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .category-tab {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            
+            .tool-container, .framework-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .most-used, .recently-added, .analytics-section {
+                padding: 30px 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tool-container, .framework-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-tabs {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .category-tab {
+                text-align: center;
+            }
+        }
+        
+        /* Focus improvements for accessibility */
+        .tool-card:focus, .framework-card:focus, .category-tab:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        
+        /* Reduced motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+
+
+    <!-- Loading Screen -->
+    <div class="loading hide" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <header>
+        <h1>Ashi Tools</h1>
+        <p>Empowering Tomorrow's Management Leaders</p>
+        <p class="header-sub"><span id="total-tools-count">51</span>+ specialized tools for academic excellence and business strategy</p>
+        
+        <!-- Enhanced Quote Rotator -->
+        <div id="quote-rotator">
+            <p id="sanskritQuote" style="opacity: 1; transition: opacity 0.3s;">मौनं परमं ज्ञानं शान्तिर्देहस्य भूषणम् ।</p>
+            <p id="englishQuote" style="opacity: 1; transition: opacity 0.3s;">Silence is the highest knowledge, and peace is the ornament of life. – Inspired by Shiva</p>
+        </div>
+        
+        <!-- OPTIMIZED: Horizontal layout for stats and CTAs -->
+        <div class="hero-content">
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number" data-target="51" id="tools-counter">51+</span>
+                    <span class="stat-label">Professional Tools</span>
+                </div>
+                
+                <div class="stat">
+                    <span class="stat-number" data-target="6">6</span>
+                    <span class="stat-label">Categories</span>
+                </div>
+            </div>
+            
+            <!-- OPTIMIZED: Compact CTA section -->
+            <div class="cta-section">
+                <div class="cta-container">
+                    <a href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank" class="cta-button" rel="noopener">
+                        <i class="fab fa-instagram social-icon"></i>
+                        DM me on Instagram
+                    </a>
+                    <a href="https://www.linkedin.com/in/ashish-singh-rajput-909662233/" target="_blank" class="cta-button" rel="noopener">
+                        <i class="fab fa-linkedin social-icon"></i>
+                        Connect on LinkedIn
+                    </a>
+                </div>
+                <p class="cta-text">Have suggestions or issues? Reach out to me!</p>
+            </div>
+        </div>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" placeholder="Search tools... (try '7ps', 'swot', 'calculator')" aria-label="Search tools">
+                <button class="clear-search" type="button" title="Clear search"><i class="fas fa-times"></i></button>
+                <button type="button" aria-label="Search"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="category-nav" role="navigation" aria-label="Category navigation">
+        <div class="category-tabs" id="category-tabs-container">
+                <button class="category-tab active" data-category="all">
+                    All Tools
+                </button>
+            
+                        <button class="category-tab" data-category="marketing">
+                            Marketing &amp; Strategy
+                        </button>
+                    
+                        <button class="category-tab" data-category="operations">
+                            Operations &amp; Analytics
+                        </button>
+                    
+                        <button class="category-tab" data-category="finance">
+                            Finance &amp; Valuation
+                        </button>
+                    
+                        <button class="category-tab" data-category="business">
+                            Business Frameworks
+                        </button>
+                    
+                        <button class="category-tab" data-category="academic">
+                            Academic &amp; Professional Tools
+                        </button>
+                    
+                        <button class="category-tab" data-category="productivity">
+                            Productivity &amp; Other Tools
+                        </button>
+                    </div>
+    </nav>
+
+    <!-- Search Results Container -->
+    <div id="search-results-container" style="display: none;">
+        <section class="search-results-section">
+            <div class="search-results-header">
+                <div class="search-results-text">Search Results</div>
+                <div class="search-term">Searching for: "<span id="current-search-term"></span>"</div>
+            </div>
+            <div id="search-results-content"></div>
+        </section>
+    </div>
+
+    <!-- All Tools Section (Default) -->
+    <section class="category-section active" id="all">
+        <h2><i class="fas fa-star"></i> Most Used Tools</h2>
+        <div class="most-used">
+            <div class="tool-container" id="popular-tools-container">
+                <a href="7ps of marketing" target="_blank" class="tool-card" rel="noopener" data-tool-name="7Ps of Marketing">
+                    <div class="popular-badge">🔥 Most Popular</div>
+                    <div class="card-icon"><i class="fas fa-shopping-bag"></i></div>
+                    <h3>7Ps of Marketing</h3>
+                </a>
+            
+                <a href="SMART Goal Planner0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="SMART Goal Planner">
+                    <div class="popular-badge">🔥 Most Popular</div>
+                    <div class="card-icon"><i class="fas fa-bullseye"></i></div>
+                    <h3>SMART Goal Planner</h3>
+                </a>
+            
+                <a href="Financial Ratios Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Financial Ratios Calculator">
+                    <div class="popular-badge">🔥 Most Popular</div>
+                    <div class="card-icon"><i class="fas fa-calculator"></i></div>
+                    <h3>Financial Ratios Calculator</h3>
+                </a>
+            
+                <a href="business model canvas" target="_blank" class="tool-card" rel="noopener" data-tool-name="Business Model Canvas">
+                    <div class="popular-badge">🔥 Most Popular</div>
+                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Business Model Canvas</h3>
+                </a>
+            
+                <a href="SWOT Analysis Generator( new )" target="_blank" class="tool-card" rel="noopener" data-tool-name="SWOT Analysis">
+                    <div class="popular-badge">🔥 Most Popular</div>
+                    <div class="card-icon"><i class="fas fa-th-list"></i></div>
+                    <h3>SWOT Analysis</h3>
+                </a>
+            </div>
+        </div>
+
+        <h2><i class="fas fa-plus-circle"></i> Recently Added Tools</h2>
+        <div class="recently-added">
+            <div class="tool-container" id="new-tools-container">
+                <a href="prepectual map creator NEED REPAIRMENT" target="_blank" class="tool-card" rel="noopener" data-tool-name="Perceptual Map Creator">
+                    <div class="new-badge">NEW</div>
+                    <div class="card-icon"><i class="fas fa-map"></i></div>
+                    <h3>Perceptual Map Creator</h3>
+                </a>
+            
+                <a href="Product Life Cycle (PLC) Visual Tool" target="_blank" class="tool-card" rel="noopener" data-tool-name="Product Life Cycle (PLC) Visual Tool">
+                    <div class="new-badge">NEW</div>
+                    <div class="card-icon"><i class="fas fa-life-ring"></i></div>
+                    <h3>Product Life Cycle (PLC) Visual Tool</h3>
+                </a>
+            
+                <a href="Advanced Transportation Cost Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Advanced Transportation Cost Calculator">
+                    <div class="new-badge">NEW</div>
+                    <div class="card-icon"><i class="fas fa-truck"></i></div>
+                    <h3>Advanced Transportation Cost Calculator</h3>
+                </a>
+            
+                <a href="Time Value of Money Calculator0.3" target="_blank" class="tool-card" rel="noopener" data-tool-name="Time Value of Money Calculator 0.3">
+                    <div class="new-badge">UPDATED</div>
+                    <div class="card-icon"><i class="fas fa-clock"></i></div>
+                    <h3>Time Value of Money Calculator 0.3</h3>
+                </a>
+            
+                <a href="Weekly Internship Report0.3" target="_blank" class="tool-card" rel="noopener" data-tool-name="Weekly Internship Report 0.3">
+                    <div class="new-badge">UPDATED</div>
+                    <div class="card-icon"><i class="fas fa-calendar-week"></i></div>
+                    <h3>Weekly Internship Report 0.3</h3>
+                </a>
+            </div>
+        </div>
+
+        <h2><i class="fas fa-chart-bar"></i> Usage Analytics</h2>
+        <div class="analytics-section">
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3><i class="fas fa-user"></i> Your Usage Stats</h3>
+                    <div class="user-stat-item">
+                        <div class="user-stat-label">Most Used Tool</div>
+                        <div class="user-stat-value" id="most-used-tool">Business Model Canvas (5x)</div>
+                    </div>
+                    <div class="user-stat-item">
+                        <div class="user-stat-label">Recently Used Tool</div>
+                        <div class="user-stat-value" id="recently-used-tool">Business Model Canvas (5m ago)</div>
+                    </div>
+                    <div class="user-stat-item">
+                        <div class="user-stat-label">Time Spent (This Device)</div>
+                        <div class="user-stat-value" id="time-spent-user">30m 0s</div>
+                    </div>
+                    <div class="user-stat-item">
+                        <div class="user-stat-label">Total Tool Clicks</div>
+                        <div class="user-stat-value" id="total-clicks-user">14</div>
+                    </div>
+                    <div class="user-stat-item">
+                        <div class="user-stat-label">Active Hours Today</div>
+                        <div class="user-stat-value" id="active-hours">15m 0s</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dynamic sections will be auto-generated -->
+    <div id="dynamic-sections-container">
+                        <section class="category-section" id="marketing" data-category-name="Marketing &amp; Strategy">
+                            <h2><i class="fas fa-chart-line"></i> Marketing &amp; Strategy <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(12 tools)</span></h2>
+                            <div class="tool-container">
+                                
+                                    <a href="7ps of marketing" target="_blank" class="tool-card" rel="noopener" data-tool-name="7Ps of Marketing">
+                                        <div class="card-icon"><i class="fas fa-shopping-bag"></i></div>
+                                        <h3>7Ps of Marketing</h3>
+                                    </a>
+                                
+                                    <a href="Brand Positioning Map Tool" target="_blank" class="tool-card" rel="noopener" data-tool-name="Brand Positioning Map Tool">
+                                        <div class="card-icon"><i class="fas fa-crosshairs"></i></div>
+                                        <h3>Brand Positioning Map Tool</h3>
+                                    </a>
+                                
+                                    <a href="Interactive GTM Strategy Planner0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Go-to-Market Strategy">
+                                        <div class="card-icon"><i class="fas fa-rocket"></i></div>
+                                        <h3>Go-to-Market Strategy</h3>
+                                    </a>
+                                
+                                    <a href="Competitor Analysis( new)" target="_blank" class="tool-card" rel="noopener" data-tool-name="Competitor Analysis">
+                                        <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
+                                        <h3>Competitor Analysis</h3>
+                                    </a>
+                                
+                                    <a href="customer profile canvas" target="_blank" class="tool-card" rel="noopener" data-tool-name="Customer Profile Canvas">
+                                        <div class="card-icon"><i class="fas fa-id-card"></i></div>
+                                        <h3>Customer Profile Canvas</h3>
+                                    </a>
+                                
+                                    <a href="user persona builder" target="_blank" class="tool-card" rel="noopener" data-tool-name="User Persona Builder">
+                                        <div class="card-icon"><i class="fas fa-user-friends"></i></div>
+                                        <h3>User Persona Builder</h3>
+                                    </a>
+                                
+                                    <a href="prepectual map creator NEED REPAIRMENT" target="_blank" class="tool-card" rel="noopener" data-tool-name="Perceptual Map Creator">
+                                        <div class="card-icon"><i class="fas fa-map"></i></div>
+                                        <h3>Perceptual Map Creator</h3>
+                                    </a>
+                                
+                                    <a href="MVP Strategy Planner0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="MVP Strategy Planner">
+                                        <div class="card-icon"><i class="fas fa-cube"></i></div>
+                                        <h3>MVP Strategy Planner</h3>
+                                    </a>
+                                
+                                    <a href="NABC Framework Template0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="NABC Framework Template">
+                                        <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
+                                        <h3>NABC Framework Template</h3>
+                                    </a>
+                                
+                                    <a href="Elevator Pitch Builder" target="_blank" class="tool-card" rel="noopener" data-tool-name="Elevator Pitch Builder">
+                                        <div class="card-icon"><i class="fas fa-elevator"></i></div>
+                                        <h3>Elevator Pitch Builder</h3>
+                                    </a>
+                                
+                                    <a href="Product Life Cycle (PLC) Visual Tool" target="_blank" class="tool-card" rel="noopener" data-tool-name="Product Life Cycle (PLC) Visual Tool">
+                                        <div class="card-icon"><i class="fas fa-life-ring"></i></div>
+                                        <h3>Product Life Cycle (PLC) Visual Tool</h3>
+                                    </a>
+                                
+                            </div>
+                        </section>
+                    
+                        <section class="category-section" id="operations" data-category-name="Operations &amp; Analytics">
+                            <h2><i class="fas fa-cogs"></i> Operations &amp; Analytics <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(15 tools)</span></h2>
+                            <div class="tool-container">
+                                
+                                    <a href="DMAIC Framework Planner0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="DMAIC Framework Planner">
+                                        <div class="card-icon"><i class="fas fa-cogs"></i></div>
+                                        <h3>DMAIC Framework Planner</h3>
+                                    </a>
+                                
+                                    <a href="EOQ Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="EOQ Calculator">
+                                        <div class="card-icon"><i class="fas fa-calculator"></i></div>
+                                        <h3>EOQ Calculator</h3>
+                                    </a>
+                                
+                                    <a href="Advanced Capacity Planning Tool" target="_blank" class="tool-card" rel="noopener" data-tool-name="Advanced Capacity Planning Tool">
+                                        <div class="card-icon"><i class="fas fa-industry"></i></div>
+                                        <h3>Advanced Capacity Planning Tool</h3>
+                                    </a>
+                                
+                                    <a href="Advanced Demand Forecasting Model" target="_blank" class="tool-card" rel="noopener" data-tool-name="Advanced Demand Forecasting Model">
+                                        <div class="card-icon"><i class="fas fa-chart-area"></i></div>
+                                        <h3>Advanced Demand Forecasting Model</h3>
+                                    </a>
+                                
+                                    <a href="Gantt Chart Generator0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Gantt Chart Generator">
+                                        <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+                                        <h3>Gantt Chart Generator</h3>
+                                    </a>
+                                
+                                    <a href="Advanced Waiting Line (Queuing) Calculator0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Advanced Waiting Line (Queuing) Calculator">
+                                        <div class="card-icon"><i class="fas fa-queue"></i></div>
+                                        <h3>Advanced Waiting Line (Queuing) Calculator</h3>
+                                    </a>
+                                
+                                    <a href="SIPOC Diagram Maker( new )" target="_blank" class="tool-card" rel="noopener" data-tool-name="SIPOC Diagram">
+                                        <div class="card-icon"><i class="fas fa-sitemap"></i></div>
+                                        <h3>SIPOC Diagram</h3>
+                                    </a>
+                                
+                                    <a href="Service Blueprint Maker0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Service Blueprint Maker">
+                                        <div class="card-icon"><i class="fas fa-drafting-compass"></i></div>
+                                        <h3>Service Blueprint Maker</h3>
+                                    </a>
+                                
+                                    <a href="Advanced Transportation Cost Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Advanced Transportation Cost Calculator">
+                                        <div class="card-icon"><i class="fas fa-truck"></i></div>
+                                        <h3>Advanced Transportation Cost Calculator</h3>
+                                    </a>
+                                
+                                    <a href="Event Organizer" target="_blank" class="tool-card" rel="noopener" data-tool-name="Event Organizer">
+                                        <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
+                                        <h3>Event Organizer</h3>
+                                    </a>
+                                
+                                    <a href="Meeting Minutes Maker0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Meeting Minutes Maker">
+                                        <div class="card-icon"><i class="fas fa-file-alt"></i></div>
+                                        <h3>Meeting Minutes Maker</h3>
+                                    </a>
+                                
+                                    <a href="Time matrix " target="_blank" class="tool-card" rel="noopener" data-tool-name="Time Matrix">
+                                        <div class="card-icon"><i class="fas fa-th"></i></div>
+                                        <h3>Time Matrix</h3>
+                                    </a>
+                                
+                                    <a href="importance vs efforts " target="_blank" class="tool-card" rel="noopener" data-tool-name="Importance vs Efforts">
+                                        <div class="card-icon"><i class="fas fa-balance-scale"></i></div>
+                                        <h3>Importance vs Efforts</h3>
+                                    </a>
+                                
+                                    <a href="SMART Goal Planner0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="SMART Goal Planner">
+                                        <div class="card-icon"><i class="fas fa-bullseye"></i></div>
+                                        <h3>SMART Goal Planner</h3>
+                                    </a>
+                                
+                                    <a href="Problem Statement Generator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Problem Statement Generator">
+                                        <div class="card-icon"><i class="fas fa-question-circle"></i></div>
+                                        <h3>Problem Statement Generator</h3>
+                                    </a>
+                                
+                            </div>
+                        </section>
+                    
+                        <section class="category-section" id="finance" data-category-name="Finance &amp; Valuation">
+                            <h2><i class="fas fa-dollar-sign"></i> Finance &amp; Valuation <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(7 tools)</span></h2>
+                            <div class="tool-container">
+                                
+                                    <a href="Bond Valuation Tool" target="_blank" class="tool-card" rel="noopener" data-tool-name="Bond Valuation Tool">
+                                        <div class="card-icon"><i class="fas fa-certificate"></i></div>
+                                        <h3>Bond Valuation Tool</h3>
+                                    </a>
+                                
+                                    <a href="Break-Even Point Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Break-Even Point Calculator">
+                                        <div class="card-icon"><i class="fas fa-balance-scale"></i></div>
+                                        <h3>Break-Even Point Calculator</h3>
+                                    </a>
+                                
+                                    <a href="Financial Ratios Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Financial Ratios Calculator">
+                                        <div class="card-icon"><i class="fas fa-calculator"></i></div>
+                                        <h3>Financial Ratios Calculator</h3>
+                                    </a>
+                                
+                                    <a href="Time Value of Money Calculator0.3" target="_blank" class="tool-card" rel="noopener" data-tool-name="Time Value of Money Calculator 0.3">
+                                        <div class="card-icon"><i class="fas fa-clock"></i></div>
+                                        <h3>Time Value of Money Calculator 0.3</h3>
+                                    </a>
+                                
+                                    <a href="Startup Cost Estimator" target="_blank" class="tool-card" rel="noopener" data-tool-name="Startup Cost Estimator">
+                                        <div class="card-icon"><i class="fas fa-rocket"></i></div>
+                                        <h3>Startup Cost Estimator</h3>
+                                    </a>
+                                
+                                    <a href="ROI Calculator" target="_blank" class="tool-card" rel="noopener" data-tool-name="ROI Calculator">
+                                        <div class="card-icon"><i class="fas fa-percentage"></i></div>
+                                        <h3>ROI Calculator</h3>
+                                    </a>
+                                
+                                    <a href="College Event Budget Planner" target="_blank" class="tool-card" rel="noopener" data-tool-name="College Event Budget Planner">
+                                        <div class="card-icon"><i class="fas fa-money-bill-wave"></i></div>
+                                        <h3>College Event Budget Planner</h3>
+                                    </a>
+                                
+                            </div>
+                        </section>
+                    
+                        <section class="category-section" id="business" data-category-name="Business Frameworks">
+                            <h2><i class="fas fa-chart-line"></i> Business Frameworks <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(6 tools)</span></h2>
+                            <div class="tool-container">
+                                
+                                    <a href="business model canvas" target="_blank" class="tool-card" rel="noopener" data-tool-name="Business Model Canvas">
+                                        <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                                        <h3>Business Model Canvas</h3>
+                                    </a>
+                                
+                                    <a href="SWOT Analysis Generator( new )" target="_blank" class="tool-card" rel="noopener" data-tool-name="SWOT Analysis">
+                                        <div class="card-icon"><i class="fas fa-th-list"></i></div>
+                                        <h3>SWOT Analysis</h3>
+                                    </a>
+                                
+                                    <a href="PESTEL analysis" target="_blank" class="tool-card" rel="noopener" data-tool-name="PESTEL Analysis">
+                                        <div class="card-icon"><i class="fas fa-globe-americas"></i></div>
+                                        <h3>PESTEL Analysis</h3>
+                                    </a>
+                                
+                                    <a href="Porter's Five Forces Analyzer0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Porter's Five Forces Analyzer">
+                                        <div class="card-icon"><i class="fas fa-fist-raised"></i></div>
+                                        <h3>Porter's Five Forces Analyzer</h3>
+                                    </a>
+                                
+                                    <a href="RICE priotrization model " target="_blank" class="tool-card" rel="noopener" data-tool-name="RICE Prioritization Model">
+                                        <div class="card-icon"><i class="fas fa-list-ol"></i></div>
+                                        <h3>RICE Prioritization Model</h3>
+                                    </a>
+                                
+                                    <a href="Assumption Mapping 4.0" target="_blank" class="tool-card" rel="noopener" data-tool-name="Assumption Mapping">
+                                        <div class="card-icon"><i class="fas fa-question-circle"></i></div>
+                                        <h3>Assumption Mapping</h3>
+                                    </a>
+                                
+                            </div>
+                        </section>
+                    
+                        <section class="category-section" id="academic" data-category-name="Academic &amp; Professional Tools">
+                            <h2><i class="fas fa-graduation-cap"></i> Academic &amp; Professional Tools <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(9 tools)</span></h2>
+                            <div class="tool-container">
+
+                                
+                                    <a href="Research Paper Outline Generator0.2" target="_blank" class="tool-card" rel="noopener" data-tool-name="Research Paper Outline Generator 0.2">
+                                        <div class="card-icon"><i class="fas fa-file-alt"></i></div>
+                                        <h3>Research Paper Outline Generator 0.2</h3>
+                                    </a>
+                                
+                                    <a href="Final Internship Report Maker" target="_blank" class="tool-card" rel="noopener" data-tool-name="Final Internship Report Maker">
+                                        <div class="card-icon"><i class="fas fa-file-invoice"></i></div>
+                                        <h3>Final Internship Report Maker</h3>
+                                    </a>
+                                
+                                    <a href="Weekly Internship Report0.3" target="_blank" class="tool-card" rel="noopener" data-tool-name="Weekly Internship Report 0.3">
+                                        <div class="card-icon"><i class="fas fa-calendar-week"></i></div>
+                                        <h3>Weekly Internship Report 0.3</h3>
+                                    </a>
+                                
+                                    <a href="Resume Score Analyzer" target="_blank" class="tool-card" rel="noopener" data-tool-name="Resume Score Analyzer">
+                                        <div class="card-icon"><i class="fas fa-file-contract"></i></div>
+                                        <h3>Resume Score Analyzer</h3>
+                                    </a>
+                                
+                                    <a href="Lecture Notes Organizer" target="_blank" class="tool-card" rel="noopener" data-tool-name="Lecture Notes Organizer">
+                                        <div class="card-icon"><i class="fas fa-sticky-note"></i></div>
+                                        <h3>Lecture Notes Organizer</h3>
+                                    </a>
+                                
+                                    <a href="Case Study Template" target="_blank" class="tool-card" rel="noopener" data-tool-name="Case Study Template">
+                                        <div class="card-icon"><i class="fas fa-file-powerpoint"></i></div>
+                                        <h3>Case Study Template</h3>
+                                    </a>
+                                
+                                    <a href="year calender maker" target="_blank" class="tool-card" rel="noopener" data-tool-name="Year Calendar Maker">
+                                        <div class="card-icon"><i class="fas fa-calendar"></i></div>
+                                        <h3>Year Calendar Maker</h3>
+                                    </a>
+                                
+                            </div>
+                        </section>
+                    
+                        <section class="category-section" id="productivity" data-category-name="Productivity &amp; Other Tools">
+                            <h2><i class="fas fa-tasks"></i> Productivity &amp; Other Tools <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(2 tools)</span></h2>
+                            <div class="tool-container">
+                                
+                                    <a href="qr code generator" target="_blank" class="tool-card" rel="noopener" data-tool-name="QR Code Generator">
+                                        <div class="card-icon"><i class="fas fa-qrcode"></i></div>
+                                        <h3>QR Code Generator</h3>
+                                    </a>
+                                
+                                    <a href="Advanced Mind Map Maker( testing )" target="_blank" class="tool-card" rel="noopener" data-tool-name="Mind Map Pro (NEED REPAIR)">
+                                        <div class="card-icon"><i class="fas fa-project-diagram"></i></div>
+                                        <h3>Mind Map Pro (NEED REPAIR)</h3>
+                                    </a>
+                                
+                            </div>
+                        </section>
+                    </div>
+
+    <footer>
+        Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
+        Connect with me: 
+        <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener">
+            @ashish_singh_rajput_3
+        </a> | Ashi Tools
+    </footer>
+
+    <script>
+        // 🚀 AUTOMATIC TOOL MANAGEMENT SYSTEM
+        // =====================================
+        // TO ADD A NEW TOOL: Just add it to this array below!
+        // Everything else updates automatically!
+
+        const TOOLS_DATABASE = [
+            // Marketing & Strategy Tools
+            {
+                name: "7Ps of Marketing",
+                category: "marketing",
+                icon: "fas fa-shopping-bag",
+                isPopular: true,
+                isNew: false,
+                link: "7ps of marketing"
+            },
+            {
+                name: "Brand Positioning Map Tool",
+                category: "marketing",
+                icon: "fas fa-crosshairs",
+                isPopular: false,
+                isNew: false,
+                link: "Brand Positioning Map Tool"
+            },
+            {
+                name: "Go-to-Market Strategy",
+                category: "marketing",
+                icon: "fas fa-rocket",
+                isPopular: false,
+                isNew: false,
+                link: "Interactive GTM Strategy Planner0.2"
+            },
+            {
+                name: "Competitor Analysis",
+                category: "marketing",
+                icon: "fas fa-chart-pie",
+                isPopular: false,
+                isNew: false,
+                link: "Competitor Analysis( new)"
+            },
+            {
+                name: "Customer Profile Canvas",
+                category: "marketing",
+                icon: "fas fa-id-card",
+                isPopular: false,
+                isNew: false,
+                link: "customer profile canvas"
+            },
+            {
+                name: "User Persona Builder",
+                category: "marketing",
+                icon: "fas fa-user-friends",
+                isPopular: false,
+                isNew: false,
+                link: "user persona builder"
+            },
+            {
+                name: "Perceptual Map Creator",
+                category: "marketing",
+                icon: "fas fa-map",
+                isPopular: false,
+                isNew: true,
+                link: "prepectual map creator NEED REPAIRMENT"
+            },
+            {
+                name: "MVP Strategy Planner",
+                category: "marketing",
+                icon: "fas fa-cube",
+                isPopular: false,
+                isNew: false,
+                link: "MVP Strategy Planner0.2"
+            },
+            {
+                name: "NABC Framework Template",
+                category: "marketing",
+                icon: "fas fa-lightbulb",
+                isPopular: false,
+                isNew: false,
+                link: "NABC Framework Template0.2"
+            },
+            {
+                name: "Elevator Pitch Builder",
+                category: "marketing",
+                icon: "fas fa-elevator",
+                isPopular: false,
+                isNew: false,
+                link: "Elevator Pitch Builder"
+            },
+            {
+                name: "Product Life Cycle (PLC) Visual Tool",
+                category: "marketing",
+                icon: "fas fa-life-ring",
+                isPopular: false,
+                isNew: true,
+                link: "Product Life Cycle (PLC) Visual Tool"
+            },
+
+            // Operations & Analytics Tools
+            {
+                name: "DMAIC Framework Planner",
+                category: "operations",
+                icon: "fas fa-cogs",
+                isPopular: false,
+                isNew: false,
+                link: "DMAIC Framework Planner0.2"
+            },
+            {
+                name: "EOQ Calculator",
+                category: "operations",
+                icon: "fas fa-calculator",
+                isPopular: false,
+                isNew: false,
+                link: "EOQ Calculator"
+            },
+            {
+                name: "Advanced Capacity Planning Tool",
+                category: "operations",
+                icon: "fas fa-industry",
+                isPopular: false,
+                isNew: false,
+                link: "Advanced Capacity Planning Tool"
+            },
+            {
+                name: "Advanced Demand Forecasting Model",
+                category: "operations",
+                icon: "fas fa-chart-area",
+                isPopular: false,
+                isNew: false,
+                link: "Advanced Demand Forecasting Model"
+            },
+            {
+                name: "Gantt Chart Generator",
+                category: "operations",
+                icon: "fas fa-chart-bar",
+                isPopular: false,
+                isNew: false,
+                link: "Gantt Chart Generator0.2"
+            },
+            {
+                name: "Advanced Waiting Line (Queuing) Calculator",
+                category: "operations",
+                icon: "fas fa-queue",
+                isPopular: false,
+                isNew: false,
+                link: "Advanced Waiting Line (Queuing) Calculator0.2"
+            },
+            {
+                name: "SIPOC Diagram",
+                category: "operations",
+                icon: "fas fa-sitemap",
+                isPopular: false,
+                isNew: false,
+                link: "SIPOC Diagram Maker( new )"
+            },
+            {
+                name: "Service Blueprint Maker",
+                category: "operations",
+                icon: "fas fa-drafting-compass",
+                isPopular: false,
+                isNew: false,
+                link: "Service Blueprint Maker0.2"
+            },
+            {
+                name: "Advanced Transportation Cost Calculator",
+                category: "operations",
+                icon: "fas fa-truck",
+                isPopular: false,
+                isNew: true,
+                link: "Advanced Transportation Cost Calculator"
+            },
+            {
+                name: "Event Organizer",
+                category: "operations",
+                icon: "fas fa-calendar-alt",
+                isPopular: false,
+                isNew: false,
+                link: "Event Organizer"
+            },
+            {
+                name: "Meeting Minutes Maker",
+                category: "operations",
+                icon: "fas fa-file-alt",
+                isPopular: false,
+                isNew: false,
+                link: "Meeting Minutes Maker0.2"
+            },
+            {
+                name: "Time Matrix",
+                category: "operations",
+                icon: "fas fa-th",
+                isPopular: false,
+                isNew: false,
+                link: "Time matrix "
+            },
+            {
+                name: "Importance vs Efforts",
+                category: "operations",
+                icon: "fas fa-balance-scale",
+                isPopular: false,
+                isNew: false,
+                link: "importance vs efforts "
+            },
+            {
+                name: "SMART Goal Planner",
+                category: "operations",
+                icon: "fas fa-bullseye",
+                isPopular: true,
+                isNew: false,
+                link: "SMART Goal Planner0.2"
+            },
+            {
+                name: "Problem Statement Generator",
+                category: "operations",
+                icon: "fas fa-question-circle",
+                isPopular: false,
+                isNew: false,
+                link: "Problem Statement Generator"
+            },
+
+            // Finance & Valuation Tools
+            {
+                name: "Bond Valuation Tool",
+                category: "finance",
+                icon: "fas fa-certificate",
+                isPopular: false,
+                isNew: false,
+                link: "Bond Valuation Tool"
+            },
+            {
+                name: "Break-Even Point Calculator",
+                category: "finance",
+                icon: "fas fa-balance-scale",
+                isPopular: false,
+                isNew: false,
+                link: "Break-Even Point Calculator"
+            },
+            {
+                name: "Financial Ratios Calculator",
+                category: "finance",
+                icon: "fas fa-calculator",
+                isPopular: true,
+                isNew: false,
+                link: "Financial Ratios Calculator"
+            },
+            {
+                name: "Time Value of Money Calculator 0.3",
+                category: "finance",
+                icon: "fas fa-clock",
+                isPopular: false,
+                isNew: true,
+                badgeText: "UPDATED",
+                link: "Time Value of Money Calculator0.3"
+            },
+            {
+                name: "Startup Cost Estimator",
+                category: "finance",
+                icon: "fas fa-rocket",
+                isPopular: false,
+                isNew: false,
+                link: "Startup Cost Estimator"
+            },
+            {
+                name: "ROI Calculator",
+                category: "finance",
+                icon: "fas fa-percentage",
+                isPopular: false,
+                isNew: false,
+                link: "ROI Calculator"
+            },
+            {
+                name: "College Event Budget Planner",
+                category: "finance",
+                icon: "fas fa-money-bill-wave",
+                isPopular: false,
+                isNew: false,
+                link: "College Event Budget Planner"
+            },
+
+            // Business Frameworks
+            {
+                name: "Business Model Canvas",
+                category: "business",
+                icon: "fas fa-chart-line",
+                isPopular: true,
+                isNew: false,
+                link: "business model canvas"
+            },
+            {
+                name: "SWOT Analysis",
+                category: "business",
+                icon: "fas fa-th-list",
+                isPopular: true,
+                isNew: false,
+                link: "SWOT Analysis Generator( new )"
+            },
+            {
+                name: "PESTEL Analysis",
+                category: "business",
+                icon: "fas fa-globe-americas",
+                isPopular: false,
+                isNew: false,
+                link: "PESTEL analysis"
+            },
+            {
+                name: "Porter's Five Forces Analyzer",
+                category: "business",
+                icon: "fas fa-fist-raised",
+                isPopular: false,
+                isNew: false,
+                link: "Porter's Five Forces Analyzer0.2"
+            },
+            {
+                name: "RICE Prioritization Model",
+                category: "business",
+                icon: "fas fa-list-ol",
+                isPopular: false,
+                isNew: false,
+                link: "RICE priotrization model "
+            },
+            {
+                name: "Assumption Mapping",
+                category: "business",
+                icon: "fas fa-question-circle",
+                isPopular: false,
+                isNew: false,
+                link: "Assumption Mapping 4.0"
+            },
+
+            // Academic & Professional Tools
+            {
+                name: "Research Paper Outline Generator 0.2",
+                category: "academic",
+                icon: "fas fa-file-alt",
+                isPopular: false,
+                isNew: false,
+                badgeText: "UPDATED",
+                link: "Research Paper Outline Generator0.2"
+            },
+            {
+                name: "Final Internship Report Maker",
+                category: "academic",
+                icon: "fas fa-file-invoice",
+                isPopular: false,
+                isNew: false,
+                link: "Final Internship Report Maker"
+            },
+            {
+                name: "Weekly Internship Report 0.3",
+                category: "academic",
+                icon: "fas fa-calendar-week",
+                isPopular: false,
+                isNew: true,
+                badgeText: "UPDATED",
+                link: "Weekly Internship Report0.3"
+            },
+            {
+                name: "Resume Score Analyzer",
+                category: "academic",
+                icon: "fas fa-file-contract",
+                isPopular: true,
+                isNew: false,
+                link: "Resume Score Analyzer"
+            },
+            {
+                name: "Lecture Notes Organizer",
+                category: "academic",
+                icon: "fas fa-sticky-note",
+                isPopular: false,
+                isNew: false,
+                link: "Lecture Notes Organizer"
+            },
+            {
+                name: "Case Study Template",
+                category: "academic",
+                icon: "fas fa-file-powerpoint",
+                isPopular: false,
+                isNew: false,
+                link: "Case Study Template"
+            },
+            {
+                name: "Year Calendar Maker",
+                category: "academic",
+                icon: "fas fa-calendar",
+                isPopular: false,
+                isNew: false,
+                link: "year calender maker"
+            },
+
+            // Productivity & Other Tools
+            {
+                name: "QR Code Generator",
+                category: "productivity",
+                icon: "fas fa-qrcode",
+                isPopular: false,
+                isNew: false,
+                link: "qr code generator"
+            },
+            {
+                name: "Mind Map Pro (NEED REPAIR)",
+                category: "productivity",
+                icon: "fas fa-project-diagram",
+                isPopular: false,
+                isNew: false,
+                link: "Advanced Mind Map Maker( testing )"
+            },
+            {
+                name: "BCG Matrix Analyzer",
+                category: "marketing", // Choose: marketing, operations, finance, business, academic, productivity
+                icon: "fas fa-rocket", // Any FontAwesome icon class
+                isPopular: false, // Set to true for popular tools
+                isNew: true, // Set to true for new tools (will show in "Recently Added")
+                badgeText: "NEW", // Optional: custom badge text (NEW, UPDATED, BETA, etc.)
+                link: "BCG Matrix Analyzer"
+            },
+            {
+                name: "Blue Ocean Strategy Maker",
+                category: "marketing", // Choose: marketing, operations, finance, business, academic, productivity
+                icon: "fas fa-rocket", // Any FontAwesome icon class
+                isPopular: false, // Set to true for popular tools
+                isNew: true, // Set to true for new tools (will show in "Recently Added")
+                badgeText: "NEW", // Optional: custom badge text (NEW, UPDATED, BETA, etc.)
+                link: "Blue Ocean Strategy Maker"
+            },
+            // 🔥 TO ADD NEW TOOLS:
+            // Just copy this template and paste it here:
+            /*
+            {
+                name: "Your New Tool Name",
+                category: "marketing", // Choose: marketing, operations, finance, business, academic, productivity
+                icon: "fas fa-rocket", // Any FontAwesome icon class
+                isPopular: false, // Set to true for popular tools
+                isNew: true, // Set to true for new tools (will show in "Recently Added")
+                badgeText: "NEW", // Optional: custom badge text (NEW, UPDATED, BETA, etc.)
+                link: "https://your-tool-link.com"
+            },
+            */
+        ];
+
+        // Category configuration
+        const CATEGORIES = {
+            marketing: {
+                name: "Marketing & Strategy",
+                icon: "fas fa-chart-line"
+            },
+            operations: {
+                name: "Operations & Analytics", 
+                icon: "fas fa-cogs"
+            },
+            finance: {
+                name: "Finance & Valuation",
+                icon: "fas fa-dollar-sign"
+            },
+            business: {
+                name: "Business Frameworks",
+                icon: "fas fa-chart-line"
+            },
+            academic: {
+                name: "Academic & Professional Tools",
+                icon: "fas fa-graduation-cap"
+            },
+            productivity: {
+                name: "Productivity & Other Tools",
+                icon: "fas fa-tasks"
+            }
+        };
+
+        // Quote Rotator
+        const quotes = [
+            {
+                sanskrit: "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन ।",
+                english: "You have the right to work, but not to the results thereof. – Krishna (Gita 2.47)"
+            },
+            {
+                sanskrit: "मौनं परमं ज्ञानं शान्तिर्देहस्य भूषणम् ।",
+                english: "Silence is the highest knowledge, and peace is the ornament of life. – Inspired by Shiva"
+            },
+            {
+                sanskrit: "स्वधर्मे निधनं श्रेय: परधर्मो भयावह: ।",
+                english: "It is better to fail in one's own path than to succeed in another's. – Krishna (Gita 3.35)"
+            },
+            {
+                sanskrit: "शत्रुं जितुं महान् नास्ति यः स्वमात्मानमर्जयेत् ।",
+                english: "Greater is the one who conquers the self than one who conquers thousands. – Inspired by Shiva"
+            },
+            {
+                sanskrit: "योगस्थः कुरु कर्माणि सङ्गं त्यक्त्वा धनञ्जय ।",
+                english: "Perform your duty with detachment; this balance is true Yoga. – Krishna (Gita 2.48)"
+            },
+            {
+                sanskrit: "ॐ नमः शिवाय",
+                english: "Salutations to the auspicious one, the eternally pure – Shiva Mantra"
+            }
+        ];
+
+        let currentQuoteIndex = 0;
+        let isSearchActive = false;
+        let sessionStart = Date.now();
+
+        // 🚀 AUTO-GENERATION FUNCTIONS
+        // =============================
+
+        function createToolCard(tool, showBadge = true) {
+            const badgeHtml = showBadge ? (tool.isPopular ? 
+                '<div class="popular-badge">🔥 Most Popular</div>' : 
+                (tool.isNew ? `<div class="new-badge">${tool.badgeText || 'NEW'}</div>` : '')) : '';
+            
+            return `
+                <a href="${tool.link}" target="_blank" class="tool-card" rel="noopener" data-tool-name="${tool.name}">
+                    ${badgeHtml}
+                    <div class="card-icon"><i class="${tool.icon}"></i></div>
+                    <h3>${tool.name}</h3>
+                </a>
+            `;
+        }
+
+        function generateCategoryTabs() {
+            const tabsContainer = document.getElementById('category-tabs-container');
+            const categoryCounts = {};
+            
+            // Clear existing tabs first
+            tabsContainer.innerHTML = '';
+            
+            // Count tools per category
+            TOOLS_DATABASE.forEach(tool => {
+                categoryCounts[tool.category] = (categoryCounts[tool.category] || 0) + 1;
+            });
+
+            // Add "All Tools" tab first
+            const allTabHtml = `
+                <button class="category-tab active" data-category="all">
+                    All Tools
+                </button>
+            `;
+            tabsContainer.insertAdjacentHTML('beforeend', allTabHtml);
+
+            // Generate tabs for each category
+            Object.keys(CATEGORIES).forEach(categoryId => {
+                const category = CATEGORIES[categoryId];
+                const count = categoryCounts[categoryId] || 0;
+                
+                if (count > 0) {
+                    const tabHtml = `
+                        <button class="category-tab" data-category="${categoryId}">
+                            ${category.name}
+                        </button>
+                    `;
+                    tabsContainer.insertAdjacentHTML('beforeend', tabHtml);
+                }
+            });
+        }
+
+        function generateCategorySections() {
+            const container = document.getElementById('dynamic-sections-container');
+            
+            Object.keys(CATEGORIES).forEach(categoryId => {
+                const category = CATEGORIES[categoryId];
+                const categoryTools = TOOLS_DATABASE.filter(tool => tool.category === categoryId);
+                
+                if (categoryTools.length > 0) {
+                    const sectionHtml = `
+                        <section class="category-section" id="${categoryId}" data-category-name="${category.name}">
+                            <h2><i class="${category.icon}"></i> ${category.name} <span style="font-size: 0.7em; color: var(--text-muted); font-weight: normal;">(${categoryTools.length} tools)</span></h2>
+                            <div class="tool-container">
+                                ${categoryTools.map(tool => `
+                                    <a href="${tool.link}" target="_blank" class="tool-card" rel="noopener" data-tool-name="${tool.name}">
+                                        <div class="card-icon"><i class="${tool.icon}"></i></div>
+                                        <h3>${tool.name}</h3>
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </section>
+                    `;
+                    container.insertAdjacentHTML('beforeend', sectionHtml);
+                }
+            });
+        }
+
+        function generatePopularTools() {
+            const container = document.getElementById('popular-tools-container');
+            const popularTools = TOOLS_DATABASE.filter(tool => tool.isPopular).slice(0, 5);
+            
+            container.innerHTML = popularTools.map(tool => createToolCard(tool, true)).join('');
+        }
+
+        function generateNewTools() {
+            const container = document.getElementById('new-tools-container');
+            const newTools = TOOLS_DATABASE.filter(tool => tool.isNew).slice(0, 6);
+            
+            container.innerHTML = newTools.map(tool => createToolCard(tool, true)).join('');
+        }
+
+        function updateCounts() {
+            const totalTools = TOOLS_DATABASE.length;
+            
+            // Update header count
+            document.getElementById('total-tools-count').textContent = totalTools;
+            
+            // Update stat counter
+            document.getElementById('tools-counter').setAttribute('data-target', totalTools);
+        }
+
+        // Initialize the automatic system
+        function initializeAutoSystem() {
+            updateCounts();
+            generateCategoryTabs();
+            generateCategorySections();
+            generatePopularTools();
+            generateNewTools();
+        }
+
+        // Usage Analytics System (same as before)
+        function updateToolUsage(toolName) {
+            const usageData = JSON.parse(localStorage.getItem('toolUsageData') || '{}');
+            usageData[toolName] = (usageData[toolName] || 0) + 1;
+            localStorage.setItem('toolUsageData', JSON.stringify(usageData));
+            localStorage.setItem('lastUsedTool', toolName);
+            localStorage.setItem('lastUsedTime', Date.now());
+            
+            const totalClicks = Number(localStorage.getItem('totalClicks') || 0) + 1;
+            localStorage.setItem('totalClicks', totalClicks);
+            
+            updateAnalyticsDisplay();
+        }
+
+        function updateAnalyticsDisplay() {
+            const usageData = JSON.parse(localStorage.getItem('toolUsageData') || '{}');
+            let mostUsed = null, mostCount = 0;
+            Object.entries(usageData).forEach(([name, count]) => {
+                if (count > mostCount) { mostUsed = name; mostCount = count; }
+            });
+
+            document.getElementById('most-used-tool').textContent = 
+                mostUsed ? `${mostUsed} (${mostCount}x)` : '—';
+
+            const lastUsed = localStorage.getItem('lastUsedTool');
+            const lastTime = localStorage.getItem('lastUsedTime');
+            if (lastUsed && lastTime) {
+                const timeAgo = formatTimeAgo(Number(lastTime));
+                document.getElementById('recently-used-tool').textContent = `${lastUsed} (${timeAgo})`;
+            } else {
+                document.getElementById('recently-used-tool').textContent = '—';
+            }
+
+            const prevTimeSpent = Number(localStorage.getItem('timeSpent') || 0);
+            const currentSessionTime = Date.now() - sessionStart;
+            const totalTime = prevTimeSpent + currentSessionTime;
+            document.getElementById('time-spent-user').textContent = formatTime(totalTime);
+
+            const totalClicks = Number(localStorage.getItem('totalClicks') || 0);
+            document.getElementById('total-clicks-user').textContent = totalClicks;
+
+            updateActiveHours();
+        }
+
+        function updateActiveHours() {
+            const today = new Date().toDateString();
+            const storedDate = localStorage.getItem('activeHoursDate');
+            const storedHours = Number(localStorage.getItem('activeHoursToday') || 0);
+            
+            let activeTime = 0;
+            if (storedDate === today) {
+                activeTime = storedHours;
+            } else {
+                localStorage.setItem('activeHoursDate', today);
+                localStorage.setItem('activeHoursToday', '0');
+            }
+            
+            const currentSessionTime = Date.now() - sessionStart;
+            const totalActiveTime = activeTime + currentSessionTime;
+            
+            document.getElementById('active-hours').textContent = formatTime(totalActiveTime);
+        }
+
+        function formatTime(milliseconds) {
+            const minutes = Math.floor(milliseconds / 60000);
+            const seconds = Math.floor((milliseconds % 60000) / 1000);
+            const hours = Math.floor(minutes / 60);
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes % 60}m`;
+            } else if (minutes > 0) {
+                return `${minutes}m ${seconds}s`;
+            } else {
+                return `${seconds}s`;
+            }
+        }
+
+        function formatTimeAgo(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            
+            if (days > 0) return `${days}d ago`;
+            if (hours > 0) return `${hours}h ago`;
+            if (minutes > 0) return `${minutes}m ago`;
+            return 'just now';
+        }
+
+        // Track tool clicks
+        document.body.addEventListener('click', function(e) {
+            const card = e.target.closest('.tool-card, .framework-card');
+            if (card) {
+                let toolName = card.getAttribute('data-tool-name');
+                if (!toolName) {
+                    const h3 = card.querySelector('h3');
+                    toolName = h3 ? h3.textContent.trim() : '';
+                }
+                if (toolName) {
+                    updateToolUsage(toolName);
+                    
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        card.style.transform = '';
+                    }, 150);
+                }
+            }
+        });
+
+        // Track session time on page unload
+        window.addEventListener('beforeunload', function() {
+            const prevTimeSpent = Number(localStorage.getItem('timeSpent') || 0);
+            const currentSessionTime = Date.now() - sessionStart;
+            localStorage.setItem('timeSpent', prevTimeSpent + currentSessionTime);
+            
+            const today = new Date().toDateString();
+            const storedDate = localStorage.getItem('activeHoursDate');
+            const storedHours = Number(localStorage.getItem('activeHoursToday') || 0);
+            
+            if (storedDate === today) {
+                localStorage.setItem('activeHoursToday', storedHours + currentSessionTime);
+            } else {
+                localStorage.setItem('activeHoursDate', today);
+                localStorage.setItem('activeHoursToday', currentSessionTime);
+            }
+        });
+
+        // Initialize demo data for new users
+        function initializeDemoData() {
+            const hasData = localStorage.getItem('toolUsageData');
+            if (!hasData) {
+                const demoData = {
+                    'Business Model Canvas': 5,
+                    'SWOT Analysis': 3,
+                    'Financial Ratios Calculator': 4,
+                    '7Ps of Marketing': 2
+                };
+                localStorage.setItem('toolUsageData', JSON.stringify(demoData));
+                localStorage.setItem('lastUsedTool', 'Business Model Canvas');
+                localStorage.setItem('lastUsedTime', Date.now() - 300000);
+                localStorage.setItem('totalClicks', '14');
+                localStorage.setItem('timeSpent', '1800000');
+                
+                const today = new Date().toDateString();
+                localStorage.setItem('activeHoursDate', today);
+                localStorage.setItem('activeHoursToday', '900000');
+            }
+        }
+
+        function rotateQuote() {
+            const sanskritElement = document.getElementById('sanskritQuote');
+            const englishElement = document.getElementById('englishQuote');
+            
+            sanskritElement.style.opacity = '0';
+            englishElement.style.opacity = '0';
+            
+            setTimeout(() => {
+                sanskritElement.textContent = quotes[currentQuoteIndex].sanskrit;
+                englishElement.textContent = quotes[currentQuoteIndex].english;
+                
+                sanskritElement.style.opacity = '1';
+                englishElement.style.opacity = '1';
+                
+                currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+            }, 300);
+        }
+
+        // Initialize quote rotator
+        rotateQuote();
+        setInterval(rotateQuote, 6000);
+
+        // Loading screen
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hide');
+                initializeAutoSystem(); // Initialize the auto system
+                animateCounters();
+                initializeDemoData();
+                updateAnalyticsDisplay();
+                
+                setInterval(updateAnalyticsDisplay, 30000);
+            }, 500);
+        });
+
+        // Counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number[data-target]');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const duration = 1500;
+                const increment = target / (duration / 16);
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    counter.textContent = Math.floor(current) + (target > 50 ? '+' : '');
+                }, 16);
+            });
+        }
+
+        // Enhanced category switching
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('.category-tab')) {
+                if (isSearchActive) {
+                    clearSearch();
+                }
+                
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.category-section').forEach(s => s.classList.remove('active'));
+                
+                e.target.classList.add('active');
+                
+                const category = e.target.getAttribute('data-category');
+                const section = document.getElementById(category);
+                if (section) {
+                    section.classList.add('active');
+                }
+                
+                resetAnimations();
+            }
+        });
+
+        // Enhanced Search Functionality
+        const searchInput = document.querySelector('.search-box input');
+        const searchButton = document.querySelector('.search-box button[aria-label="Search"]');
+        const clearButton = document.querySelector('.clear-search');
+        const searchResultsContainer = document.getElementById('search-results-container');
+        const searchResultsContent = document.getElementById('search-results-content');
+        const currentSearchTerm = document.getElementById('current-search-term');
+
+        function highlightText(text, searchTerm) {
+            if (!searchTerm) return text;
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (!searchTerm) {
+                clearSearch();
+                return;
+            }
+
+            isSearchActive = true;
+            clearButton.classList.add('visible');
+            
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            searchResultsContainer.style.display = 'block';
+            currentSearchTerm.textContent = searchTerm;
+            searchResultsContent.innerHTML = '';
+
+            const results = [];
+            Object.keys(CATEGORIES).forEach(categoryId => {
+                const categoryName = CATEGORIES[categoryId].name;
+                const categoryMatches = [];
+
+                TOOLS_DATABASE.filter(tool => tool.category === categoryId).forEach(tool => {
+                    if (tool.name.toLowerCase().includes(searchTerm)) {
+                        categoryMatches.push({
+                            tool: tool,
+                            relevance: calculateRelevance(tool.name, searchTerm)
+                        });
+                    }
+                });
+
+                if (categoryMatches.length > 0) {
+                    categoryMatches.sort((a, b) => b.relevance - a.relevance);
+                    results.push({
+                        categoryName: categoryName,
+                        tools: categoryMatches
+                    });
+                }
+            });
+
+            if (results.length === 0) {
+                searchResultsContent.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h3>No tools found</h3>
+                        <p>Try searching with different keywords like 'calculator', 'analysis', 'planner', etc.</p>
+                    </div>
+                `;
+            } else {
+                results.forEach(category => {
+                    const categorySection = document.createElement('div');
+                    categorySection.innerHTML = `
+                        <h2><i class="fas fa-folder-open"></i> ${category.categoryName}</h2>
+                        <div class="tool-container">
+                            ${category.tools.map(item => {
+                                const tool = item.tool;
+                                const cardHtml = `
+                                    <a href="${tool.link}" target="_blank" class="tool-card search-match" rel="noopener" data-tool-name="${tool.name}">
+                                        <div class="card-icon"><i class="${tool.icon}"></i></div>
+                                        <h3>${highlightText(tool.name, searchTerm)}</h3>
+                                    </a>
+                                `;
+                                return cardHtml;
+                            }).join('')}
+                        </div>
+                    `;
+                    searchResultsContent.appendChild(categorySection);
+                });
+            }
+
+            setTimeout(() => {
+                document.querySelectorAll('.search-match').forEach((card, index) => {
+                    card.style.animationDelay = `${index * 0.1}s`;
+                });
+            }, 100);
+        }
+
+        function calculateRelevance(toolName, searchTerm) {
+            const lowerToolName = toolName.toLowerCase();
+            const lowerSearchTerm = searchTerm.toLowerCase();
+            
+            if (lowerToolName === lowerSearchTerm) return 100;
+            if (lowerToolName.startsWith(lowerSearchTerm)) return 80;
+            if (lowerToolName.includes(' ' + lowerSearchTerm + ' ') || 
+                lowerToolName.includes(' ' + lowerSearchTerm) ||
+                lowerToolName.includes(lowerSearchTerm + ' ')) return 60;
+            if (lowerToolName.includes(lowerSearchTerm)) return 40;
+            
+            return 0;
+        }
+
+        function clearSearch() {
+            isSearchActive = false;
+            searchInput.value = '';
+            clearButton.classList.remove('visible');
+            searchResultsContainer.style.display = 'none';
+            
+            document.querySelectorAll('.category-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('all').classList.add('active');
+            
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('.category-tab[data-category="all"]').classList.add('active');
+        }
+
+        // Event listeners for search
+        if (searchInput) {
+            searchInput.addEventListener('input', performSearch);
+        }
+        if (searchButton) {
+            searchButton.addEventListener('click', performSearch);
+        }
+        if (clearButton) {
+            clearButton.addEventListener('click', clearSearch);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                if (searchInput) searchInput.focus();
+            }
+            
+            if (e.key === 'Escape') {
+                if (document.activeElement === searchInput) {
+                    searchInput.blur();
+                }
+                if (isSearchActive) {
+                    clearSearch();
+                }
+            }
+        });
+
+        // Reset animations function
+        function resetAnimations() {
+            document.querySelectorAll('.tool-card, .framework-card').forEach((card, index) => {
+                card.style.animation = 'none';
+                card.offsetHeight;
+                card.style.animation = `fadeIn 0.3s ease forwards`;
+                card.style.animationDelay = `${index * 0.05}s`;
+            });
+        }
+
+        // Mobile scroll handling
+        function initializeMobileScroll() {
+            const tabsContainer = document.querySelector('.category-tabs');
+            if (!tabsContainer) return;
+            
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            tabsContainer.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - tabsContainer.offsetLeft;
+                scrollLeft = tabsContainer.scrollLeft;
+            });
+
+            tabsContainer.addEventListener('mouseleave', () => {
+                isDown = false;
+            });
+
+            tabsContainer.addEventListener('mouseup', () => {
+                isDown = false;
+            });
+
+            tabsContainer.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - tabsContainer.offsetLeft;
+                const walk = (x - startX) * 2;
+                tabsContainer.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMobileScroll();
+            
+            document.addEventListener('click', function(e) {
+                const element = e.target.closest('.tool-card, .framework-card, .category-tab');
+                if (element) {
+                    element.setAttribute('tabindex', '0');
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                const element = e.target.closest('.tool-card, .framework-card, .category-tab');
+                if (element && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    element.click();
+                }
+            });
+        });
+
+        // Quote rotator error handling
+        document.getElementById('sanskritQuote').style.transition = 'opacity 0.3s ease';
+        document.getElementById('englishQuote').style.transition = 'opacity 0.3s ease';
+    </script>
+
+
+            <script></script>
+        
+    
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>
