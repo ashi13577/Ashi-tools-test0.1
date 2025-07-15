@@ -1,1638 +1,1578 @@
 <!DOCTYPE html>
 <html>
 <head>
-            <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-SFBS0EZSPT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-SFBS0EZSPT');
-</script>
-            <style></style>
-        </head>
-        <body data-new-gr-c-s-check-loaded="14.1240.0" data-gr-ext-installed="">
-            
-
-
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bond Valuation Tool - Ashi Tools</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    :root {
-      --primary: #00ffd5;
-      --secondary: #00b39e;
-      --dark-bg: #0e0e0e;
-      --card-bg: #1e1e1e;
-      --text-light: #cccccc;
-      --border: #333;
-      --success: #28a745;
-      --warning: #ffc107;
-      --danger: #dc3545;
-      --info: #17a2b8;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', 'Roboto', sans-serif;
-      background-color: var(--dark-bg);
-      color: #ffffff;
-      line-height: 1.6;
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 40px auto;
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-    }
-
-    .header {
-      padding: 30px;
-      text-align: center;
-      background: linear-gradient(135deg, #0e0e0e, #1e1e1e);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .header h1 {
-      color: var(--primary);
-      margin: 0 0 10px 0;
-      font-size: 2.2em;
-      text-shadow: 0 0 10px rgba(0, 255, 213, 0.3);
-    }
-
-    .header p {
-      color: var(--text-light);
-      font-size: 1.1em;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .main-section {
-      padding: 30px;
-    }
-
-    .bond-form {
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      padding: 25px;
-      margin-bottom: 30px;
-      border: 1px solid var(--border);
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .template-section {
-      margin-bottom: 25px;
-    }
-
-    .template-section h3 {
-      color: var(--primary);
-      margin-bottom: 15px;
-      font-size: 1.3em;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .template-buttons {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      flex: 1;
-      min-width: 200px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 10px;
-      background-color: #222;
-      border: 1px solid var(--border);
-      color: white;
-      border-radius: 5px;
-      font-size: 1em;
-      transition: border-color 0.3s;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: var(--primary);
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(0, 255, 213, 0.2);
-    }
-
-    .input-hint {
-      font-size: 12px;
-      color: var(--text-light);
-      margin-top: 4px;
-    }
-
-    .form-actions {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      background-color: var(--primary);
-      color: var(--dark-bg);
-      border: none;
-      padding: 12px 25px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1em;
-      transition: all 0.3s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-    }
-
-    .btn:hover {
-      background-color: var(--secondary);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 255, 213, 0.3);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    .btn-secondary {
-      background-color: var(--secondary);
-      color: white;
-    }
-
-    .btn-secondary:hover {
-      background-color: #008f7a;
-    }
-
-    .btn-warning {
-      background-color: var(--warning);
-      color: var(--dark-bg);
-    }
-
-    .btn-warning:hover {
-      background-color: #e0a800;
-    }
-
-    .btn-danger {
-      background-color: var(--danger);
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background-color: #c82333;
-    }
-
-    .btn-info {
-      background-color: var(--info);
-      color: white;
-    }
-
-    .btn-info:hover {
-      background-color: #138496;
-    }
-
-    .results-section {
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      margin: 25px 0;
-      border: 1px solid var(--border);
-      overflow: hidden;
-    }
-
-    .section-header {
-      padding: 15px 20px;
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 1.2em;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .results-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
-
-    .result-card {
-      background-color: #222;
-      border-radius: 8px;
-      padding: 20px;
-      text-align: center;
-      border: 1px solid var(--border);
-      transition: transform 0.3s;
-    }
-
-    .result-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 255, 213, 0.2);
-    }
-
-    .result-value {
-      font-size: 2em;
-      font-weight: bold;
-      color: var(--primary);
-      margin-bottom: 10px;
-    }
-
-    .result-label {
-      color: var(--text-light);
-      font-size: 0.9em;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .result-description {
-      color: var(--text-light);
-      font-size: 0.8em;
-      margin-top: 5px;
-      opacity: 0.8;
-    }
-
-    .analysis-section {
-      padding: 20px;
-      background-color: var(--card-bg);
-    }
-
-    .analysis-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-
-    .analysis-card {
-      background-color: #222;
-      border-radius: 8px;
-      padding: 20px;
-      border: 1px solid var(--border);
-    }
-
-    .analysis-card h4 {
-      color: var(--primary);
-      margin-bottom: 15px;
-      font-size: 1.1em;
-    }
-
-    .cash-flow-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-
-    .cash-flow-table th,
-    .cash-flow-table td {
-      padding: 8px 12px;
-      text-align: center;
-      border: 1px solid var(--border);
-      font-size: 0.9em;
-    }
-
-    .cash-flow-table th {
-      background-color: #333;
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    .cash-flow-table td {
-      color: var(--text-light);
-    }
-
-    .chart-container {
-      width: 100%;
-      height: 400px;
-      position: relative;
-      padding: 20px;
-      background-color: var(--card-bg);
-    }
-
-    .education-box {
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      padding: 30px;
-      margin: 30px 0;
-      border: 1px solid var(--border);
-      color: var(--text-light);
-      line-height: 1.6;
-    }
-
-    .education-box h3,
-    .education-box h4 {
-      color: var(--primary);
-      font-weight: 700;
-      margin-bottom: 15px;
-    }
-
-    .education-box h3 {
-      font-size: 1.4em;
-      text-shadow: 0 0 5px rgba(0, 255, 213, 0.2);
-    }
-
-    .feature-tag {
-      background-color: #333;
-      color: var(--primary);
-      font-size: 11px;
-      border-radius: 10px;
-      padding: 3px 10px;
-      margin-right: 8px;
-      font-weight: 500;
-      display: inline-block;
-    }
-
-    .formula {
-      background-color: #222;
-      color: var(--primary);
-      font-family: 'Courier New', monospace;
-      border-radius: 6px;
-      padding: 12px 16px;
-      margin: 15px 0;
-      border: 1px solid var(--border);
-      display: block;
-      text-align: center;
-      font-size: 1.1em;
-    }
-
-    .bond-comparison {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin: 20px 0;
-    }
-
-    .bond-card {
-      background-color: #222;
-      border-radius: 8px;
-      padding: 15px;
-      border: 1px solid var(--border);
-      text-align: center;
-    }
-
-    .bond-card.selected {
-      border-color: var(--primary);
-      box-shadow: 0 0 10px rgba(0, 255, 213, 0.3);
-    }
-
-    .bond-card h4 {
-      color: var(--primary);
-      margin-bottom: 10px;
-    }
-
-    .bond-detail {
-      color: var(--text-light);
-      font-size: 0.9em;
-      margin: 5px 0;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: var(--success);
-      color: white;
-      padding: 12px 25px;
-      border-radius: 8px;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s;
-      z-index: 1000;
-      font-weight: 600;
-    }
-
-    .toast.show {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .toast.error {
-      background-color: var(--danger);
-    }
-
-    .toast.warning {
-      background-color: var(--warning);
-      color: var(--dark-bg);
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 40px;
-      color: var(--text-light);
-      padding: 25px;
-      background-color: var(--dark-bg);
-      border-top: 1px solid var(--border);
-    }
-
-    .insta-link {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: bold;
-      transition: all 0.3s;
-    }
-
-    .insta-link:hover {
-      text-decoration: underline;
-      text-shadow: 0 0 5px rgba(0, 255, 213, 0.5);
-    }
-
-    @media (max-width: 768px) {
-      .main-section {
-        padding: 20px 15px;
-      }
-
-      .template-buttons {
-        justify-content: center;
-      }
-
-      .form-actions {
-        justify-content: center;
-      }
-
-      .chart-container {
-        height: 300px;
-        padding: 15px;
-      }
-
-      .row {
-        flex-direction: column;
-      }
-
-      .results-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-
-
-  <div class="container">
-    <div class="header">
-      <h1><i class="fa-solid fa-chart-line"></i> Bond Valuation Tool</h1>
-      <p>
-        Comprehensive bond valuation calculator with present value analysis, yield calculations, and risk assessment. Perfect for investors, students, and financial professionals.
-      </p>
-    </div>
-
-    <div class="main-section">
-      <!-- Bond Input Form -->
-      <div class="bond-form">
-        <div class="template-section">
-          <h3><i class="fa-solid fa-university"></i> Bond Templates</h3>
-          <div class="template-buttons">
-            <button class="btn btn-secondary" onclick="loadTemplate('treasury')">
-              <i class="fa-solid fa-landmark"></i> US Treasury
-            </button>
-            <button class="btn btn-secondary" onclick="loadTemplate('corporate')">
-              <i class="fa-solid fa-building"></i> Corporate Bond
-            </button>
-            <button class="btn btn-secondary" onclick="loadTemplate('municipal')">
-              <i class="fa-solid fa-city"></i> Municipal Bond
-            </button>
-            <button class="btn btn-secondary" onclick="loadTemplate('zero_coupon')">
-              <i class="fa-solid fa-circle-notch"></i> Zero Coupon
-            </button>
-            <button class="btn btn-secondary" onclick="loadTemplate('high_yield')">
-              <i class="fa-solid fa-fire"></i> High Yield
-            </button>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="form-group">
-            <label for="bondName">Bond Name/Issuer</label>
-            <input type="text" id="bondName" placeholder="e.g., US Treasury 10Y, Apple Inc">
-            <span class="input-hint">Enter bond name or issuer</span>
-          </div>
-          <div class="form-group">
-            <label for="faceValue">Face Value ($)</label>
-            <input type="number" id="faceValue" value="1000" min="100" step="100">
-            <span class="input-hint">Par value or principal amount</span>
-          </div>
-          <div class="form-group">
-            <label for="couponRate">Annual Coupon Rate (%)</label>
-            <input type="number" id="couponRate" value="5" min="0" max="50" step="0.1">
-            <span class="input-hint">Annual interest rate paid</span>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="form-group">
-            <label for="yearsToMaturity">Years to Maturity</label>
-            <input type="number" id="yearsToMaturity" value="10" min="0.1" max="50" step="0.1">
-            <span class="input-hint">Time until bond matures</span>
-          </div>
-          <div class="form-group">
-            <label for="requiredYield">Required Yield/YTM (%)</label>
-            <input type="number" id="requiredYield" value="6" min="0" max="50" step="0.1">
-            <span class="input-hint">Market discount rate</span>
-          </div>
-          <div class="form-group">
-            <label for="paymentFrequency">Payment Frequency</label>
-            <select id="paymentFrequency">
-              <option value="1">Annual</option>
-              <option value="2" selected="">Semi-Annual</option>
-              <option value="4">Quarterly</option>
-              <option value="12">Monthly</option>
-            </select>
-            <span class="input-hint">How often coupons are paid</span>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="form-group">
-            <label for="currentPrice">Current Market Price ($)</label>
-            <input type="number" id="currentPrice" placeholder="e.g., 950" step="0.01">
-            <span class="input-hint">Leave blank to calculate fair value</span>
-          </div>
-          <div class="form-group">
-            <label for="creditRating">Credit Rating</label>
-            <select id="creditRating">
-              <option value="AAA">AAA (Highest)</option>
-              <option value="AA">AA (High)</option>
-              <option value="A" selected="">A (Upper Medium)</option>
-              <option value="BBB">BBB (Lower Medium)</option>
-              <option value="BB">BB (Speculative)</option>
-              <option value="B">B (Highly Speculative)</option>
-              <option value="CCC">CCC (Substantial Risk)</option>
-              <option value="D">D (Default)</option>
-            </select>
-            <span class="input-hint">Bond credit quality rating</span>
-          </div>
-          <div class="form-group">
-            <label for="bondType">Bond Type</label>
-            <select id="bondType">
-              <option value="government">Government</option>
-              <option value="corporate" selected="">Corporate</option>
-              <option value="municipal">Municipal</option>
-              <option value="zero-coupon">Zero Coupon</option>
-            </select>
-            <span class="input-hint">Type of bond issuer</span>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button class="btn" onclick="calculateBond()">
-            <i class="fa-solid fa-calculator"></i> Calculate Bond Value
-          </button>
-          <button class="btn btn-info" onclick="performSensitivityAnalysis()">
-            <i class="fa-solid fa-chart-area"></i> Sensitivity Analysis
-          </button>
-          <button class="btn btn-warning" onclick="compareBonds()">
-            <i class="fa-solid fa-balance-scale"></i> Compare Bonds
-          </button>
-          <button class="btn btn-secondary" onclick="exportAnalysis()">
-            <i class="fa-solid fa-download"></i> Export Results
-          </button>
-          <button class="btn btn-danger" onclick="resetForm()">
-            <i class="fa-solid fa-rotate-left"></i> Reset
-          </button>
-        </div>
-      </div>
-
-      <!-- Results Section -->
-      <div class="results-section" id="resultsSection" style="display: none;">
-        <div class="section-header">
-          <i class="fa-solid fa-chart-pie"></i> Bond Valuation Results
-        </div>
-        <div class="results-grid" id="resultsGrid">
-        <div class="result-card">
-          <div class="result-value">$886.94</div>
-          <div class="result-label">Fair Value</div>
-          <div class="result-description">Theoretical bond price</div>
-        </div>
-        <div class="result-card">
-          <div class="result-value">4.51%</div>
-          <div class="result-label">Current Yield</div>
-          <div class="result-description">Annual return on investment</div>
-        </div>
-        <div class="result-card">
-          <div class="result-value">5.50%</div>
-          <div class="result-label">Yield to Maturity</div>
-          <div class="result-description">Total return if held to maturity</div>
-        </div>
-        <div class="result-card">
-          <div class="result-value">8.32</div>
-          <div class="result-label">Duration (Years)</div>
-          <div class="result-description">Price sensitivity to rate changes</div>
-        </div>
-        <div class="result-card">
-          <div class="result-value">7.89</div>
-          <div class="result-label">Modified Duration</div>
-          <div class="result-description">Adjusted price sensitivity</div>
-        </div>
-        <div class="result-card">
-          <div class="result-value">77.08</div>
-          <div class="result-label">Convexity</div>
-          <div class="result-description">Curvature of price-yield relationship</div>
-        </div>
-      </div>
-      </div>
-
-      <!-- Analysis Section -->
-      <div class="results-section" id="analysisSection" style="display: none;">
-        <div class="section-header">
-          <i class="fa-solid fa-magnifying-glass-chart"></i> Detailed Analysis
-        </div>
-        <div class="analysis-section">
-          <div class="analysis-grid" id="analysisGrid">
-        <div class="analysis-card">
-          <h4><i class="fa-solid fa-chart-line"></i> Bond Classification</h4>
-          <div style="color: var(--success); font-weight: bold; font-size: 1.2em;">
-            Discount Bond
-          </div>
-          <div style="margin-top: 10px;">
-            Premium/Discount: -11.31%
-            <br>Trading below par value
-          </div>
-        </div>
-        
-        <div class="analysis-card">
-          <h4><i class="fa-solid fa-shield-alt"></i> Risk Assessment</h4>
-          <div style="color: var(--danger); font-weight: bold; font-size: 1.2em;">
-            High Risk
-          </div>
-          <div style="margin-top: 10px;">
-            Credit Rating: AAA
-            <br>Interest Rate Risk: High
-            <br>Duration: 8.32 years
-          </div>
-        </div>
-        
-        <div class="analysis-card">
-          <h4><i class="fa-solid fa-dollar-sign"></i> Cash Flow Analysis</h4>
-          <div>
-            <strong>PV of Coupons:</strong> $301.51
-            <br><strong>PV of Principal:</strong> $585.43
-            <br><strong>Total Periods:</strong> 10
-            <br><strong>Periodic Payment:</strong> $40.00
-          </div>
-        </div>
-        
-        <div class="analysis-card">
-          <h4><i class="fa-solid fa-chart-area"></i> Sensitivity Metrics</h4>
-          <div>
-            <strong>Modified Duration:</strong> 7.89
-            <br><strong>Convexity:</strong> 77.08
-            <br><strong>Price Change (1% rate rise):</strong> -7.89%
-            <br><strong>Bond Type:</strong> Zero-coupon
-          </div>
-        </div>
-      </div>
-        </div>
-      </div>
-
-      <!-- Cash Flow Table -->
-      <div class="results-section" id="cashFlowSection" style="display: none;">
-        <div class="section-header">
-          <i class="fa-solid fa-table"></i> Cash Flow Schedule
-        </div>
-        <div style="padding: 20px; overflow-x: auto;">
-          <table class="cash-flow-table" id="cashFlowTable">
-        <tbody><tr>
-          <th>Period</th>
-          <th>Date (Years)</th>
-          <th>Coupon Payment</th>
-          <th>Principal Payment</th>
-          <th>Total Cash Flow</th>
-          <th>Present Value</th>
-          <th>Cumulative PV</th>
-        </tr>
-      
-          <tr>
-            <td>1</td>
-            <td>1.00</td>
-            <td>$40.00</td>
-            <td>$0.00</td>
-            <td>$40.00</td>
-            <td>$37.91</td>
-            <td>$37.91</td>
-          </tr>
-        
-          <tr>
-            <td>2</td>
-            <td>2.00</td>
-            <td>$40.00</td>
-            <td>$0.00</td>
-            <td>$40.00</td>
-            <td>$35.94</td>
-            <td>$73.85</td>
-          </tr>
-        
-          <tr>
-            <td>3</td>
-            <td>3.00</td>
-            <td>$40.00</td>
-            <td>$0.00</td>
-            <td>$40.00</td>
-            <td>$34.06</td>
-            <td>$107.92</td>
-          </tr>
-        
-          <tr>
-            <td>4</td>
-            <td>4.00</td>
-            <td>$40.00</td>
-            <td>$0.00</td>
-            <td>$40.00</td>
-            <td>$32.29</td>
-            <td>$140.21</td>
-          </tr>
-        
-          <tr>
-            <td>5</td>
-            <td>5.00</td>
-            <td>$40.00</td>
-            <td>$0.00</td>
-            <td>$40.00</td>
-            <td>$30.61</td>
-            <td>$170.81</td>
-          </tr>
-        
-          <tr>
-            <td>6</td>
-            <td>6.00</td>
-            <td>$40.00</td>
-            <td>$0.00</td>
-            <td>$40.00</td>
-            <td>$29.01</td>
-            <td>$199.82</td>
-          </tr>
-        
-          <tr>
-            <td>7</td>
-            <td>7.00</td>
-            <td>$40.00</td>
-            <td>$0.00</td>
-            <td>$40.00</td>
-            <td>$27.50</td>
-            <td>$227.32</td>
-          </tr>
-        
-          <tr>
-            <td>8</td>
-            <td>8.00</td>
-            <td>$40.00</td>
-            <td>$0.00</td>
-            <td>$40.00</td>
-            <td>$26.06</td>
-            <td>$253.38</td>
-          </tr>
-        
-          <tr>
-            <td>9</td>
-            <td>9.00</td>
-            <td>$40.00</td>
-            <td>$0.00</td>
-            <td>$40.00</td>
-            <td>$24.71</td>
-            <td>$278.09</td>
-          </tr>
-        
-          <tr>
-            <td>10</td>
-            <td>10.00</td>
-            <td>$40.00</td>
-            <td>$1000.00</td>
-            <td>$1040.00</td>
-            <td>$608.85</td>
-            <td>$886.94</td>
-          </tr>
-        </tbody></table>
-        </div>
-      </div>
-
-      <!-- Chart Section -->
-      <div class="results-section" id="chartSection" style="display: none;">
-        <div class="section-header">
-          <i class="fa-solid fa-chart-line"></i> Bond Price Sensitivity
-        </div>
-        <div class="chart-container">
-          <canvas id="bondChart" style="box-sizing: border-box;" width="300"></canvas>
-        </div>
-      </div>
-
-      <!-- Educational Content -->
-      <div class="education-box">
-        <h3><i class="fa-solid fa-graduation-cap"></i> Bond Valuation - Complete Guide</h3>
-        
-        <div style="margin-bottom: 20px;">
-          <strong>Master bond valuation to understand fixed-income securities, interest rate risk, and investment returns in debt markets.</strong>
-        </div>
-
-        <h4>1. Bond Valuation Fundamentals <span class="feature-tag">Core Concepts</span></h4>
-        <div>
-          Bond valuation is based on the present value of future cash flows. A bond's intrinsic value equals the present value of all expected coupon payments plus the present value of the face value at maturity.
-          
-          <div class="formula">Bond Price = Σ[C/(1+r)^t] + F/(1+r)^n</div>
-          
-          Where: C = coupon payment, r = required yield, t = time period, F = face value, n = years to maturity
-        </div>
-
-        <h4>2. Key Bond Metrics <span class="feature-tag">Analytics</span></h4>
-        <div>
-          <strong>Yield to Maturity (YTM):</strong> Total return if held to maturity
-          <br><br>
-          <strong>Current Yield:</strong> Annual coupon payment divided by current price
-          <br><br>
-          <strong>Duration:</strong> Price sensitivity to interest rate changes
-          <div class="formula">Modified Duration = Macaulay Duration / (1 + YTM/m)</div>
-          
-          <strong>Convexity:</strong> Curvature of price-yield relationship for better risk assessment
-        </div>
-
-        <h4>3. Bond Pricing Relationships <span class="feature-tag">Market Dynamics</span></h4>
-        <ul style="margin: 10px 0; padding-left: 20px;">
-          <li><strong>Interest Rate Risk:</strong> Bond prices move inversely to interest rates</li>
-          <li><strong>Credit Risk:</strong> Higher credit risk requires higher yields</li>
-          <li><strong>Time to Maturity:</strong> Longer maturity bonds are more sensitive to rate changes</li>
-          <li><strong>Coupon Effect:</strong> Lower coupon bonds have higher duration</li>
-          <li><strong>Yield Curve:</strong> Term structure affects bond pricing</li>
-        </ul>
-
-        <h4>4. Types of Bonds <span class="feature-tag">Market Segments</span></h4>
-        <div>
-          <strong>Government Bonds:</strong> Treasury securities with minimal credit risk
-          <br><br>
-          <strong>Corporate Bonds:</strong> Higher yields but increased credit risk
-          <br><br>
-          <strong>Municipal Bonds:</strong> Tax-advantaged bonds issued by local governments
-          <br><br>
-          <strong>Zero Coupon Bonds:</strong> Sold at discount, no periodic interest payments
-          <br><br>
-          <strong>Convertible Bonds:</strong> Can be converted to equity shares
-        </div>
-
-        <h4>5. Risk Assessment <span class="feature-tag">Risk Management</span></h4>
-        <div>
-          <strong>Credit Risk:</strong> Probability of default by issuer
-          <br><br>
-          <strong>Interest Rate Risk:</strong> Price volatility due to rate changes
-          <br><br>
-          <strong>Inflation Risk:</strong> Purchasing power erosion
-          <br><br>
-          <strong>Liquidity Risk:</strong> Ability to sell before maturity
-          <br><br>
-          <strong>Call Risk:</strong> Early redemption by issuer
-        </div>
-
-        <h4>6. Yield Calculations <span class="feature-tag">Performance Metrics</span></h4>
-        <div>
-          <strong>Current Yield:</strong>
-          <div class="formula">Current Yield = Annual Coupon / Current Price</div>
-          
-          <strong>Yield to Maturity:</strong> IRR of bond's cash flows
-          <br><br>
-          <strong>Yield to Call:</strong> Yield if bond is called early
-          <br><br>
-          <strong>Tax-Equivalent Yield:</strong> For municipal bonds
-          <div class="formula">TEY = Municipal Yield / (1 - Tax Rate)</div>
-        </div>
-
-        <h4>7. Duration and Convexity <span class="feature-tag">Risk Metrics</span></h4>
-        <div>
-          <strong>Macaulay Duration:</strong> Weighted average time to receive cash flows
-          <div class="formula">Duration = Σ[t × PV(CF_t)] / Bond Price</div>
-          
-          <strong>Modified Duration:</strong> Price sensitivity approximation
-          <br><br>
-          <strong>Convexity:</strong> Second-order price sensitivity
-          <div class="formula">% Price Change ≈ -Duration × ΔYield + ½ × Convexity × (ΔYield)²</div>
-        </div>
-
-        <h4>8. Bond Investment Strategies <span class="feature-tag">Portfolio Management</span></h4>
-        <ul style="margin: 10px 0; padding-left: 20px;">
-          <li><strong>Buy and Hold:</strong> Hold bonds to maturity for predictable income</li>
-          <li><strong>Laddering:</strong> Stagger maturities for reinvestment flexibility</li>
-          <li><strong>Barbell Strategy:</strong> Combine short and long-term bonds</li>
-          <li><strong>Bullet Strategy:</strong> Concentrate maturities around target date</li>
-          <li><strong>Active Trading:</strong> Capitalize on interest rate movements</li>
-        </ul>
-
-        <h4>9. Market Factors <span class="feature-tag">Economic Environment</span></h4>
-        <div>
-          <strong>Federal Reserve Policy:</strong> Interest rate decisions impact bond prices
-          <br><br>
-          <strong>Economic Growth:</strong> GDP growth affects credit quality and rates
-          <br><br>
-          <strong>Inflation Expectations:</strong> Erodes real returns of fixed payments
-          <br><br>
-          <strong>Credit Spreads:</strong> Risk premiums over government bonds
-          <br><br>
-          <strong>Supply and Demand:</strong> Issuance levels and investor appetite
-        </div>
-
-        <h4>10. Advanced Concepts <span class="feature-tag">Professional Level</span></h4>
-        <div>
-          <strong>Option-Adjusted Spread (OAS):</strong> Spread after removing embedded options
-          <br><br>
-          <strong>Z-Spread:</strong> Spread over entire yield curve
-          <br><br>
-          <strong>Effective Duration:</strong> Duration considering embedded options
-          <br><br>
-          <strong>Key Rate Duration:</strong> Sensitivity to specific maturity points
-          <br><br>
-          <strong>Credit Value Adjustment (CVA):</strong> Counterparty risk pricing
-        </div>
-      </div>
-    </div>
-
-    <div id="toast" class="toast success show">Form reset successfully!</div>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SFBS0EZSPT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-SFBS0EZSPT');
+    </script>
     
-    <div class="footer">
-      Built with ❤️ by <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank">Ashish Singh Rajput</a><br>
-      Empowering financial education and investment analysis
-    </div>
-  </div>
-
-  <script>
-    // Global variables
-    let bondChart = null;
-    let currentBondData = null;
-
-    // Bond templates
-    const templates = {
-      treasury: {
-        bondName: "US Treasury 10Y",
-        faceValue: 1000,
-        couponRate: 4.5,
-        yearsToMaturity: 10,
-        requiredYield: 4.2,
-        paymentFrequency: 2,
-        creditRating: "AAA",
-        bondType: "government"
-      },
-      corporate: {
-        bondName: "Apple Inc 2034",
-        faceValue: 1000,
-        couponRate: 5.25,
-        yearsToMaturity: 10,
-        requiredYield: 5.8,
-        paymentFrequency: 2,
-        creditRating: "AA",
-        bondType: "corporate"
-      },
-      municipal: {
-        bondName: "California Muni",
-        faceValue: 1000,
-        couponRate: 3.5,
-        yearsToMaturity: 15,
-        requiredYield: 3.2,
-        paymentFrequency: 2,
-        creditRating: "A",
-        bondType: "municipal"
-      },
-      zero_coupon: {
-        bondName: "Zero Coupon 2034",
-        faceValue: 1000,
-        couponRate: 0,
-        yearsToMaturity: 10,
-        requiredYield: 5.5,
-        paymentFrequency: 1,
-        creditRating: "AAA",
-        bondType: "zero-coupon"
-      },
-      high_yield: {
-        bondName: "High Yield Corp",
-        faceValue: 1000,
-        couponRate: 8.5,
-        yearsToMaturity: 7,
-        requiredYield: 9.2,
-        paymentFrequency: 2,
-        creditRating: "BB",
-        bondType: "corporate"
-      }
-    };
-
-    // Load template function
-    function loadTemplate(templateName) {
-      const template = templates[templateName];
-      if (!template) return;
-
-      Object.keys(template).forEach(key => {
-        const element = document.getElementById(key);
-        if (element) {
-          element.value = template[key];
-        }
-      });
-
-      showToast(`${templateName.replace('_', ' ').toUpperCase()} template loaded!`, "success");
-    }
-
-    // Calculate bond function
-    function calculateBond() {
-      try {
-        // Get input values
-        const bondName = document.getElementById('bondName').value || 'Bond';
-        const faceValue = parseFloat(document.getElementById('faceValue').value);
-        const couponRate = parseFloat(document.getElementById('couponRate').value) / 100;
-        const yearsToMaturity = parseFloat(document.getElementById('yearsToMaturity').value);
-        const requiredYield = parseFloat(document.getElementById('requiredYield').value) / 100;
-        const paymentFrequency = parseInt(document.getElementById('paymentFrequency').value);
-        const currentPrice = parseFloat(document.getElementById('currentPrice').value);
-        const creditRating = document.getElementById('creditRating').value;
-        const bondType = document.getElementById('bondType').value;
-
-        // Validation
-        if (isNaN(faceValue) || isNaN(couponRate) || isNaN(yearsToMaturity) || isNaN(requiredYield)) {
-          showToast("Please fill in all required fields with valid numbers", "error");
-          return;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bond Valuation Tool - Ashi Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #00ffd5;
+            --secondary: #00b39e;
+            --dark-bg: #0e0e0e;
+            --card-bg: #1e1e1e;
+            --text-light: #cccccc;
+            --border: #333;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --tooltip-bg: rgba(0, 0, 0, 0.95);
+            --tooltip-border: rgba(0, 255, 213, 0.3);
         }
 
-        // Calculate bond metrics
-        const results = calculateBondMetrics(faceValue, couponRate, yearsToMaturity, requiredYield, paymentFrequency, currentPrice);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 30px;
+            text-align: center;
+            background: linear-gradient(135deg, #0e0e0e, #1e1e1e);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            color: var(--primary);
+            margin: 0 0 10px 0;
+            font-size: 2.2em;
+            text-shadow: 0 0 10px rgba(0, 255, 213, 0.3);
+        }
+
+        .header p {
+            color: var(--text-light);
+            font-size: 1.1em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .main-section {
+            padding: 30px;
+        }
+
+        .bond-form {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .template-section {
+            margin-bottom: 25px;
+        }
+
+        .template-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Improved Template Cards - No Overlapping Tooltips */
+        .template-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .template-card {
+            background: linear-gradient(135deg, rgba(0, 255, 213, 0.05), rgba(0, 255, 213, 0.08));
+            border: 1px solid rgba(0, 255, 213, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-card:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 213, 0.1), rgba(0, 255, 213, 0.15));
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 213, 0.2);
+        }
+
+        .template-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .template-card h4 {
+            color: var(--primary);
+            margin: 0 0 12px 0;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .template-card .use-case-text {
+            color: var(--text-light);
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .template-card .template-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .feature-badge {
+            background: rgba(0, 255, 213, 0.2);
+            color: var(--primary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            background-color: #222;
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 255, 213, 0.2);
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: var(--dark-bg);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 213, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #008f7a;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: var(--dark-bg);
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-info {
+            background-color: var(--info);
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+        .results-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 15px 20px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2em;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .result-card {
+            background-color: #222;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: transform 0.3s;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 213, 0.2);
+        }
+
+        .result-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .result-label {
+            color: var(--text-light);
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-description {
+            color: var(--text-light);
+            font-size: 0.8em;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        .analysis-section {
+            padding: 20px;
+            background-color: var(--card-bg);
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .analysis-card {
+            background-color: #222;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .analysis-card h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .cash-flow-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .cash-flow-table th,
+        .cash-flow-table td {
+            padding: 8px 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+            font-size: 0.9em;
+        }
+
+        .cash-flow-table th {
+            background-color: #333;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .cash-flow-table td {
+            color: var(--text-light);
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            padding: 20px;
+            background-color: var(--card-bg);
+        }
+
+        .education-box {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid var(--border);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .education-box h3,
+        .education-box h4 {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .education-box h3 {
+            font-size: 1.4em;
+            text-shadow: 0 0 5px rgba(0, 255, 213, 0.2);
+        }
+
+        .feature-tag {
+            background-color: #333;
+            color: var(--primary);
+            font-size: 11px;
+            border-radius: 10px;
+            padding: 3px 10px;
+            margin-right: 8px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .formula {
+            background-color: #222;
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin: 15px 0;
+            border: 1px solid var(--border);
+            display: block;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .bond-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .bond-card {
+            background-color: #222;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .bond-card.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 255, 213, 0.3);
+        }
+
+        .bond-card h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .bond-detail {
+            color: var(--text-light);
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1000;
+            font-weight: 600;
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .toast.error {
+            background-color: var(--danger);
+        }
+
+        .toast.warning {
+            background-color: var(--warning);
+            color: var(--dark-bg);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-light);
+            padding: 25px;
+            background-color: var(--dark-bg);
+            border-top: 1px solid var(--border);
+        }
+
+        .insta-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .insta-link:hover {
+            text-decoration: underline;
+            text-shadow: 0 0 5px rgba(0, 255, 213, 0.5);
+        }
+
+        .use-case-info {
+            background: rgba(0, 255, 213, 0.1);
+            border-left: 3px solid var(--primary);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: var(--text-light);
+        }
+
+        .use-case-info strong {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .main-section {
+                padding: 20px 15px;
+            }
+
+            .template-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                justify-content: center;
+            }
+
+            .chart-container {
+                height: 300px;
+                padding: 15px;
+            }
+
+            .row {
+                flex-direction: column;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fa-solid fa-chart-line"></i> Bond Valuation Tool</h1>
+            <p>
+                Comprehensive bond valuation calculator with present value analysis, yield calculations, and risk assessment. Perfect for investors, students, and financial professionals analyzing Indian bonds and global securities.
+            </p>
+        </div>
+
+        <div class="main-section">
+            <!-- Bond Input Form -->
+            <div class="bond-form">
+                <div class="template-section">
+                    <h3><i class="fa-solid fa-university"></i> Bond Templates with Use Cases</h3>
+                    
+                    <!-- Improved Template Cards - No Overlapping Issues -->
+                    <div class="template-cards">
+                        <div class="template-card" onclick="loadTemplate('indian_govt')">
+                            <h4><i class="fa-solid fa-landmark"></i> Indian Government Bonds</h4>
+                            <div class="use-case-text">
+                                Perfect for risk-free investments, portfolio benchmarking, and capital preservation. Use when you need a baseline for comparing other bonds or building conservative portfolios.
+                            </div>
+                            <div class="template-features">
+                                <span class="feature-badge">Risk-Free</span>
+                                <span class="feature-badge">Benchmark</span>
+                                <span class="feature-badge">Conservative</span>
+                            </div>
+                        </div>
+                        
+                        <div class="template-card" onclick="loadTemplate('corporate_india')">
+                            <h4><i class="fa-solid fa-building"></i> Corporate Bonds</h4>
+                            <div class="use-case-text">
+                                Ideal for higher yields and credit analysis. Use when seeking better returns than government bonds or evaluating corporate credit risk for diversified portfolios.
+                            </div>
+                            <div class="template-features">
+                                <span class="feature-badge">Higher Yields</span>
+                                <span class="feature-badge">Credit Analysis</span>
+                                <span class="feature-badge">Diversification</span>
+                            </div>
+                        </div>
+                        
+                        <div class="template-card" onclick="loadTemplate('state_development')">
+                            <h4><i class="fa-solid fa-city"></i> State Development Bonds</h4>
+                            <div class="use-case-text">
+                                Excellent for tax benefits and infrastructure exposure. Use for tax planning, state-level investments, or when seeking infrastructure investment themes.
+                            </div>
+                            <div class="template-features">
+                                <span class="feature-badge">Tax Benefits</span>
+                                <span class="feature-badge">Infrastructure</span>
+                                <span class="feature-badge">State Exposure</span>
+                            </div>
+                        </div>
+                        
+                        <div class="template-card" onclick="loadTemplate('zero_coupon')">
+                            <h4><i class="fa-solid fa-circle-notch"></i> Zero Coupon Bonds</h4>
+                            <div class="use-case-text">
+                                Best for goal-based investing and duration matching. Use for long-term financial goals or when you want to avoid reinvestment risk with single maturity payment.
+                            </div>
+                            <div class="template-features">
+                                <span class="feature-badge">Goal-Based</span>
+                                <span class="feature-badge">Duration Match</span>
+                                <span class="feature-badge">No Reinvestment</span>
+                            </div>
+                        </div>
+                        
+                        <div class="template-card" onclick="loadTemplate('high_yield_india')">
+                            <h4><i class="fa-solid fa-fire"></i> High Yield Bonds</h4>
+                            <div class="use-case-text">
+                                Perfect for higher returns and risk diversification. Use when seeking superior yields or analyzing distressed securities with higher risk tolerance.
+                            </div>
+                            <div class="template-features">
+                                <span class="feature-badge">High Returns</span>
+                                <span class="feature-badge">Risk Diversification</span>
+                                <span class="feature-badge">Distressed Analysis</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Guide Information Box -->
+                    <div class="use-case-info">
+                        <strong>💡 Quick Guide:</strong> Government bonds for safe portfolios | Corporate bonds for yield enhancement | State bonds for tax benefits | Zero-coupon for goal-based investing | High-yield for risk-taking investors
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="bondName">Bond Name/Issuer</label>
+                        <input type="text" id="bondName" placeholder="e.g., GOI 2034, Reliance Industries">
+                        <span class="input-hint">Enter bond name or issuer</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="faceValue">Face Value (₹)</label>
+                        <input type="number" id="faceValue" value="100000" min="1000" step="1000">
+                        <span class="input-hint">Par value or principal amount</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="couponRate">Annual Coupon Rate (%)</label>
+                        <input type="number" id="couponRate" value="7.5" min="0" max="20" step="0.1">
+                        <span class="input-hint">Annual interest rate paid</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="yearsToMaturity">Years to Maturity</label>
+                        <input type="number" id="yearsToMaturity" value="10" min="0.1" max="50" step="0.1">
+                        <span class="input-hint">Time until bond matures</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="requiredYield">Required Yield/YTM (%)</label>
+                        <input type="number" id="requiredYield" value="8" min="0" max="25" step="0.1">
+                        <span class="input-hint">Market discount rate</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentFrequency">Payment Frequency</label>
+                        <select id="paymentFrequency">
+                            <option value="1">Annual</option>
+                            <option value="2" selected>Semi-Annual</option>
+                            <option value="4">Quarterly</option>
+                        </select>
+                        <span class="input-hint">How often coupons are paid</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="currentPrice">Current Market Price (₹)</label>
+                        <input type="number" id="currentPrice" placeholder="e.g., 95000" step="0.01">
+                        <span class="input-hint">Leave blank to calculate fair value</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="creditRating">Credit Rating</label>
+                        <select id="creditRating">
+                            <option value="AAA">AAA (Highest - Govt/PSU)</option>
+                            <option value="AA+">AA+ (Very High)</option>
+                            <option value="AA">AA (High)</option>
+                            <option value="A+" selected>A+ (Upper Medium)</option>
+                            <option value="A">A (Medium)</option>
+                            <option value="BBB">BBB (Lower Medium)</option>
+                            <option value="BB">BB (Speculative)</option>
+                            <option value="B">B (Highly Speculative)</option>
+                            <option value="D">D (Default)</option>
+                        </select>
+                        <span class="input-hint">Bond credit quality rating</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="bondType">Bond Type</label>
+                        <select id="bondType">
+                            <option value="government">Government (G-Sec)</option>
+                            <option value="corporate" selected>Corporate Bond</option>
+                            <option value="state">State Development</option>
+                            <option value="psu">PSU Bond</option>
+                            <option value="zero-coupon">Zero Coupon</option>
+                        </select>
+                        <span class="input-hint">Type of bond issuer</span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn" onclick="calculateBond()">
+                        <i class="fa-solid fa-calculator"></i> Calculate Bond Value
+                    </button>
+                    <button class="btn btn-info" onclick="performSensitivityAnalysis()">
+                        <i class="fa-solid fa-chart-area"></i> Sensitivity Analysis
+                    </button>
+                    <button class="btn btn-warning" onclick="compareBonds()">
+                        <i class="fa-solid fa-balance-scale"></i> Compare Bonds
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportAnalysis()">
+                        <i class="fa-solid fa-download"></i> Export Results
+                    </button>
+                    <button class="btn btn-danger" onclick="resetForm()">
+                        <i class="fa-solid fa-rotate-left"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="section-header">
+                    <i class="fa-solid fa-chart-pie"></i> Bond Valuation Results
+                </div>
+                <div class="results-grid" id="resultsGrid">
+                    <!-- Results will be populated here -->
+                </div>
+            </div>
+
+            <!-- Analysis Section -->
+            <div class="results-section" id="analysisSection" style="display: none;">
+                <div class="section-header">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i> Detailed Analysis
+                </div>
+                <div class="analysis-section">
+                    <div class="analysis-grid" id="analysisGrid">
+                        <!-- Analysis will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cash Flow Table -->
+            <div class="results-section" id="cashFlowSection" style="display: none;">
+                <div class="section-header">
+                    <i class="fa-solid fa-table"></i> Cash Flow Schedule
+                </div>
+                <div style="padding: 20px; overflow-x: auto;">
+                    <table class="cash-flow-table" id="cashFlowTable">
+                        <!-- Cash flow table will be populated here -->
+                    </table>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="results-section" id="chartSection" style="display: none;">
+                <div class="section-header">
+                    <i class="fa-solid fa-chart-line"></i> Bond Price Sensitivity
+                </div>
+                <div class="chart-container">
+                    <canvas id="bondChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Educational Content -->
+            <div class="education-box">
+                <h3><i class="fa-solid fa-graduation-cap"></i> Bond Valuation - Complete Guide for Indian Markets</h3>
+                
+                <div style="margin-bottom: 20px;">
+                    <strong>Master bond valuation to understand fixed-income securities in Indian markets, interest rate risk, and investment returns in debt markets.</strong>
+                </div>
+
+                <h4>1. Indian Bond Market Fundamentals <span class="feature-tag">Core Concepts</span></h4>
+                <div>
+                    Bond valuation in India follows global principles but with local market characteristics. Government Securities (G-Sec) serve as the benchmark, while corporate bonds offer higher yields with credit risk.
+                    
+                    <div class="formula">Bond Price = Σ[C/(1+r)^t] + F/(1+r)^n</div>
+                    
+                    Where: C = coupon payment, r = required yield, t = time period, F = face value, n = years to maturity
+                </div>
+
+                <h4>2. Key Bond Metrics for Indian Markets <span class="feature-tag">Analytics</span></h4>
+                <div>
+                    <strong>Yield to Maturity (YTM):</strong> Critical for comparing bonds across different maturities and credit qualities
+                    <br><br>
+                    <strong>Current Yield:</strong> Important for income-focused investors seeking regular cash flows
+                    <br><br>
+                    <strong>Duration:</strong> Essential for managing interest rate risk in volatile Indian markets
+                    <div class="formula">Modified Duration = Macaulay Duration / (1 + YTM/m)</div>
+                    
+                    <strong>G-Sec Spread:</strong> Credit spread over government bonds for risk assessment
+                </div>
+
+                <h4>3. Indian Bond Types & Applications <span class="feature-tag">Market Segments</span></h4>
+                <div>
+                    <strong>Government Securities (G-Sec):</strong> Risk-free benchmark for portfolio construction
+                    <br><br>
+                    <strong>Corporate Bonds:</strong> Higher yields from private sector, rated by CRISIL, ICRA, CARE
+                    <br><br>
+                    <strong>State Development Loans (SDL):</strong> State government bonds with tax advantages
+                    <br><br>
+                    <strong>PSU Bonds:</strong> Public sector undertaking bonds with implicit government support
+                    <br><br>
+                    <strong>Tax-Free Bonds:</strong> Infrastructure bonds offering tax-exempt interest income
+                </div>
+
+                <h4>4. Risk Assessment in Indian Context <span class="feature-tag">Risk Management</span></h4>
+                <div>
+                    <strong>Credit Risk:</strong> Default probability - use rating agency assessments (CRISIL, ICRA, CARE, Fitch India)
+                    <br><br>
+                    <strong>Interest Rate Risk:</strong> RBI monetary policy impact on bond prices
+                    <br><br>
+                    <strong>Inflation Risk:</strong> Purchasing power erosion - consider inflation-indexed bonds
+                    <br><br>
+                    <strong>Liquidity Risk:</strong> Secondary market trading challenges in corporate bonds
+                    <br><br>
+                    <strong>Regulatory Risk:</strong> Changes in tax treatment or RBI guidelines
+                </div>
+
+                <h4>5. Investment Strategies for Indian Bonds <span class="feature-tag">Portfolio Management</span></h4>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li><strong>Laddering Strategy:</strong> Stagger maturities for reinvestment flexibility during RBI cycles</li>
+                    <li><strong>Barbell Approach:</strong> Combine short-term FDs with long-term G-Sec</li>
+                    <li><strong>Credit Spread Trading:</strong> Capitalize on corporate-govt yield differentials</li>
+                    <li><strong>Duration Matching:</strong> Align bond duration with investment horizon</li>
+                    <li><strong>Tax Optimization:</strong> Use tax-free bonds and capital gains planning</li>
+                </ul>
+
+                <h4>6. Market Factors Affecting Indian Bonds <span class="feature-tag">Economic Environment</span></h4>
+                <div>
+                    <strong>RBI Monetary Policy:</strong> Repo rate changes directly impact bond yields
+                    <br><br>
+                    <strong>Inflation Targeting:</strong> CPI inflation affects real returns and RBI policy stance
+                    <br><br>
+                    <strong>Fiscal Deficit:</strong> Government borrowing program impacts G-Sec supply and yields
+                    <br><br>
+                    <strong>Foreign Investment:</strong> FPI limits and flows affect bond market liquidity
+                    <br><br>
+                    <strong>Corporate Earnings:</strong> Credit quality and default risk assessment
+                </div>
+
+                <h4>7. Tax Implications for Indian Investors <span class="feature-tag">Tax Planning</span></h4>
+                <div>
+                    <strong>Interest Income:</strong> Taxed as per income tax slab rates
+                    <br><br>
+                    <strong>Capital Gains:</strong> Short-term (≤3 years) taxed as income, Long-term at 20% with indexation
+                    <br><br>
+                    <strong>Tax-Free Bonds:</strong> Interest income exempt from tax up to specified limits
+                    <br><br>
+                    <strong>TDS Provisions:</strong> 10% TDS on interest income above ₹5,000
+                </div>
+
+                <h4>8. Practical Applications & Tools <span class="feature-tag">Implementation</span></h4>
+                <div>
+                    <strong>Yield Curve Analysis:</strong> Use RBI yield curve for relative value assessment
+                    <br><br>
+                    <strong>Credit Spread Monitoring:</strong> Track spreads over G-Sec for entry/exit decisions
+                    <br><br>
+                    <strong>Duration Hedging:</strong> Use interest rate derivatives for large portfolios
+                    <br><br>
+                    <strong>Liquidity Management:</strong> Balance return objectives with liquidity needs
+                </div>
+            </div>
+        </div>
+
+        <div id="toast" class="toast"></div>
         
-        // Store current bond data
-        currentBondData = {
-          bondName,
-          faceValue,
-          couponRate,
-          yearsToMaturity,
-          requiredYield,
-          paymentFrequency,
-          currentPrice,
-          creditRating,
-          bondType,
-          ...results
+        <div class="footer">
+            Built with ❤️ by <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank">Ashish Singh Rajput</a><br>
+            Empowering financial education and investment analysis in Indian markets
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let bondChart = null;
+        let currentBondData = null;
+
+        // Indian bond templates with realistic values
+        const templates = {
+            indian_govt: {
+                bondName: "GOI 7.75% 2034",
+                faceValue: 100000,
+                couponRate: 7.75,
+                yearsToMaturity: 10,
+                requiredYield: 7.5,
+                paymentFrequency: 2,
+                creditRating: "AAA",
+                bondType: "government"
+            },
+            corporate_india: {
+                bondName: "Reliance Industries 8.25% 2034",
+                faceValue: 100000,
+                couponRate: 8.25,
+                yearsToMaturity: 10,
+                requiredYield: 8.8,
+                paymentFrequency: 2,
+                creditRating: "AA+",
+                bondType: "corporate"
+            },
+            state_development: {
+                bondName: "Maharashtra SDL 7.5% 2039",
+                faceValue: 100000,
+                couponRate: 7.5,
+                yearsToMaturity: 15,
+                requiredYield: 7.8,
+                paymentFrequency: 2,
+                creditRating: "AA",
+                bondType: "state"
+            },
+            zero_coupon: {
+                bondName: "Zero Coupon 2034",
+                faceValue: 100000,
+                couponRate: 0,
+                yearsToMaturity: 10,
+                requiredYield: 8.2,
+                paymentFrequency: 1,
+                creditRating: "AAA",
+                bondType: "zero-coupon"
+            },
+            high_yield_india: {
+                bondName: "NBFC High Yield 11% 2031",
+                faceValue: 100000,
+                couponRate: 11,
+                yearsToMaturity: 7,
+                requiredYield: 12.5,
+                paymentFrequency: 2,
+                creditRating: "BBB",
+                bondType: "corporate"
+            }
         };
 
-        // Display results
-        displayResults(results, bondName, creditRating, bondType);
-        generateAnalysis(results, bondName, creditRating, bondType);
-        generateCashFlowTable(faceValue, couponRate, yearsToMaturity, paymentFrequency, requiredYield);
+        // Load template function
+        function loadTemplate(templateName) {
+            const template = templates[templateName];
+            if (!template) return;
 
-        showToast("Bond valuation completed successfully!", "success");
+            Object.keys(template).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.value = template[key];
+                }
+            });
 
-      } catch (error) {
-        showToast("Error in calculation: " + error.message, "error");
-      }
-    }
-
-    // Bond calculation functions
-    function calculateBondMetrics(faceValue, couponRate, yearsToMaturity, requiredYield, paymentFrequency, currentPrice) {
-      const periodsPerYear = paymentFrequency;
-      const totalPeriods = yearsToMaturity * periodsPerYear;
-      const periodYield = requiredYield / periodsPerYear;
-      const periodCoupon = (couponRate * faceValue) / periodsPerYear;
-
-      // Calculate present value of coupons
-      let pvCoupons = 0;
-      if (couponRate > 0) {
-        pvCoupons = periodCoupon * ((1 - Math.pow(1 + periodYield, -totalPeriods)) / periodYield);
-      }
-
-      // Calculate present value of face value
-      const pvFaceValue = faceValue / Math.pow(1 + periodYield, totalPeriods);
-
-      // Fair value (theoretical price)
-      const fairValue = pvCoupons + pvFaceValue;
-
-      // Current yield
-      const currentYield = currentPrice ? (couponRate * faceValue) / currentPrice : (couponRate * faceValue) / fairValue;
-
-      // Calculate YTM if current price is provided
-      let ytm = requiredYield;
-      if (currentPrice && !isNaN(currentPrice)) {
-        ytm = calculateYTM(currentPrice, faceValue, couponRate, yearsToMaturity, paymentFrequency);
-      }
-
-      // Duration calculation (Macaulay Duration)
-      let duration = 0;
-      for (let t = 1; t <= totalPeriods; t++) {
-        const cashFlow = t < totalPeriods ? periodCoupon : periodCoupon + faceValue;
-        const pv = cashFlow / Math.pow(1 + periodYield, t);
-        duration += (t / periodsPerYear) * pv;
-      }
-      duration = duration / fairValue;
-
-      // Modified Duration
-      const modifiedDuration = duration / (1 + periodYield);
-
-      // Convexity calculation
-      let convexity = 0;
-      for (let t = 1; t <= totalPeriods; t++) {
-        const cashFlow = t < totalPeriods ? periodCoupon : periodCoupon + faceValue;
-        const pv = cashFlow / Math.pow(1 + periodYield, t);
-        convexity += (t * (t + 1)) * pv;
-      }
-      convexity = convexity / (Math.pow(1 + periodYield, 2) * fairValue * Math.pow(periodsPerYear, 2));
-
-      // Calculate premium/discount
-      const premiumDiscount = currentPrice ? ((currentPrice - faceValue) / faceValue) * 100 : ((fairValue - faceValue) / faceValue) * 100;
-
-      return {
-        fairValue: fairValue,
-        currentYield: currentYield * 100,
-        ytm: ytm * 100,
-        duration: duration,
-        modifiedDuration: modifiedDuration,
-        convexity: convexity,
-        pvCoupons: pvCoupons,
-        pvFaceValue: pvFaceValue,
-        premiumDiscount: premiumDiscount,
-        totalPeriods: totalPeriods,
-        periodCoupon: periodCoupon
-      };
-    }
-
-    // YTM calculation using Newton-Raphson method
-    function calculateYTM(price, faceValue, couponRate, years, frequency) {
-      const periods = years * frequency;
-      const coupon = (couponRate * faceValue) / frequency;
-      
-      let ytm = 0.05; // Initial guess
-      const tolerance = 0.0001;
-      let iterations = 0;
-      const maxIterations = 100;
-
-      while (iterations < maxIterations) {
-        let bondPrice = 0;
-        let derivative = 0;
-
-        for (let t = 1; t <= periods; t++) {
-          const cashFlow = t < periods ? coupon : coupon + faceValue;
-          const discountFactor = Math.pow(1 + ytm / frequency, t);
-          bondPrice += cashFlow / discountFactor;
-          derivative -= (t * cashFlow) / (frequency * Math.pow(discountFactor, 2));
+            showToast(`${templateName.replace('_', ' ').toUpperCase()} template loaded!`, "success");
         }
 
-        const f = bondPrice - price;
-        if (Math.abs(f) < tolerance) break;
+        // Calculate bond function
+        function calculateBond() {
+            try {
+                // Get input values
+                const bondName = document.getElementById('bondName').value || 'Bond';
+                const faceValue = parseFloat(document.getElementById('faceValue').value);
+                const couponRate = parseFloat(document.getElementById('couponRate').value) / 100;
+                const yearsToMaturity = parseFloat(document.getElementById('yearsToMaturity').value);
+                const requiredYield = parseFloat(document.getElementById('requiredYield').value) / 100;
+                const paymentFrequency = parseInt(document.getElementById('paymentFrequency').value);
+                const currentPrice = parseFloat(document.getElementById('currentPrice').value);
+                const creditRating = document.getElementById('creditRating').value;
+                const bondType = document.getElementById('bondType').value;
 
-        ytm = ytm - f / derivative;
-        iterations++;
-      }
-
-      return ytm;
-    }
-
-    // Display results function
-    function displayResults(results, bondName, creditRating, bondType) {
-      const resultsGrid = document.getElementById('resultsGrid');
-      
-      resultsGrid.innerHTML = `
-        <div class="result-card">
-          <div class="result-value">$${results.fairValue.toFixed(2)}</div>
-          <div class="result-label">Fair Value</div>
-          <div class="result-description">Theoretical bond price</div>
-        </div>
-        <div class="result-card">
-          <div class="result-value">${results.currentYield.toFixed(2)}%</div>
-          <div class="result-label">Current Yield</div>
-          <div class="result-description">Annual return on investment</div>
-        </div>
-        <div class="result-card">
-          <div class="result-value">${results.ytm.toFixed(2)}%</div>
-          <div class="result-label">Yield to Maturity</div>
-          <div class="result-description">Total return if held to maturity</div>
-        </div>
-        <div class="result-card">
-          <div class="result-value">${results.duration.toFixed(2)}</div>
-          <div class="result-label">Duration (Years)</div>
-          <div class="result-description">Price sensitivity to rate changes</div>
-        </div>
-        <div class="result-card">
-          <div class="result-value">${results.modifiedDuration.toFixed(2)}</div>
-          <div class="result-label">Modified Duration</div>
-          <div class="result-description">Adjusted price sensitivity</div>
-        </div>
-        <div class="result-card">
-          <div class="result-value">${results.convexity.toFixed(2)}</div>
-          <div class="result-label">Convexity</div>
-          <div class="result-description">Curvature of price-yield relationship</div>
-        </div>
-      `;
-
-      document.getElementById('resultsSection').style.display = '';
-    }
-
-    // Generate analysis function
-    function generateAnalysis(results, bondName, creditRating, bondType) {
-      const analysisGrid = document.getElementById('analysisGrid');
-      
-      // Determine bond classification
-      let classification = "At Par";
-      let classificationColor = "var(--primary)";
-      if (results.premiumDiscount > 0.5) {
-        classification = "Premium Bond";
-        classificationColor = "var(--warning)";
-      } else if (results.premiumDiscount < -0.5) {
-        classification = "Discount Bond";
-        classificationColor = "var(--success)";
-      }
-
-      // Risk assessment
-      let riskLevel = "Low";
-      let riskColor = "var(--success)";
-      if (results.duration > 7 || creditRating.includes("B")) {
-        riskLevel = "High";
-        riskColor = "var(--danger)";
-      } else if (results.duration > 4 || creditRating.includes("BBB")) {
-        riskLevel = "Medium";
-        riskColor = "var(--warning)";
-      }
-
-      analysisGrid.innerHTML = `
-        <div class="analysis-card">
-          <h4><i class="fa-solid fa-chart-line"></i> Bond Classification</h4>
-          <div style="color: ${classificationColor}; font-weight: bold; font-size: 1.2em;">
-            ${classification}
-          </div>
-          <div style="margin-top: 10px;">
-            Premium/Discount: ${results.premiumDiscount.toFixed(2)}%
-            <br>Trading ${results.premiumDiscount > 0 ? 'above' : results.premiumDiscount < 0 ? 'below' : 'at'} par value
-          </div>
-        </div>
-        
-        <div class="analysis-card">
-          <h4><i class="fa-solid fa-shield-alt"></i> Risk Assessment</h4>
-          <div style="color: ${riskColor}; font-weight: bold; font-size: 1.2em;">
-            ${riskLevel} Risk
-          </div>
-          <div style="margin-top: 10px;">
-            Credit Rating: ${creditRating}
-            <br>Interest Rate Risk: ${results.duration > 7 ? 'High' : results.duration > 4 ? 'Medium' : 'Low'}
-            <br>Duration: ${results.duration.toFixed(2)} years
-          </div>
-        </div>
-        
-        <div class="analysis-card">
-          <h4><i class="fa-solid fa-dollar-sign"></i> Cash Flow Analysis</h4>
-          <div>
-            <strong>PV of Coupons:</strong> $${results.pvCoupons.toFixed(2)}
-            <br><strong>PV of Principal:</strong> $${results.pvFaceValue.toFixed(2)}
-            <br><strong>Total Periods:</strong> ${results.totalPeriods}
-            <br><strong>Periodic Payment:</strong> $${results.periodCoupon.toFixed(2)}
-          </div>
-        </div>
-        
-        <div class="analysis-card">
-          <h4><i class="fa-solid fa-chart-area"></i> Sensitivity Metrics</h4>
-          <div>
-            <strong>Modified Duration:</strong> ${results.modifiedDuration.toFixed(2)}
-            <br><strong>Convexity:</strong> ${results.convexity.toFixed(2)}
-            <br><strong>Price Change (1% rate rise):</strong> -${results.modifiedDuration.toFixed(2)}%
-            <br><strong>Bond Type:</strong> ${bondType.charAt(0).toUpperCase() + bondType.slice(1)}
-          </div>
-        </div>
-      `;
-
-      document.getElementById('analysisSection').style.display = '';
-    }
-
-    // Generate cash flow table
-    function generateCashFlowTable(faceValue, couponRate, yearsToMaturity, paymentFrequency, requiredYield) {
-      const periodsPerYear = paymentFrequency;
-      const totalPeriods = yearsToMaturity * periodsPerYear;
-      const periodYield = requiredYield / periodsPerYear;
-      const periodCoupon = (couponRate * faceValue) / periodsPerYear;
-
-      let tableHTML = `
-        <tr>
-          <th>Period</th>
-          <th>Date (Years)</th>
-          <th>Coupon Payment</th>
-          <th>Principal Payment</th>
-          <th>Total Cash Flow</th>
-          <th>Present Value</th>
-          <th>Cumulative PV</th>
-        </tr>
-      `;
-
-      let cumulativePV = 0;
-
-      for (let t = 1; t <= totalPeriods; t++) {
-        const date = (t / periodsPerYear).toFixed(2);
-        const couponPayment = periodCoupon;
-        const principalPayment = t === totalPeriods ? faceValue : 0;
-        const totalCashFlow = couponPayment + principalPayment;
-        const presentValue = totalCashFlow / Math.pow(1 + periodYield, t);
-        cumulativePV += presentValue;
-
-        tableHTML += `
-          <tr>
-            <td>${t}</td>
-            <td>${date}</td>
-            <td>$${couponPayment.toFixed(2)}</td>
-            <td>$${principalPayment.toFixed(2)}</td>
-            <td>$${totalCashFlow.toFixed(2)}</td>
-            <td>$${presentValue.toFixed(2)}</td>
-            <td>$${cumulativePV.toFixed(2)}</td>
-          </tr>
-        `;
-      }
-
-      document.getElementById('cashFlowTable').innerHTML = tableHTML;
-      document.getElementById('cashFlowSection').style.display = '';
-    }
-
-    // Sensitivity analysis function
-    function performSensitivityAnalysis() {
-      if (!currentBondData) {
-        showToast("Please calculate a bond first!", "error");
-        return;
-      }
-
-      const yieldChanges = [-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2];
-      const priceData = [];
-      const labels = [];
-
-      yieldChanges.forEach(change => {
-        const newYield = currentBondData.requiredYield + (change / 100);
-        const results = calculateBondMetrics(
-          currentBondData.faceValue,
-          currentBondData.couponRate,
-          currentBondData.yearsToMaturity,
-          newYield,
-          currentBondData.paymentFrequency
-        );
-        priceData.push(results.fairValue);
-        labels.push(`${(newYield * 100).toFixed(1)}%`);
-      });
-
-      createSensitivityChart(labels, priceData);
-      showToast("Sensitivity analysis completed!", "success");
-    }
-
-    // Create sensitivity chart
-    function createSensitivityChart(labels, priceData) {
-      const ctx = document.getElementById('bondChart').getContext('2d');
-      
-      if (bondChart) bondChart.destroy();
-
-      bondChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Bond Price',
-            data: priceData,
-            borderColor: '#00ffd5',
-            backgroundColor: 'rgba(0, 255, 213, 0.1)',
-            borderWidth: 3,
-            pointRadius: 6,
-            pointBackgroundColor: '#00ffd5',
-            pointBorderColor: '#00b39e',
-            pointBorderWidth: 2,
-            fill: true,
-            tension: 0.4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            title: {
-              display: true,
-              text: 'Bond Price Sensitivity to Yield Changes',
-              color: '#00ffd5',
-              font: { size: 18, weight: 'bold' }
-            },
-            legend: {
-              labels: { color: '#cccccc' }
-            },
-            tooltip: {
-              backgroundColor: '#1e1e1e',
-              titleColor: '#00ffd5',
-              bodyColor: '#cccccc',
-              borderColor: '#333',
-              borderWidth: 1,
-              callbacks: {
-                label: function(context) {
-                  return `Price: $${context.parsed.y.toFixed(2)}`;
+                // Validation
+                if (isNaN(faceValue) || isNaN(couponRate) || isNaN(yearsToMaturity) || isNaN(requiredYield)) {
+                    showToast("Please fill in all required fields with valid numbers", "error");
+                    return;
                 }
-              }
+
+                // Calculate bond metrics
+                const results = calculateBondMetrics(faceValue, couponRate, yearsToMaturity, requiredYield, paymentFrequency, currentPrice);
+                
+                // Store current bond data
+                currentBondData = {
+                    bondName,
+                    faceValue,
+                    couponRate,
+                    yearsToMaturity,
+                    requiredYield,
+                    paymentFrequency,
+                    currentPrice,
+                    creditRating,
+                    bondType,
+                    ...results
+                };
+
+                // Display results
+                displayResults(results, bondName, creditRating, bondType);
+                generateAnalysis(results, bondName, creditRating, bondType);
+                generateCashFlowTable(faceValue, couponRate, yearsToMaturity, paymentFrequency, requiredYield);
+
+                showToast("Bond valuation completed successfully!", "success");
+
+            } catch (error) {
+                showToast("Error in calculation: " + error.message, "error");
             }
-          },
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: 'Yield to Maturity',
-                color: '#00ffd5',
-                font: { size: 14, weight: 'bold' }
-              },
-              ticks: { color: '#cccccc' },
-              grid: { color: '#333' }
-            },
-            y: {
-              title: {
-                display: true,
-                text: 'Bond Price ($)',
-                color: '#00ffd5',
-                font: { size: 14, weight: 'bold' }
-              },
-              ticks: { 
-                color: '#cccccc',
-                callback: function(value) {
-                  return '$' + value.toFixed(0);
-                }
-              },
-              grid: { color: '#333' }
-            }
-          },
-          animation: {
-            duration: 1500,
-            easing: 'easeInOutCubic'
-          }
         }
-      });
 
-      document.getElementById('chartSection').style.display = '';
-    }
+        // Bond calculation functions
+        function calculateBondMetrics(faceValue, couponRate, yearsToMaturity, requiredYield, paymentFrequency, currentPrice) {
+            const periodsPerYear = paymentFrequency;
+            const totalPeriods = yearsToMaturity * periodsPerYear;
+            const periodYield = requiredYield / periodsPerYear;
+            const periodCoupon = (couponRate * faceValue) / periodsPerYear;
 
-    // Compare bonds function
-    function compareBonds() {
-      if (!currentBondData) {
-        showToast("Please calculate a bond first!", "error");
-        return;
-      }
+            // Calculate present value of coupons
+            let pvCoupons = 0;
+            if (couponRate > 0) {
+                pvCoupons = periodCoupon * ((1 - Math.pow(1 + periodYield, -totalPeriods)) / periodYield);
+            }
 
-      // Create comparison with different scenarios
-      const comparisons = [
-        { name: "Current Bond", ...currentBondData },
-        { name: "Higher Yield (+1%)", ...currentBondData, requiredYield: currentBondData.requiredYield + 0.01 },
-        { name: "Lower Yield (-1%)", ...currentBondData, requiredYield: currentBondData.requiredYield - 0.01 },
-        { name: "Shorter Maturity (-5Y)", ...currentBondData, yearsToMaturity: Math.max(1, currentBondData.yearsToMaturity - 5) }
-      ];
+            // Calculate present value of face value
+            const pvFaceValue = faceValue / Math.pow(1 + periodYield, totalPeriods);
 
-      let comparisonHTML = '<div class="bond-comparison">';
-      
-      comparisons.forEach((bond, index) => {
-        const results = calculateBondMetrics(
-          bond.faceValue,
-          bond.couponRate,
-          bond.yearsToMaturity,
-          bond.requiredYield,
-          bond.paymentFrequency
-        );
+            // Fair value (theoretical price)
+            const fairValue = pvCoupons + pvFaceValue;
 
-        comparisonHTML += `
-          <div class="bond-card ${index === 0 ? 'selected' : ''}">
-            <h4>${bond.name}</h4>
-            <div class="bond-detail">Price: $${results.fairValue.toFixed(2)}</div>
-            <div class="bond-detail">YTM: ${results.ytm.toFixed(2)}%</div>
-            <div class="bond-detail">Duration: ${results.duration.toFixed(2)}</div>
-            <div class="bond-detail">Current Yield: ${results.currentYield.toFixed(2)}%</div>
-          </div>
-        `;
-      });
+            // Current yield
+            const currentYield = currentPrice ? (couponRate * faceValue) / currentPrice : (couponRate * faceValue) / fairValue;
 
-      comparisonHTML += '</div>';
+            // Calculate YTM if current price is provided
+            let ytm = requiredYield;
+            if (currentPrice && !isNaN(currentPrice)) {
+                ytm = calculateYTM(currentPrice, faceValue, couponRate, yearsToMaturity, paymentFrequency);
+            }
 
-      // Add to analysis section
-      document.getElementById('analysisGrid').innerHTML += `
-        <div class="analysis-card" style="grid-column: 1 / -1;">
-          <h4><i class="fa-solid fa-balance-scale"></i> Bond Comparison</h4>
-          ${comparisonHTML}
-        </div>
-      `;
+            // Duration calculation (Macaulay Duration)
+            let duration = 0;
+            for (let t = 1; t <= totalPeriods; t++) {
+                const cashFlow = t < totalPeriods ? periodCoupon : periodCoupon + faceValue;
+                const pv = cashFlow / Math.pow(1 + periodYield, t);
+                duration += (t / periodsPerYear) * pv;
+            }
+            duration = duration / fairValue;
 
-      showToast("Bond comparison generated!", "success");
-    }
+            // Modified Duration
+            const modifiedDuration = duration / (1 + periodYield);
 
-    // Export analysis function
-    function exportAnalysis() {
-      if (!currentBondData) {
-        showToast("No data to export! Please calculate a bond first.", "error");
-        return;
-      }
+            // Convexity calculation
+            let convexity = 0;
+            for (let t = 1; t <= totalPeriods; t++) {
+                const cashFlow = t < totalPeriods ? periodCoupon : periodCoupon + faceValue;
+                const pv = cashFlow / Math.pow(1 + periodYield, t);
+                convexity += (t * (t + 1)) * pv;
+            }
+            convexity = convexity / (Math.pow(1 + periodYield, 2) * fairValue * Math.pow(periodsPerYear, 2));
 
-      let csv = "Bond Valuation Analysis Report\n";
-      csv += `Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}\n\n`;
-      
-      csv += "BOND DETAILS\n";
-      csv += "============\n";
-      csv += `Bond Name,${currentBondData.bondName}\n`;
-      csv += `Face Value,$${currentBondData.faceValue}\n`;
-      csv += `Coupon Rate,${(currentBondData.couponRate * 100).toFixed(2)}%\n`;
-      csv += `Years to Maturity,${currentBondData.yearsToMaturity}\n`;
-      csv += `Required Yield,${(currentBondData.requiredYield * 100).toFixed(2)}%\n`;
-      csv += `Payment Frequency,${currentBondData.paymentFrequency}x per year\n`;
-      csv += `Credit Rating,${currentBondData.creditRating}\n`;
-      csv += `Bond Type,${currentBondData.bondType}\n\n`;
-      
-      csv += "VALUATION RESULTS\n";
-      csv += "=================\n";
-      csv += `Fair Value,$${currentBondData.fairValue.toFixed(2)}\n`;
-      csv += `Current Yield,${currentBondData.currentYield.toFixed(2)}%\n`;
-      csv += `Yield to Maturity,${currentBondData.ytm.toFixed(2)}%\n`;
-      csv += `Duration,${currentBondData.duration.toFixed(2)} years\n`;
-      csv += `Modified Duration,${currentBondData.modifiedDuration.toFixed(2)}\n`;
-      csv += `Convexity,${currentBondData.convexity.toFixed(2)}\n`;
-      csv += `Premium/Discount,${currentBondData.premiumDiscount.toFixed(2)}%\n`;
+            // Calculate premium/discount
+            const premiumDiscount = currentPrice ? ((currentPrice - faceValue) / faceValue) * 100 : ((fairValue - faceValue) / faceValue) * 100;
 
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `bond_analysis_${new Date().toISOString().split('T')[0]}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+            return {
+                fairValue: fairValue,
+                currentYield: currentYield * 100,
+                ytm: ytm * 100,
+                duration: duration,
+                modifiedDuration: modifiedDuration,
+                convexity: convexity,
+                pvCoupons: pvCoupons,
+                pvFaceValue: pvFaceValue,
+                premiumDiscount: premiumDiscount,
+                totalPeriods: totalPeriods,
+                periodCoupon: periodCoupon
+            };
+        }
 
-      showToast("Analysis exported successfully!", "success");
-    }
+        // YTM calculation using Newton-Raphson method
+        function calculateYTM(price, faceValue, couponRate, years, frequency) {
+            const periods = years * frequency;
+            const coupon = (couponRate * faceValue) / frequency;
+            
+            let ytm = 0.08; // Initial guess for Indian markets
+            const tolerance = 0.0001;
+            let iterations = 0;
+            const maxIterations = 100;
 
-    // Reset form function
-    function resetForm() {
-      if (!confirm("Are you sure you want to reset all inputs and clear results?")) {
-        return;
-      }
+            while (iterations < maxIterations) {
+                let bondPrice = 0;
+                let derivative = 0;
 
-      // Reset form fields
-      document.getElementById('bondName').value = '';
-      document.getElementById('faceValue').value = '1000';
-      document.getElementById('couponRate').value = '5';
-      document.getElementById('yearsToMaturity').value = '10';
-      document.getElementById('requiredYield').value = '6';
-      document.getElementById('paymentFrequency').value = '2';
-      document.getElementById('currentPrice').value = '';
-      document.getElementById('creditRating').value = 'A';
-      document.getElementById('bondType').value = 'corporate';
+                for (let t = 1; t <= periods; t++) {
+                    const cashFlow = t < periods ? coupon : coupon + faceValue;
+                    const discountFactor = Math.pow(1 + ytm / frequency, t);
+                    bondPrice += cashFlow / discountFactor;
+                    derivative -= (t * cashFlow) / (frequency * Math.pow(discountFactor, 2));
+                }
 
-      // Hide result sections
-      document.getElementById('resultsSection').style.display = 'none';
-      document.getElementById('analysisSection').style.display = 'none';
-      document.getElementById('cashFlowSection').style.display = 'none';
-      document.getElementById('chartSection').style.display = 'none';
+                const f = bondPrice - price;
+                if (Math.abs(f) < tolerance) break;
 
-      // Destroy chart
-      if (bondChart) {
-        bondChart.destroy();
-        bondChart = null;
-      }
+                ytm = ytm - f / derivative;
+                iterations++;
+            }
 
-      // Reset data
-      currentBondData = null;
+            return ytm;
+        }
 
-      showToast("Form reset successfully!", "success");
-    }
+        // Format currency in INR
+        function formatINR(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
 
-    // Toast notification function
-    function showToast(message, type = "success") {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.className = `toast ${type} show`;
-      
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
+        // Display results function with INR formatting
+        function displayResults(results, bondName, creditRating, bondType) {
+            const resultsGrid = document.getElementById('resultsGrid');
+            
+            resultsGrid.innerHTML = `
+                <div class="result-card">
+                    <div class="result-value">${formatINR(results.fairValue)}</div>
+                    <div class="result-label">Fair Value</div>
+                    <div class="result-description">Theoretical bond price</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">${results.currentYield.toFixed(2)}%</div>
+                    <div class="result-label">Current Yield</div>
+                    <div class="result-description">Annual return on investment</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">${results.ytm.toFixed(2)}%</div>
+                    <div class="result-label">Yield to Maturity</div>
+                    <div class="result-description">Total return if held to maturity</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">${results.duration.toFixed(2)}</div>
+                    <div class="result-label">Duration (Years)</div>
+                    <div class="result-description">Price sensitivity to rate changes</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">${results.modifiedDuration.toFixed(2)}</div>
+                    <div class="result-label">Modified Duration</div>
+                    <div class="result-description">Adjusted price sensitivity</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">${results.convexity.toFixed(2)}</div>
+                    <div class="result-label">Convexity</div>
+                    <div class="result-description">Curvature of price-yield relationship</div>
+                </div>
+            `;
 
-    // Initialize the application
-    document.addEventListener('DOMContentLoaded', function() {
-      // Add Enter key support for inputs
-      const inputs = document.querySelectorAll('input[type="number"], input[type="text"]');
-      inputs.forEach(input => {
-        input.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            calculateBond();
-          }
+            document.getElementById('resultsSection').style.display = '';
+        }
+
+        // Generate analysis function with Indian context
+        function generateAnalysis(results, bondName, creditRating, bondType) {
+            const analysisGrid = document.getElementById('analysisGrid');
+            
+            // Determine bond classification
+            let classification = "At Par";
+            let classificationColor = "var(--primary)";
+            if (results.premiumDiscount > 0.5) {
+                classification = "Premium Bond";
+                classificationColor = "var(--warning)";
+            } else if (results.premiumDiscount < -0.5) {
+                classification = "Discount Bond";
+                classificationColor = "var(--success)";
+            }
+
+            // Risk assessment for Indian context
+            let riskLevel = "Low";
+            let riskColor = "var(--success)";
+            if (results.duration > 8 || creditRating.includes("B")) {
+                riskLevel = "High";
+                riskColor = "var(--danger)";
+            } else if (results.duration > 5 || creditRating.includes("BBB")) {
+                riskLevel = "Medium";
+                riskColor = "var(--warning)";
+            }
+
+            // Tax implications
+            let taxInfo = "Taxable interest income";
+            if (bondType === "government") {
+                taxInfo = "Taxable as per income slab";
+            } else if (bondType === "state") {
+                taxInfo = "May qualify for tax benefits";
+            }
+
+            analysisGrid.innerHTML = `
+                <div class="analysis-card">
+                    <h4><i class="fa-solid fa-chart-line"></i> Bond Classification</h4>
+                    <div style="color: ${classificationColor}; font-weight: bold; font-size: 1.2em;">
+                        ${classification}
+                    </div>
+                    <div style="margin-top: 10px;">
+                        Premium/Discount: ${results.premiumDiscount.toFixed(2)}%
+                        <br>Trading ${results.premiumDiscount > 0 ? 'above' : results.premiumDiscount < 0 ? 'below' : 'at'} par value
+                        <br>Spread over G-Sec: ${bondType !== 'government' ? '+' + (results.ytm - 7.5).toFixed(2) + '%' : 'Benchmark'}
+                    </div>
+                </div>
+                
+                <div class="analysis-card">
+                    <h4><i class="fa-solid fa-shield-alt"></i> Risk Assessment</h4>
+                    <div style="color: ${riskColor}; font-weight: bold; font-size: 1.2em;">
+                        ${riskLevel} Risk
+                    </div>
+                    <div style="margin-top: 10px;">
+                        Credit Rating: ${creditRating}
+                        <br>Interest Rate Risk: ${results.duration > 8 ? 'High' : results.duration > 5 ? 'Medium' : 'Low'}
+                        <br>Duration: ${results.duration.toFixed(2)} years
+                        <br>RBI Policy Sensitivity: ${results.duration > 7 ? 'High' : 'Moderate'}
+                    </div>
+                </div>
+                
+                <div class="analysis-card">
+                    <h4><i class="fa-solid fa-rupee-sign"></i> Cash Flow Analysis</h4>
+                    <div>
+                        <strong>PV of Coupons:</strong> ${formatINR(results.pvCoupons)}
+                        <br><strong>PV of Principal:</strong> ${formatINR(results.pvFaceValue)}
+                        <br><strong>Total Periods:</strong> ${results.totalPeriods}
+                        <br><strong>Periodic Payment:</strong> ${formatINR(results.periodCoupon)}
+                    </div>
+                </div>
+                
+                <div class="analysis-card">
+                    <h4><i class="fa-solid fa-calculator"></i> Tax & Returns</h4>
+                    <div>
+                        <strong>Tax Treatment:</strong> ${taxInfo}
+                        <br><strong>Pre-tax Yield:</strong> ${results.ytm.toFixed(2)}%
+                        <br><strong>Post-tax Yield (30% slab):</strong> ${(results.ytm * 0.7).toFixed(2)}%
+                        <br><strong>Bond Type:</strong> ${bondType.charAt(0).toUpperCase() + bondType.slice(1)}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('analysisSection').style.display = '';
+        }
+
+        // Generate cash flow table with INR formatting
+        function generateCashFlowTable(faceValue, couponRate, yearsToMaturity, paymentFrequency, requiredYield) {
+            const periodsPerYear = paymentFrequency;
+            const totalPeriods = yearsToMaturity * periodsPerYear;
+            const periodYield = requiredYield / periodsPerYear;
+            const periodCoupon = (couponRate * faceValue) / periodsPerYear;
+
+            let tableHTML = `
+                <tr>
+                    <th>Period</th>
+                    <th>Date (Years)</th>
+                    <th>Coupon Payment</th>
+                    <th>Principal Payment</th>
+                    <th>Total Cash Flow</th>
+                    <th>Present Value</th>
+                    <th>Cumulative PV</th>
+                </tr>
+            `;
+
+            let cumulativePV = 0;
+
+            for (let t = 1; t <= totalPeriods; t++) {
+                const date = (t / periodsPerYear).toFixed(2);
+                const couponPayment = periodCoupon;
+                const principalPayment = t === totalPeriods ? faceValue : 0;
+                const totalCashFlow = couponPayment + principalPayment;
+                const presentValue = totalCashFlow / Math.pow(1 + periodYield, t);
+                cumulativePV += presentValue;
+
+                tableHTML += `
+                    <tr>
+                        <td>${t}</td>
+                        <td>${date}</td>
+                        <td>${formatINR(couponPayment)}</td>
+                        <td>${formatINR(principalPayment)}</td>
+                        <td>${formatINR(totalCashFlow)}</td>
+                        <td>${formatINR(presentValue)}</td>
+                        <td>${formatINR(cumulativePV)}</td>
+                    </tr>
+                `;
+            }
+
+            document.getElementById('cashFlowTable').innerHTML = tableHTML;
+            document.getElementById('cashFlowSection').style.display = '';
+        }
+
+        // Sensitivity analysis function
+        function performSensitivityAnalysis() {
+            if (!currentBondData) {
+                showToast("Please calculate a bond first!", "error");
+                return;
+            }
+
+            const yieldChanges = [-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2];
+            const priceData = [];
+            const labels = [];
+
+            yieldChanges.forEach(change => {
+                const newYield = currentBondData.requiredYield + (change / 100);
+                const results = calculateBondMetrics(
+                    currentBondData.faceValue,
+                    currentBondData.couponRate,
+                    currentBondData.yearsToMaturity,
+                    newYield,
+                    currentBondData.paymentFrequency
+                );
+                priceData.push(results.fairValue);
+                labels.push(`${(newYield * 100).toFixed(1)}%`);
+            });
+
+            createSensitivityChart(labels, priceData);
+            showToast("Sensitivity analysis completed!", "success");
+        }
+
+        // Create sensitivity chart
+        function createSensitivityChart(labels, priceData) {
+            const ctx = document.getElementById('bondChart').getContext('2d');
+            
+            if (bondChart) bondChart.destroy();
+
+            bondChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Bond Price (₹)',
+                        data: priceData,
+                        borderColor: '#00ffd5',
+                        backgroundColor: 'rgba(0, 255, 213, 0.1)',
+                        borderWidth: 3,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#00ffd5',
+                        pointBorderColor: '#00b39e',
+                        pointBorderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Bond Price Sensitivity to Yield Changes (Indian Markets)',
+                            color: '#00ffd5',
+                            font: { size: 18, weight: 'bold' }
+                        },
+                        legend: {
+                            labels: { color: '#cccccc' }
+                        },
+                        tooltip: {
+                            backgroundColor: '#1e1e1e',
+                            titleColor: '#00ffd5',
+                            bodyColor: '#cccccc',
+                            borderColor: '#333',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    return `Price: ${formatINR(context.parsed.y)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Yield to Maturity (%)',
+                                color: '#00ffd5',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: { color: '#cccccc' },
+                            grid: { color: '#333' }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Bond Price (₹)',
+                                color: '#00ffd5',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: { 
+                                color: '#cccccc',
+                                callback: function(value) {
+                                    return '₹' + (value/1000).toFixed(0) + 'K';
+                                }
+                            },
+                            grid: { color: '#333' }
+                        }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeInOutCubic'
+                    }
+                }
+            });
+
+            document.getElementById('chartSection').style.display = '';
+        }
+
+        // Compare bonds function with Indian examples
+        function compareBonds() {
+            if (!currentBondData) {
+                showToast("Please calculate a bond first!", "error");
+                return;
+            }
+
+            // Create comparison with different scenarios
+            const comparisons = [
+                { name: "Current Bond", ...currentBondData },
+                { name: "Higher Yield (+1%)", ...currentBondData, requiredYield: currentBondData.requiredYield + 0.01 },
+                { name: "Lower Yield (-1%)", ...currentBondData, requiredYield: currentBondData.requiredYield - 0.01 },
+                { name: "G-Sec Benchmark", ...currentBondData, requiredYield: 0.075, bondType: "government", creditRating: "AAA" }
+            ];
+
+            let comparisonHTML = '<div class="bond-comparison">';
+            
+            comparisons.forEach((bond, index) => {
+                const results = calculateBondMetrics(
+                    bond.faceValue,
+                    bond.couponRate,
+                    bond.yearsToMaturity,
+                    bond.requiredYield,
+                    bond.paymentFrequency
+                );
+
+                comparisonHTML += `
+                    <div class="bond-card ${index === 0 ? 'selected' : ''}">
+                        <h4>${bond.name}</h4>
+                        <div class="bond-detail">Price: ${formatINR(results.fairValue)}</div>
+                        <div class="bond-detail">YTM: ${results.ytm.toFixed(2)}%</div>
+                        <div class="bond-detail">Duration: ${results.duration.toFixed(2)}</div>
+                        <div class="bond-detail">Current Yield: ${results.currentYield.toFixed(2)}%</div>
+                    </div>
+                `;
+            });
+
+            comparisonHTML += '</div>';
+
+            // Add to analysis section
+            document.getElementById('analysisGrid').innerHTML += `
+                <div class="analysis-card" style="grid-column: 1 / -1;">
+                    <h4><i class="fa-solid fa-balance-scale"></i> Bond Comparison</h4>
+                    ${comparisonHTML}
+                </div>
+            `;
+
+            showToast("Bond comparison generated!", "success");
+        }
+
+        // Export analysis function
+        function exportAnalysis() {
+            if (!currentBondData) {
+                showToast("No data to export! Please calculate a bond first.", "error");
+                return;
+            }
+
+            let csv = "Bond Valuation Analysis Report (Indian Markets)\n";
+            csv += `Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}\n\n`;
+            
+            csv += "BOND DETAILS\n";
+            csv += "============\n";
+            csv += `Bond Name,${currentBondData.bondName}\n`;
+            csv += `Face Value,₹${currentBondData.faceValue.toLocaleString('en-IN')}\n`;
+            csv += `Coupon Rate,${(currentBondData.couponRate * 100).toFixed(2)}%\n`;
+            csv += `Years to Maturity,${currentBondData.yearsToMaturity}\n`;
+            csv += `Required Yield,${(currentBondData.requiredYield * 100).toFixed(2)}%\n`;
+            csv += `Payment Frequency,${currentBondData.paymentFrequency}x per year\n`;
+            csv += `Credit Rating,${currentBondData.creditRating}\n`;
+            csv += `Bond Type,${currentBondData.bondType}\n\n`;
+            
+            csv += "VALUATION RESULTS\n";
+            csv += "=================\n";
+            csv += `Fair Value,₹${currentBondData.fairValue.toLocaleString('en-IN', {maximumFractionDigits: 2})}\n`;
+            csv += `Current Yield,${currentBondData.currentYield.toFixed(2)}%\n`;
+            csv += `Yield to Maturity,${currentBondData.ytm.toFixed(2)}%\n`;
+            csv += `Duration,${currentBondData.duration.toFixed(2)} years\n`;
+            csv += `Modified Duration,${currentBondData.modifiedDuration.toFixed(2)}\n`;
+            csv += `Convexity,${currentBondData.convexity.toFixed(2)}\n`;
+            csv += `Premium/Discount,${currentBondData.premiumDiscount.toFixed(2)}%\n`;
+
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `bond_analysis_${new Date().toISOString().split('T')}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+            showToast("Analysis exported successfully!", "success");
+        }
+
+        // Reset form function
+        function resetForm() {
+            if (!confirm("Are you sure you want to reset all inputs and clear results?")) {
+                return;
+            }
+
+            // Reset form fields to Indian market defaults
+            document.getElementById('bondName').value = '';
+            document.getElementById('faceValue').value = '100000';
+            document.getElementById('couponRate').value = '7.5';
+            document.getElementById('yearsToMaturity').value = '10';
+            document.getElementById('requiredYield').value = '8';
+            document.getElementById('paymentFrequency').value = '2';
+            document.getElementById('currentPrice').value = '';
+            document.getElementById('creditRating').value = 'A+';
+            document.getElementById('bondType').value = 'corporate';
+
+            // Hide result sections
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('analysisSection').style.display = 'none';
+            document.getElementById('cashFlowSection').style.display = 'none';
+            document.getElementById('chartSection').style.display = 'none';
+
+            // Destroy chart
+            if (bondChart) {
+                bondChart.destroy();
+                bondChart = null;
+            }
+
+            // Reset data
+            currentBondData = null;
+
+            showToast("Form reset successfully!", "success");
+        }
+
+        // Toast notification function
+        function showToast(message, type = "success") {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add Enter key support for inputs
+            const inputs = document.querySelectorAll('input[type="number"], input[type="text"]');
+            inputs.forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        calculateBond();
+                    }
+                });
+            });
         });
-      });
-    });
-  </script>
-
-
-            <script></script>
-        
-    
-</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>
+    </script>
+</body>
+</html>
