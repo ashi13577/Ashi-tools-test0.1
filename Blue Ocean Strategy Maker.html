@@ -1,341 +1,1568 @@
 <!DOCTYPE html>
 <html>
 <head>
-            <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-SFBS0EZSPT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-SFBS0EZSPT');
-</script>
-            <style></style>
-        </head>
-        <body data-new-gr-c-s-check-loaded="14.1239.0" data-gr-ext-installed="">
-            
-
-
-  <meta charset="UTF-8">
-  <title>Blue Ocean Strategy Maker - Ashi Tools</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-/* ...theme and layout as before, see previous answers for details/brand... */
-:root {
-  --primary: #00ceea;
-  --accent: #2ddbaf;
-  --dark-bg: #0a1522;
-  --card-bg: #172230;
-  --text-light: #edfffc;
-  --border: #26475a;
-  --eliminate: #e74c3c;
-  --reduce: #f8c471;
-  --raise: #2980b9;
-  --create: #2ecc71;
-}
-body { font-family: 'Roboto', 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, var(--dark-bg), #233448 80%);
-  color: var(--text-light);margin:0;min-height:100vh;padding:0 0 30px 0;}
-.container{max-width:900px;margin:30px auto 0 auto;background:var(--card-bg);border-radius:18px;padding:30px 12px 26px 12px;border:1.2px solid var(--border);box-shadow:0 8px 36px 0 #11dde111,0 1.5px 8px #0005;}
-header {text-align:center;margin-bottom:18px;}
-h1 {color: var(--primary); font-size:2.1rem;}
-h2 {color:var(--primary); font-size:1.24rem;margin-top:24px;}
-.strategy-intro {background: #191f2c;border-left:5px solid var(--primary);padding:16px 18px;margin-bottom:13px;border-radius:9px;color:#e2f7f4;}
-.strategy-intro h3 {margin-top:0; color:var(--primary);}
-.strategy-table-section h3 {margin:12px 0 12px 0;color:var(--primary);}
-.strategy-form-row {display:flex;flex-wrap:wrap;gap:13px;align-items: center;margin-bottom:8px;}
-input, select, textarea, button {padding: 10px; border-radius: 6px; border: 1px solid #2b3d50; background: #172937; color: #f6fafd; font-size:1em; font-family:inherit;}
-input:focus, select:focus, textarea:focus{outline:none; border-color: var(--primary);background: #182d3c;}
-input, select {min-width: 128px;max-width:210px;}
-textarea {resize:vertical;min-width:190px;max-width:410px;}
-button {background: var(--primary);color: #30373b;border: none; cursor: pointer;font-weight:600;transition: .2s; box-shadow:0 1px 13px #11ffe133;}
-button:hover {background: var(--accent); color: #111;}
-.delete-btn{background:#e74c3c;color:#fff;padding:6px 10px;margin-left:5px;box-shadow:none;}
-.delete-btn:hover{background:#c0392b;}
-.action-btns { margin-top:16px; display:flex; gap:12px; }
-.add-demo-btn{background:#22ce7d; color:#161616; font-weight:700;}
-.clear-btn{background:#e74c3c; color:#fff;}
-.demo-tip {color: #aceedc; font-size:.97em;margin-top:6px;margin-bottom:8px;background:rgba(0,255,220,0.08); padding:8px 11px;border-radius:5px;}
-.strategy-canvas-section {margin:32px 0 22px 0;}
-.strategy-canvas-label {text-align:center;font-weight:600;color:#43ffe0;margin-bottom:7px;}
-#blueOceanQuad {max-width:660px;margin:0 auto 15px auto;background:#131f2a;border-radius:10px;box-shadow:0 1px 10px #0ff5;}
-#quadGrid {display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;}
-.blueo-quad {min-height:132px;padding:10px 10px 6px 16px;}
-.blueo-quad h4{margin:5px 0 6px 0;font-weight:700;font-size:1.07em;}
-.blueo-quad ul{padding-left:14px;margin:5px 0 0 0;list-style-type: disc;}
-.blueo-quad li{margin-bottom:2px;font-size:1em;font-weight:500;}
-.strategy-table {width: 100%;border-collapse: separate;border-spacing: 0;margin-bottom: 14px;background: #15202d;border-radius: 9px;overflow: hidden;}
-.strategy-table th, .strategy-table td {padding:12px 8px;text-align: left;}
-.strategy-table th {background: #102a32;color: var(--primary);border-bottom: 2.5px solid var(--border);}
-.strategy-table td {border-bottom: 1px solid #123;}
-.row-eliminate { background: rgba(231,76,60,0.09);}
-.row-reduce { background: rgba(248,196,113,0.11);}
-.row-raise { background: rgba(52,152,219,0.09);}
-.row-create { background: rgba(46,204,113,0.10);}
-.label-eliminate{background:#e74c3c;color:#fff;padding:3px 13px;border-radius:8px;}
-.label-reduce{background:#f8c471;color:#222;padding:3px 13px;border-radius:8px;}
-.label-raise{background:#2980b9;color:#fff;padding:3px 13px;border-radius:8px;}
-.label-create{background:#2ecc71;color:#fff;padding:3px 13px;border-radius:8px;}
-.toast {position: fixed; bottom: 28px; right: 25px; z-index:1999; background: var(--accent); color: #191f23; border-radius:7px; padding:15px 20px; font-size:1em;font-weight:600; box-shadow:0 3.5px 18px #0006;display:none;min-width:160px;text-align:center;}
-footer {text-align:center; margin-top:40px; color:#5bebcf;padding-top:20px;font-size:1em;border-top:2px solid #173440;line-height:1.65;}
-.insta-link { color: #e1306c; font-weight:600; background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;transition:all .18s;}
-.insta-link:hover{color:#fff;text-shadow:0 0 8px #e232b855;-webkit-text-fill-color:unset;}
-@media (max-width:600px){
-  .container{padding:3px 2vw;}
-  .strategy-table th, .strategy-table td { font-size:.92em; padding:7px 4px;}
-  textarea {min-width:110px;}
-  #blueOceanQuad{max-width:98vw;}
-}
-  </style>
-
-
-<div class="container">
-  <header>
-    <h1><i class="fa-solid fa-water"></i> Blue Ocean Strategy Maker</h1>
-    <div class="strategy-intro">
-      <h3>What is Blue Ocean Strategy?</h3>
-      <p>
-        <b>Blue Ocean Strategy</b> is about creating uncontested market space ("blue oceans") instead of fighting in saturated markets ("red oceans"). Use the <b>Four Actions Framework</b>:
-        </p><ul style="margin-bottom:4px;">
-          <li><b style="color:#e74c3c">Eliminate</b>: Which factors should be eliminated?</li>
-          <li><b style="color:#f8c471">Reduce</b>: Which factors should be reduced below industry standard?</li>
-          <li><b style="color:#2980b9">Raise</b>: Which factors should be raised above industry standard?</li>
-          <li><b style="color:#2ecc71">Create</b>: What new factors should be created?</li>
-        </ul>
-        <div style="margin-top:8px;">Use <b>Load Demo</b> for a Cirque du Soleil example!</div>
-      <p></p>
-    </div>
-  </header>
-  <section class="input-section">
-    <h2>Build Your Strategy Canvas</h2>
-    <div class="strategy-form-row">
-      <select id="actionType">
-        <option value="Eliminate">Eliminate</option>
-        <option value="Reduce">Reduce</option>
-        <option value="Raise">Raise</option>
-        <option value="Create">Create</option>
-      </select>
-      <input type="text" id="factor" placeholder="Factor (e.g., Delivery Time)" required="">
-      <textarea id="description" placeholder="Explain your strategic action here..."></textarea>
-      <button onclick="addRow()"><i class="fa-solid fa-plus"></i> Add Action</button>
-    </div>
-    <div class="action-btns">
-      <button class="add-demo-btn" onclick="loadDemo()"><i class="fa-solid fa-rocket"></i> Load Demo</button>
-      <button class="clear-btn" onclick="clearAll()"><i class="fa-solid fa-eraser"></i> Clear All</button>
-      <button class="add-item-btn" onclick="exportPDF()"><i class="fa-solid fa-file-pdf"></i> Export PDF</button>
-    </div>
-  </section>
-  <section class="strategy-canvas-section">
-    <div class="strategy-canvas-label">Four Actions Framework Quadrant (Web Only)</div>
-    <div id="blueOceanQuad">
-      <div id="quadGrid" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;">
-        <div id="quad-Eliminate" class="blueo-quad" style="border-right:2px solid #122a; border-bottom:2px solid #122a;"><h4 style="color:#e74c3c;">Eliminate <span style="color:#eee;font-size:0.94em;font-weight:400;">- Remove factors</span></h4><ul><li style="color:#adbbe2;">No action</li></ul></div>
-        <div id="quad-Reduce" class="blueo-quad" style="border-bottom:2px solid #122a;"><h4 style="color:#f8c471;">Reduce <span style="color:#eee;font-size:0.94em;font-weight:400;">- Below standard</span></h4><ul><li style="color:#adbbe2;">No action</li></ul></div>
-        <div id="quad-Raise" class="blueo-quad" style="border-right:2px solid #122a;"><h4 style="color:#2980b9;">Raise <span style="color:#eee;font-size:0.94em;font-weight:400;">- Above standard</span></h4><ul><li style="color:#adbbe2;">No action</li></ul></div>
-        <div id="quad-Create" class="blueo-quad"><h4 style="color:#2ecc71;">Create <span style="color:#eee;font-size:0.94em;font-weight:400;">- New factors</span></h4><ul><li style="color:#adbbe2;">No action</li></ul></div>
-      </div>
-    </div>
-  </section>
-  <section class="strategy-table-section">
-    <h3>Your Blue Ocean Strategic Moves</h3>
-    <table class="strategy-table" id="strategyTable">
-      <thead>
-        <tr>
-          <th>Action</th>
-          <th>Factor</th>
-          <th>Description / Reasoning</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody id="strategyTableBody"><tr><td colspan="4" style="text-align:center;color:#aff;">No actions added yet. Use the form above to start.</td></tr></tbody>
-    </table>
-  </section>
-  <footer>
-    Built with ❤️ by Ashi | Empowering tomorrow's management leaders<br>
-    Connect with me: 
-    <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank">
-      @ashish_singh_rajput_3
-    </a>
-  </footer>
-  <div class="toast" id="toast" style="display: none;">Canvas cleared.</div>
-</div>
-<script>
-let strategy = [];
-function getLabelHtml(type){
-  switch(type){
-    case 'Eliminate': return '<span class="label-eliminate">Eliminate</span>';
-    case 'Reduce': return '<span class="label-reduce">Reduce</span>';
-    case 'Raise': return '<span class="label-raise">Raise</span>';
-    case 'Create': return '<span class="label-create">Create</span>';
-  }
-}
-function renderTable(){
-  const tbody = document.getElementById('strategyTableBody');
-  tbody.innerHTML = "";
-  if(strategy.length === 0){
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:#aff;">No actions added yet. Use the form above to start.</td></tr>`;
-    drawQuad();
-    return;
-  }
-  strategy.forEach((row,i)=>{
-    tbody.innerHTML +=
-      `<tr class="row-${row.type.toLowerCase()}">
-        <td>${getLabelHtml(row.type)}</td>
-        <td>${row.factor}</td>
-        <td>${row.description}</td>
-        <td><button class="delete-btn" onclick="removeRow(${i})"><i class="fa-solid fa-trash"></i></button></td>
-      </tr>`;
-  });
-  drawQuad();
-}
-renderTable();
-function drawQuad(){
-  const Q = {Eliminate:[], Reduce:[], Raise:[], Create:[]};
-  strategy.forEach(row => { Q[row.type].push(row); });
-  const labels = {
-    Eliminate: {title:"Eliminate", color:"#e74c3c", hint:"Remove factors"},
-    Reduce: {title:"Reduce", color:"#f8c471", hint:"Below standard"},
-    Raise: {title:"Raise", color:"#2980b9", hint:"Above standard"},
-    Create: {title:"Create", color:"#2ecc71", hint:"New factors"}
-  };
-  ["Eliminate","Reduce","Raise","Create"].forEach(type=>{
-    const el = document.getElementById('quad-'+type);
-    el.innerHTML = `<h4 style="color:${labels[type].color};">${labels[type].title} <span style="color:#eee;font-size:0.94em;font-weight:400;">- ${labels[type].hint}</span></h4><ul>${Q[type].length===0 ? '<li style="color:#adbbe2;">No action</li>' : Q[type].map(f=>`<li style="color:${labels[type].color};">${f.factor}<span style="color:#d0fff6;font-weight:400;font-size:.95em;">${f.description?": "+f.description:""}</span></li>`).join('')}</ul>`;
-  });
-}
-function addRow(){
-  const type = document.getElementById('actionType').value;
-  const factor = document.getElementById('factor').value.trim();
-  const description = document.getElementById('description').value.trim();
-  if(!factor){ showToast('Factor is required'); return; }
-  strategy.push({type,factor,description});
-  document.getElementById('factor').value = '';
-  document.getElementById('description').value = '';
-  renderTable();
-  showToast('Strategy action added!');
-}
-function removeRow(idx){
-  strategy.splice(idx,1);
-  renderTable();
-}
-function loadDemo(){
-  strategy = [
-    { type: 'Eliminate', factor: 'Tips for Waiters', description: 'No tips — like Cirque du Soleil — from Blue Ocean case (does not add value for audience or business model).' },
-    { type: 'Eliminate', factor: 'Star Performers', description: 'Eliminated expensive star performers, reducing cost and dependence.' },
-    { type: 'Reduce', factor: 'Fun Fair Food', description: 'Reduced typical circus food and midway distractions.' },
-    { type: 'Raise', factor: 'Theme', description: 'Raised show theme and production value.' },
-    { type: 'Raise', factor: 'Venue Experience', description: 'Enhanced comfort, safety, and venue atmosphere.' },
-    { type: 'Create', factor: 'Storyline/Artistic Performance', description: 'Created plot and dance, new for adult crowd.' },
-    { type: 'Create', factor: 'Live Music', description: 'Original, customized musical scores.' }
-  ];
-  renderTable();
-  showToast('Demo loaded! You can now view and edit strategic actions.');
-}
-function clearAll(){
-  if(confirm('Clear the entire strategy canvas?')) {
-    strategy = [];
-    renderTable();
-    showToast('Canvas cleared.');
-  }
-}
-function showToast(txt){
-  let t=document.getElementById('toast');
-  t.textContent = txt; t.style.display="block";
-  setTimeout(()=>{ t.style.display="none"; },2000);
-}
-// PDF (no chart, professional report)
-function exportPDF() {
-  if(!strategy.length) return showToast("Add at least one row!");
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('p','pt','a4');
-  let y = 48;
-  doc.setFontSize(18); doc.setTextColor(12, 206, 234);
-  doc.text("Blue Ocean Strategy Report", 40, y); y+=22;
-  doc.setFontSize(11); doc.setTextColor(42,219,175);
-  doc.text("Four Actions Framework",40, y); y+=16;
-  doc.setTextColor(110); doc.setFontSize(9);
-  doc.text("Date: "+(new Date().toLocaleString()),40,y); y+=18;
-  doc.setFontSize(13); doc.setTextColor(44, 183, 191);
-  doc.text("Strategic Moves by Quadrant:",40,y); y+=12;
-  // Section definitions
-  const quadrants = [
-    {key:'Eliminate',  label:'Eliminate',  color:[231,76,60]},
-    {key:'Reduce',     label:'Reduce',     color:[248,196,113]},
-    {key:'Raise',      label:'Raise',      color:[52,152,219]},
-    {key:'Create',     label:'Create',     color:[46,204,113]}
-  ];
-  quadrants.forEach(q=>{
-    const items = strategy.filter(r=>r.type===q.label);
-    if(y>760) {doc.addPage(); y=38;}
-    doc.setFontSize(12); doc.setTextColor(...q.color);
-    doc.text(q.label, 48, y);
-    y+=8;
-    if(!items.length){
-      doc.setFontSize(9);doc.setTextColor(145); doc.text("  [ No actions listed ]",56,y); y+=10;
-    } else {
-      items.forEach(a=>{
-        doc.setFontSize(10); doc.setTextColor(...q.color);
-        let txt = a.factor + (a.description?(": "+a.description):"");
-        const lines = doc.splitTextToSize(txt, 410);
-        doc.text("- "+lines[0], 56, y); y+=12;
-        for(let l=1;l<lines.length;l++){ doc.text(lines[l], 62, y); y+=11;}
-      });
-    }
-    y+=6;
-  });
-  y+=6;
-  // Summary Table (PROFESSIONAL WRAP: NO OVERLAP)
-  doc.setFontSize(13);doc.setTextColor(11,190,231);if(y>760){doc.addPage();y=38;}
-  doc.text("All Blue Ocean Actions (Table):",40,y);y+=12;
-  doc.setFontSize(10);doc.setTextColor(55,180,210);
-  let headers=["Action","Factor","Description"];
-  doc.text(headers[0], 46, y);
-  doc.text(headers[1],105,y);
-  doc.text(headers[2], 180, y);
-  y+=4; doc.setDrawColor(180); doc.line(42,y,500,y); y+=8;
-
-  strategy.forEach((r,i)=>{
-    if(y>790) {doc.addPage();y=35;}
-    const color = {
-      Eliminate:[231,76,60],
-      Reduce:[248,196,113],
-      Raise:[52,152,219],
-      Create:[46,204,113]
-    }[r.type]||[50,50,50];
-    doc.setFontSize(9); doc.setTextColor(...color);
-    doc.text(r.type, 48, y);
-
-    // Factor
-    doc.setTextColor(35,170,190);
-    let facLines = doc.splitTextToSize(r.factor||"", 66);
-    facLines.forEach((fLine,i) => {
-      doc.text(fLine, 105, y + (i*11));
-    });
-
-    // Description, under factor, left-aligned
-    doc.setTextColor(90);
-    let descLines = doc.splitTextToSize(r.description||"", 310);
-    descLines.forEach((dLine, i) => {
-      doc.text(dLine, 105, y + (facLines.length+i)*11);
-    });
-    y += Math.max(facLines.length+descLines.length,1)*11;
-  });
-
-  // Footer
-  const pages = doc.internal.getNumberOfPages();
-  for(let i=1;i<=pages;i++){
-    doc.setPage(i);doc.setFontSize(8);doc.setTextColor(40,220,213);
-    doc.text("Blue Ocean Strategy | Ashi Tools | "+i+"/"+pages, 40, 820);
-  }
-  doc.save("blue_ocean_strategy.pdf");
-  showToast('PDF exported successfully!');
-}
-</script>
-
-
-            <script></script>
-        
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SFBS0EZSPT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-SFBS0EZSPT');
+    </script>
     
-</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>
+    <meta charset="UTF-8">
+    <title>Blue Ocean Strategy Maker - Advanced Strategic Planning Tool</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="Create comprehensive Blue Ocean Strategy using the Four Actions Framework. Export to PDF, save templates, and analyze competitive advantages.">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary: #00ceea;
+            --accent: #2ddbaf;
+            --dark-bg: #0a1522;
+            --card-bg: #172230;
+            --text-light: #edfffc;
+            --border: #26475a;
+            --eliminate: #e74c3c;
+            --reduce: #f8c471;
+            --raise: #2980b9;
+            --create: #2ecc71;
+            --warning: #f39c12;
+            --success: #27ae60;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body { 
+            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif; 
+            background: linear-gradient(135deg, var(--dark-bg), #233448 80%);
+            color: var(--text-light);
+            margin:0;
+            min-height:100vh;
+            padding:0 0 30px 0;
+            line-height: 1.6;
+        }
+
+        .container{
+            max-width:1100px;
+            margin:30px auto 0 auto;
+            background:var(--card-bg);
+            border-radius:18px;
+            padding:30px 20px;
+            border:1.2px solid var(--border);
+            box-shadow:0 8px 36px 0 #11dde111,0 1.5px 8px #0005;
+        }
+
+        header {
+            text-align:center;
+            margin-bottom:30px;
+        }
+
+        h1 {
+            color: var(--primary); 
+            font-size:2.4rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color:var(--primary); 
+            font-size:1.4rem;
+            margin-top:30px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .strategy-intro {
+            background: #191f2c;
+            border-left:5px solid var(--primary);
+            padding:20px;
+            margin-bottom:20px;
+            border-radius:10px;
+            color:#e2f7f4;
+        }
+
+        .strategy-intro h3 {
+            margin-top:0; 
+            color:var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab {
+            padding: 12px 20px;
+            background: transparent;
+            color: var(--text-light);
+            border: none;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: var(--dark-bg);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .strategy-form-row {
+            display:flex;
+            flex-wrap:wrap;
+            gap:15px;
+            align-items: center;
+            margin-bottom:15px;
+            background: #1a2530;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        input, select, textarea, button {
+            padding: 12px; 
+            border-radius: 8px; 
+            border: 1px solid #2b3d50; 
+            background: #172937; 
+            color: #f6fafd; 
+            font-size:1em; 
+            font-family:inherit;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus{
+            outline:none; 
+            border-color: var(--primary);
+            background: #182d3c;
+            box-shadow: 0 0 0 3px rgba(0, 206, 234, 0.1);
+        }
+
+        input, select {
+            min-width: 140px;
+            max-width:220px;
+        }
+
+        textarea {
+            resize:vertical;
+            min-width:200px;
+            max-width:450px;
+            min-height: 60px;
+        }
+
+        button {
+            background: var(--primary);
+            color: #30373b;
+            border: none; 
+            cursor: pointer;
+            font-weight:600;
+            transition: all 0.3s; 
+            box-shadow:0 2px 15px #11ffe133;
+        }
+
+        button:hover {
+            background: var(--accent); 
+            color: #111;
+            transform: translateY(-2px);
+        }
+
+        .delete-btn{
+            background:#e74c3c;
+            color:#fff;
+            padding:8px 12px;
+            margin-left:5px;
+            box-shadow:none;
+        }
+
+        .delete-btn:hover{
+            background:#c0392b;
+        }
+
+        .action-btns { 
+            margin-top:20px; 
+            display:flex; 
+            gap:15px; 
+            flex-wrap: wrap;
+        }
+
+        .add-demo-btn{background:#22ce7d; color:#161616; font-weight:700;}
+        .clear-btn{background:#e74c3c; color:#fff;}
+        .save-btn{background:#f39c12; color:#fff;}
+        .load-btn{background:#3498db; color:#fff;}
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #1a2530;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--eliminate), var(--reduce), var(--raise), var(--create));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: #1a2530;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .strategy-canvas-section {
+            margin:32px 0 22px 0;
+        }
+
+        .strategy-canvas-label {
+            text-align:center;
+            font-weight:600;
+            color:#43ffe0;
+            margin-bottom:15px;
+            font-size: 1.2rem;
+        }
+
+        #blueOceanQuad {
+            max-width:800px;
+            margin:0 auto 15px auto;
+            background:#131f2a;
+            border-radius:12px;
+            box-shadow:0 4px 20px #0ff5;
+            overflow: hidden;
+        }
+
+        #quadGrid {
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            grid-template-rows:1fr 1fr;
+        }
+
+        .blueo-quad {
+            min-height:150px;
+            padding:15px;
+            position: relative;
+        }
+
+        .blueo-quad h4{
+            margin:0 0 10px 0;
+            font-weight:700;
+            font-size:1.1em;
+        }
+
+        .blueo-quad ul{
+            padding-left:16px;
+            margin:10px 0 0 0;
+            list-style-type: disc;
+        }
+
+        .blueo-quad li{
+            margin-bottom:5px;
+            font-size:1em;
+            font-weight:500;
+            line-height: 1.4;
+        }
+
+        .strategy-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+            background: #15202d;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .strategy-table th, .strategy-table td {
+            padding:15px 12px;
+            text-align: left;
+        }
+
+        .strategy-table th {
+            background: #102a32;
+            color: var(--primary);
+            border-bottom: 3px solid var(--border);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .strategy-table td {
+            border-bottom: 1px solid #1a2836;
+        }
+
+        .row-eliminate { background: rgba(231,76,60,0.09);}
+        .row-reduce { background: rgba(248,196,113,0.11);}
+        .row-raise { background: rgba(52,152,219,0.09);}
+        .row-create { background: rgba(46,204,113,0.10);}
+
+        .label-eliminate{background:#e74c3c;color:#fff;padding:6px 16px;border-radius:20px;font-size:0.9rem;}
+        .label-reduce{background:#f8c471;color:#222;padding:6px 16px;border-radius:20px;font-size:0.9rem;}
+        .label-raise{background:#2980b9;color:#fff;padding:6px 16px;border-radius:20px;font-size:0.9rem;}
+        .label-create{background:#2ecc71;color:#fff;padding:6px 16px;border-radius:20px;font-size:0.9rem;}
+
+        .priority-selector {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-light);
+        }
+
+        .impact-meter {
+            width: 100%;
+            height: 6px;
+            background: #1a2530;
+            border-radius: 3px;
+            margin: 5px 0;
+        }
+
+        .impact-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .impact-low { background: #e74c3c; }
+        .impact-medium { background: #f39c12; }
+        .impact-high { background: #27ae60; }
+
+        .toast {
+            position: fixed; 
+            bottom: 30px; 
+            right: 30px; 
+            z-index:1999; 
+            background: var(--accent); 
+            color: #191f23; 
+            border-radius:10px; 
+            padding:15px 25px; 
+            font-size:1em;
+            font-weight:600; 
+            box-shadow:0 4px 25px #0008;
+            display:none;
+            min-width:200px;
+            text-align:center;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid var(--border);
+        }
+
+        .close {
+            color: var(--text-light);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--primary);
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .template-card {
+            background: #1a2530;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .validation-error {
+            color: var(--eliminate);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        footer {
+            text-align:center; 
+            margin-top:50px; 
+            color:#5bebcf;
+            padding-top:25px;
+            font-size:1em;
+            border-top:2px solid #173440;
+            line-height:1.8;
+        }
+
+        .insta-link { 
+            color: #e1306c; 
+            font-weight:600; 
+            background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+            -webkit-background-clip:text;
+            background-clip:text;
+            -webkit-text-fill-color:transparent;
+            transition:all .18s;
+            text-decoration: none;
+        }
+
+        .insta-link:hover{
+            color:#fff;
+            text-shadow:0 0 8px #e232b855;
+            -webkit-text-fill-color:unset;
+        }
+
+        @media (max-width:768px){
+            .container{padding:15px;}
+            .strategy-form-row {flex-direction: column; align-items: stretch;}
+            .strategy-table th, .strategy-table td { font-size:.9em; padding:10px 8px;}
+            textarea {min-width:100%;}
+            #blueOceanQuad{max-width:100%;}
+            .stats-grid {grid-template-columns: repeat(2, 1fr);}
+            .tabs {flex-direction: column;}
+            .action-btns {justify-content: center;}
+            h1 {font-size: 2rem;}
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fa-solid fa-water"></i> Blue Ocean Strategy Maker</h1>
+            <p class="subtitle">Advanced Strategic Planning & Analysis Tool</p>
+            <div class="strategy-intro">
+                <h3>What is Blue Ocean Strategy?</h3>
+                <p>
+                    <b>Blue Ocean Strategy</b> is about creating uncontested market space ("blue oceans") instead of fighting in saturated markets ("red oceans"). Use the <b>Four Actions Framework</b>:
+                </p>
+                <ul style="margin-bottom:10px;">
+                    <li><b style="color:#e74c3c">Eliminate</b>: Which factors should be eliminated?</li>
+                    <li><b style="color:#f8c471">Reduce</b>: Which factors should be reduced below industry standard?</li>
+                    <li><b style="color:#2980b9">Raise</b>: Which factors should be raised above industry standard?</li>
+                    <li><b style="color:#2ecc71">Create</b>: What new factors should be created?</li>
+                </ul>
+                <div style="margin-top:15px; padding: 10px; background: rgba(0,206,234,0.1); border-radius: 8px;">
+                    <strong>💡 Pro Tip:</strong> Use <b>Load Demo</b> for a Cirque du Soleil example, or explore templates to get started quickly!
+                </div>
+            </div>
+        </header>
+
+        <!-- Progress Indicator -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- Statistics Dashboard -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalActions">0</div>
+                <div class="stat-label">Total Actions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="eliminateCount">0</div>
+                <div class="stat-label">Eliminate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="reduceCount">0</div>
+                <div class="stat-label">Reduce</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="raiseCount">0</div>
+                <div class="stat-label">Raise</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="createCount">0</div>
+                <div class="stat-label">Create</div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('builder')">
+                <i class="fa-solid fa-hammer"></i> Strategy Builder
+            </button>
+            <button class="tab" onclick="switchTab('analysis')">
+                <i class="fa-solid fa-chart-line"></i> Analysis
+            </button>
+            <button class="tab" onclick="switchTab('templates')">
+                <i class="fa-solid fa-bookmark"></i> Templates
+            </button>
+        </div>
+
+        <!-- Strategy Builder Tab -->
+        <div id="builder" class="tab-content active">
+            <section class="input-section">
+                <h2>Build Your Strategy Canvas</h2>
+                <div class="strategy-form-row">
+                    <select id="actionType">
+                        <option value="Eliminate">Eliminate</option>
+                        <option value="Reduce">Reduce</option>
+                        <option value="Raise">Raise</option>
+                        <option value="Create">Create</option>
+                    </select>
+                    <input type="text" id="factor" placeholder="Factor (e.g., Delivery Time)" required>
+                    <textarea id="description" placeholder="Explain your strategic action and expected impact..."></textarea>
+                    <select id="priority" class="priority-selector">
+                        <option value="High">High Priority</option>
+                        <option value="Medium">Medium Priority</option>
+                        <option value="Low">Low Priority</option>
+                    </select>
+                    <select id="impact" class="priority-selector">
+                        <option value="High">High Impact</option>
+                        <option value="Medium">Medium Impact</option>
+                        <option value="Low">Low Impact</option>
+                    </select>
+                    <button onclick="addRow()"><i class="fa-solid fa-plus"></i> Add Action</button>
+                </div>
+                <div id="validationErrors"></div>
+                
+                <div class="action-btns">
+                    <button class="add-demo-btn" onclick="loadDemo()"><i class="fa-solid fa-rocket"></i> Load Demo</button>
+                    <button class="clear-btn" onclick="clearAll()"><i class="fa-solid fa-eraser"></i> Clear All</button>
+                    <button class="save-btn" onclick="saveTemplate()"><i class="fa-solid fa-save"></i> Save Template</button>
+                    <button class="load-btn" onclick="openTemplateModal()"><i class="fa-solid fa-folder-open"></i> Load Template</button>
+                    <button onclick="exportPDF()"><i class="fa-solid fa-file-pdf"></i> Export PDF</button>
+                    <button onclick="exportJSON()"><i class="fa-solid fa-download"></i> Export JSON</button>
+                </div>
+            </section>
+
+            <section class="strategy-canvas-section">
+                <div class="strategy-canvas-label">Four Actions Framework Quadrant</div>
+                <div id="blueOceanQuad">
+                    <div id="quadGrid">
+                        <div id="quad-Eliminate" class="blueo-quad" style="border-right:2px solid #1a2836; border-bottom:2px solid #1a2836;">
+                            <h4 style="color:#e74c3c;">Eliminate <span style="color:#eee;font-size:0.9em;font-weight:400;">- Remove factors</span></h4>
+                            <ul><li style="color:#adbbe2;">No actions yet</li></ul>
+                        </div>
+                        <div id="quad-Reduce" class="blueo-quad" style="border-bottom:2px solid #1a2836;">
+                            <h4 style="color:#f8c471;">Reduce <span style="color:#eee;font-size:0.9em;font-weight:400;">- Below standard</span></h4>
+                            <ul><li style="color:#adbbe2;">No actions yet</li></ul>
+                        </div>
+                        <div id="quad-Raise" class="blueo-quad" style="border-right:2px solid #1a2836;">
+                            <h4 style="color:#2980b9;">Raise <span style="color:#eee;font-size:0.9em;font-weight:400;">- Above standard</span></h4>
+                            <ul><li style="color:#adbbe2;">No actions yet</li></ul>
+                        </div>
+                        <div id="quad-Create" class="blueo-quad">
+                            <h4 style="color:#2ecc71;">Create <span style="color:#eee;font-size:0.9em;font-weight:400;">- New factors</span></h4>
+                            <ul><li style="color:#adbbe2;">No actions yet</li></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="strategy-table-section">
+                <h2>Your Blue Ocean Strategic Moves</h2>
+                <table class="strategy-table" id="strategyTable">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Factor</th>
+                            <th>Description / Reasoning</th>
+                            <th>Priority</th>
+                            <th>Impact</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="strategyTableBody">
+                        <tr><td colspan="6" style="text-align:center;color:#aff;">No actions added yet. Use the form above to start building your strategy.</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <!-- Analysis Tab -->
+        <div id="analysis" class="tab-content">
+            <section>
+                <h2>Strategy Analysis & Insights</h2>
+                <div id="analysisContent">
+                    <div style="background: #1a2530; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h3 style="color: var(--primary);">Strategic Balance Assessment</h3>
+                        <div id="balanceAnalysis"></div>
+                    </div>
+                    
+                    <div style="background: #1a2530; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h3 style="color: var(--primary);">Risk & Opportunity Matrix</h3>
+                        <div id="riskMatrix"></div>
+                    </div>
+
+                    <div style="background: #1a2530; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h3 style="color: var(--primary);">Implementation Roadmap</h3>
+                        <div id="roadmap"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Templates Tab -->
+        <div id="templates" class="tab-content">
+            <section>
+                <h2>Strategy Templates</h2>
+                <p style="color: #aaa; margin-bottom: 20px;">Choose from pre-built templates or browse saved strategies to kickstart your planning.</p>
+                <div class="template-grid" id="templateGrid">
+                    <!-- Templates will be populated by JavaScript -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Template Modal -->
+        <div id="templateModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeTemplateModal()">&times;</span>
+                <h2 style="color: var(--primary);">Save Strategy Template</h2>
+                <div style="margin: 20px 0;">
+                    <input type="text" id="templateName" placeholder="Template Name" style="width: 100%; margin-bottom: 10px;">
+                    <textarea id="templateDescription" placeholder="Template Description" style="width: 100%; height: 80px;"></textarea>
+                </div>
+                <button onclick="confirmSaveTemplate()" style="margin-right: 10px;">Save Template</button>
+                <button onclick="closeTemplateModal()" class="clear-btn">Cancel</button>
+            </div>
+        </div>
+
+        <footer>
+            Built with ❤️ by Ashi | Empowering tomorrow's strategic leaders<br>
+            Advanced Blue Ocean Strategy Planning Tool | 
+            <a class="insta-link" href="https://www.instagram.com/ashish_singh_rajput_3" target="_blank">
+                @ashish_singh_rajput_3
+            </a>
+        </footer>
+
+        <div class="toast" id="toast" style="display: none;">Action completed successfully!</div>
+    </div>
+
+    <script>
+        let strategy = [];
+        let currentTab = 'builder';
+
+        // Enhanced data structure for strategy items
+        function createStrategyItem(type, factor, description, priority = 'Medium', impact = 'Medium') {
+            return {
+                id: Date.now() + Math.random(),
+                type,
+                factor,
+                description,
+                priority,
+                impact,
+                dateCreated: new Date().toISOString()
+            };
+        }
+
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            currentTab = tabName;
+            
+            // Load specific content based on tab
+            if (tabName === 'analysis') {
+                updateAnalysis();
+            } else if (tabName === 'templates') {
+                loadTemplates();
+            }
+        }
+
+        // Enhanced validation
+        function validateInput() {
+            const factor = document.getElementById('factor').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const errors = [];
+            
+            if (!factor) {
+                errors.push('Factor is required');
+            } else if (factor.length < 3) {
+                errors.push('Factor must be at least 3 characters');
+            }
+            
+            if (description && description.length > 500) {
+                errors.push('Description must be less than 500 characters');
+            }
+            
+            // Check for duplicates
+            const duplicate = strategy.find(item => 
+                item.factor.toLowerCase() === factor.toLowerCase()
+            );
+            
+            if (duplicate) {
+                errors.push('This factor already exists in your strategy');
+            }
+            
+            const errorDiv = document.getElementById('validationErrors');
+            if (errors.length > 0) {
+                errorDiv.innerHTML = errors.map(error => 
+                    `<div class="validation-error"><i class="fa-solid fa-exclamation-triangle"></i> ${error}</div>`
+                ).join('');
+                return false;
+            } else {
+                errorDiv.innerHTML = '';
+                return true;
+            }
+        }
+
+        // Enhanced label HTML generation
+        function getLabelHtml(type) {
+            const icons = {
+                'Eliminate': 'fa-times-circle',
+                'Reduce': 'fa-arrow-down',
+                'Raise': 'fa-arrow-up',
+                'Create': 'fa-plus-circle'
+            };
+            
+            return `<span class="label-${type.toLowerCase()}">
+                <i class="fa-solid ${icons[type]}"></i> ${type}
+            </span>`;
+        }
+
+        // Priority and Impact HTML
+        function getPriorityHtml(priority) {
+            const colors = {
+                'High': '#e74c3c',
+                'Medium': '#f39c12',
+                'Low': '#27ae60'
+            };
+            return `<span style="color: ${colors[priority]}; font-weight: 600;">
+                <i class="fa-solid fa-flag"></i> ${priority}
+            </span>`;
+        }
+
+        function getImpactHtml(impact) {
+            const colors = {
+                'High': '#27ae60',
+                'Medium': '#f39c12',
+                'Low': '#e74c3c'
+            };
+            return `<div class="impact-meter">
+                <div class="impact-fill impact-${impact.toLowerCase()}" style="width: ${impact === 'High' ? '100%' : impact === 'Medium' ? '60%' : '30%'}"></div>
+            </div>
+            <span style="color: ${colors[impact]}; font-weight: 600; font-size: 0.9rem;">${impact} Impact</span>`;
+        }
+
+        // Enhanced table rendering
+        function renderTable() {
+            const tbody = document.getElementById('strategyTableBody');
+            tbody.innerHTML = "";
+            
+            if (strategy.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#aff;">No actions added yet. Use the form above to start building your strategy.</td></tr>`;
+                drawQuad();
+                updateStats();
+                updateProgress();
+                return;
+            }
+            
+            strategy.forEach((row, i) => {
+                tbody.innerHTML += `
+                    <tr class="row-${row.type.toLowerCase()}">
+                        <td>${getLabelHtml(row.type)}</td>
+                        <td><strong>${row.factor}</strong></td>
+                        <td>${row.description || '<em style="color: #888;">No description</em>'}</td>
+                        <td>${getPriorityHtml(row.priority)}</td>
+                        <td>${getImpactHtml(row.impact)}</td>
+                        <td>
+                            <button class="delete-btn" onclick="removeRow(${i})" title="Delete action">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+            
+            drawQuad();
+            updateStats();
+            updateProgress();
+        }
+
+        // Enhanced quadrant drawing
+        function drawQuad() {
+            const Q = {Eliminate: [], Reduce: [], Raise: [], Create: []};
+            strategy.forEach(row => Q[row.type].push(row));
+            
+            const labels = {
+                Eliminate: {title: "Eliminate", color: "#e74c3c", hint: "Remove factors"},
+                Reduce: {title: "Reduce", color: "#f8c471", hint: "Below standard"},
+                Raise: {title: "Raise", color: "#2980b9", hint: "Above standard"},
+                Create: {title: "Create", color: "#2ecc71", hint: "New factors"}
+            };
+            
+            ["Eliminate", "Reduce", "Raise", "Create"].forEach(type => {
+                const el = document.getElementById('quad-' + type);
+                const items = Q[type];
+                
+                el.innerHTML = `
+                    <h4 style="color:${labels[type].color};">
+                        ${labels[type].title} 
+                        <span style="color:#eee;font-size:0.9em;font-weight:400;">- ${labels[type].hint}</span>
+                    </h4>
+                    <ul>
+                        ${items.length === 0 ? 
+                            '<li style="color:#adbbe2;">No actions yet</li>' : 
+                            items.map(f => `
+                                <li style="color:${labels[type].color};">
+                                    <strong>${f.factor}</strong>
+                                    ${f.description ? 
+                                        `<span style="color:#d0fff6;font-weight:400;font-size:.95em;"><br>→ ${f.description}</span>` : 
+                                        ''
+                                    }
+                                    <div style="font-size: 0.8rem; color: #aaa; margin-top: 3px;">
+                                        Priority: ${f.priority} | Impact: ${f.impact}
+                                    </div>
+                                </li>
+                            `).join('')
+                        }
+                    </ul>`;
+            });
+        }
+
+        // Statistics update
+        function updateStats() {
+            const counts = {
+                total: strategy.length,
+                eliminate: strategy.filter(s => s.type === 'Eliminate').length,
+                reduce: strategy.filter(s => s.type === 'Reduce').length,
+                raise: strategy.filter(s => s.type === 'Raise').length,
+                create: strategy.filter(s => s.type === 'Create').length
+            };
+            
+            document.getElementById('totalActions').textContent = counts.total;
+            document.getElementById('eliminateCount').textContent = counts.eliminate;
+            document.getElementById('reduceCount').textContent = counts.reduce;
+            document.getElementById('raiseCount').textContent = counts.raise;
+            document.getElementById('createCount').textContent = counts.create;
+        }
+
+        // Progress bar update
+        function updateProgress() {
+            const total = strategy.length;
+            const maxRecommended = 16; // Good balance across 4 categories
+            const progress = Math.min((total / maxRecommended) * 100, 100);
+            
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // Enhanced add row function
+        function addRow() {
+            if (!validateInput()) return;
+            
+            const type = document.getElementById('actionType').value;
+            const factor = document.getElementById('factor').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const priority = document.getElementById('priority').value;
+            const impact = document.getElementById('impact').value;
+            
+            const newItem = createStrategyItem(type, factor, description, priority, impact);
+            strategy.push(newItem);
+            
+            // Clear form
+            document.getElementById('factor').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('priority').value = 'Medium';
+            document.getElementById('impact').value = 'Medium';
+            
+            renderTable();
+            showToast('Strategy action added successfully!');
+        }
+
+        function removeRow(idx) {
+            if (confirm('Are you sure you want to remove this strategic action?')) {
+                strategy.splice(idx, 1);
+                renderTable();
+                showToast('Action removed successfully');
+            }
+        }
+
+        // Enhanced demo with priorities and impacts
+        function loadDemo() {
+            strategy = [
+                createStrategyItem('Eliminate', 'Star Performers', 'Eliminated expensive star performers, reducing cost and dependence on individual talent', 'High', 'High'),
+                createStrategyItem('Eliminate', 'Animal Acts', 'Removed traditional animal performances due to ethical concerns and costs', 'High', 'Medium'),
+                createStrategyItem('Reduce', 'Fun and Humor', 'Reduced typical circus comedy to focus more on artistic performance', 'Medium', 'Low'),
+                createStrategyItem('Reduce', 'Venue Costs', 'Streamlined venue requirements while maintaining quality experience', 'Medium', 'Medium'),
+                createStrategyItem('Raise', 'Theme and Artistry', 'Elevated artistic themes and sophisticated choreography', 'High', 'High'),
+                createStrategyItem('Raise', 'Venue Comfort', 'Enhanced audience comfort with premium seating and facilities', 'Medium', 'High'),
+                createStrategyItem('Create', 'Storyline Integration', 'Created narrative-driven performances appealing to adult audiences', 'High', 'High'),
+                createStrategyItem('Create', 'Live Musical Scores', 'Developed original, customized musical compositions for each show', 'High', 'Medium')
+            ];
+            
+            renderTable();
+            showToast('Cirque du Soleil demo loaded! Explore and modify as needed.');
+        }
+
+        function clearAll() {
+            if (confirm('This will clear your entire strategy canvas. Are you sure?')) {
+                strategy = [];
+                renderTable();
+                showToast('Strategy canvas cleared successfully');
+            }
+        }
+
+        // Analysis functionality
+        function updateAnalysis() {
+            updateBalanceAnalysis();
+            updateRiskMatrix();
+            updateRoadmap();
+        }
+
+        function updateBalanceAnalysis() {
+            const counts = {
+                eliminate: strategy.filter(s => s.type === 'Eliminate').length,
+                reduce: strategy.filter(s => s.type === 'Reduce').length,
+                raise: strategy.filter(s => s.type === 'Raise').length,
+                create: strategy.filter(s => s.type === 'Create').length
+            };
+            
+            const total = strategy.length;
+            const balance = document.getElementById('balanceAnalysis');
+            
+            if (total === 0) {
+                balance.innerHTML = '<p style="color: #888;">Add strategic actions to see balance analysis.</p>';
+                return;
+            }
+            
+            // Calculate balance score
+            const idealBalance = total / 4;
+            const balanceScore = 100 - Math.abs(counts.eliminate - idealBalance) * 5 
+                                    - Math.abs(counts.reduce - idealBalance) * 5
+                                    - Math.abs(counts.raise - idealBalance) * 5
+                                    - Math.abs(counts.create - idealBalance) * 5;
+            
+            let recommendations = [];
+            
+            if (counts.eliminate === 0) recommendations.push("Consider what industry factors you could eliminate");
+            if (counts.create === 0) recommendations.push("Think about new value propositions to create");
+            if (Math.max(counts.eliminate, counts.reduce, counts.raise, counts.create) > total * 0.6) {
+                recommendations.push("Your strategy seems heavily focused on one area - consider more balance");
+            }
+            
+            balance.innerHTML = `
+                <div style="margin-bottom: 15px;">
+                    <strong>Balance Score: ${Math.round(balanceScore)}%</strong>
+                    <div style="width: 100%; height: 10px; background: #1a2530; border-radius: 5px; margin: 5px 0;">
+                        <div style="width: ${balanceScore}%; height: 100%; background: ${balanceScore > 70 ? '#27ae60' : balanceScore > 40 ? '#f39c12' : '#e74c3c'}; border-radius: 5px;"></div>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px;">
+                    <div style="text-align: center;">
+                        <div style="color: #e74c3c; font-size: 1.5rem; font-weight: bold;">${counts.eliminate}</div>
+                        <div style="font-size: 0.9rem;">Eliminate</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="color: #f8c471; font-size: 1.5rem; font-weight: bold;">${counts.reduce}</div>
+                        <div style="font-size: 0.9rem;">Reduce</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="color: #2980b9; font-size: 1.5rem; font-weight: bold;">${counts.raise}</div>
+                        <div style="font-size: 0.9rem;">Raise</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="color: #2ecc71; font-size: 1.5rem; font-weight: bold;">${counts.create}</div>
+                        <div style="font-size: 0.9rem;">Create</div>
+                    </div>
+                </div>
+                ${recommendations.length > 0 ? `
+                    <div style="background: rgba(243, 156, 18, 0.1); padding: 10px; border-radius: 5px; border-left: 3px solid #f39c12;">
+                        <strong>Recommendations:</strong>
+                        <ul style="margin: 5px 0 0 20px;">
+                            ${recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function updateRiskMatrix() {
+            const riskMatrix = document.getElementById('riskMatrix');
+            
+            if (strategy.length === 0) {
+                riskMatrix.innerHTML = '<p style="color: #888;">Add strategic actions to see risk analysis.</p>';
+                return;
+            }
+            
+            const highRisk = strategy.filter(s => s.priority === 'High' && s.impact === 'High');
+            const mediumRisk = strategy.filter(s => s.priority === 'Medium' || s.impact === 'Medium');
+            const lowRisk = strategy.filter(s => s.priority === 'Low' && s.impact === 'Low');
+            
+            riskMatrix.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <div style="background: rgba(231, 76, 60, 0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #e74c3c;">
+                        <h4 style="color: #e74c3c; margin: 0 0 10px 0;">High Priority & Impact (${highRisk.length})</h4>
+                        ${highRisk.length > 0 ? highRisk.map(item => `<div style="margin-bottom: 5px;">• ${item.factor}</div>`).join('') : '<em>None identified</em>'}
+                    </div>
+                    <div style="background: rgba(243, 156, 18, 0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #f39c12;">
+                        <h4 style="color: #f39c12; margin: 0 0 10px 0;">Medium Risk (${mediumRisk.length})</h4>
+                        ${mediumRisk.length > 0 ? mediumRisk.slice(0, 3).map(item => `<div style="margin-bottom: 5px;">• ${item.factor}</div>`).join('') : '<em>None identified</em>'}
+                        ${mediumRisk.length > 3 ? `<div style="color: #888; font-size: 0.9rem;">... and ${mediumRisk.length - 3} more</div>` : ''}
+                    </div>
+                    <div style="background: rgba(39, 174, 96, 0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #27ae60;">
+                        <h4 style="color: #27ae60; margin: 0 0 10px 0;">Lower Risk (${lowRisk.length})</h4>
+                        ${lowRisk.length > 0 ? lowRisk.slice(0, 3).map(item => `<div style="margin-bottom: 5px;">• ${item.factor}</div>`).join('') : '<em>None identified</em>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateRoadmap() {
+            const roadmap = document.getElementById('roadmap');
+            
+            if (strategy.length === 0) {
+                roadmap.innerHTML = '<p style="color: #888;">Add strategic actions to see implementation roadmap.</p>';
+                return;
+            }
+            
+            const highPriority = strategy.filter(s => s.priority === 'High').sort((a, b) => a.type === 'Eliminate' ? -1 : 1);
+            const mediumPriority = strategy.filter(s => s.priority === 'Medium');
+            const lowPriority = strategy.filter(s => s.priority === 'Low');
+            
+            roadmap.innerHTML = `
+                <div style="border-left: 3px solid var(--primary); padding-left: 20px;">
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #e74c3c; margin: 0 0 10px 0;">🚀 Phase 1: Immediate Actions (0-3 months)</h4>
+                        ${highPriority.length > 0 ? 
+                            highPriority.map(item => `
+                                <div style="background: rgba(231, 76, 60, 0.1); padding: 10px; margin: 5px 0; border-radius: 5px;">
+                                    <strong>${item.factor}</strong> (${item.type})
+                                    ${item.description ? `<br><em style="color: #aaa; font-size: 0.9rem;">${item.description}</em>` : ''}
+                                </div>
+                            `).join('') : 
+                            '<em style="color: #888;">No high-priority actions identified</em>'
+                        }
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #f39c12; margin: 0 0 10px 0;">⚡ Phase 2: Medium-term Actions (3-12 months)</h4>
+                        ${mediumPriority.slice(0, 4).map(item => `
+                            <div style="background: rgba(243, 156, 18, 0.1); padding: 10px; margin: 5px 0; border-radius: 5px;">
+                                <strong>${item.factor}</strong> (${item.type})
+                            </div>
+                        `).join('')}
+                        ${mediumPriority.length > 4 ? `<div style="color: #888;">... and ${mediumPriority.length - 4} more actions</div>` : ''}
+                    </div>
+                    
+                    <div>
+                        <h4 style="color: #27ae60; margin: 0 0 10px 0;">🌱 Phase 3: Long-term Actions (12+ months)</h4>
+                        ${lowPriority.length > 0 ? 
+                            lowPriority.slice(0, 3).map(item => `
+                                <div style="background: rgba(39, 174, 96, 0.1); padding: 10px; margin: 5px 0; border-radius: 5px;">
+                                    <strong>${item.factor}</strong> (${item.type})
+                                </div>
+                            `).join('') : 
+                            '<em style="color: #888;">Focus on immediate and medium-term actions first</em>'
+                        }
+                    </div>
+                </div>
+            `;
+        }
+
+        // Template management
+        function saveTemplate() {
+            if (strategy.length === 0) {
+                showToast('Add some strategic actions before saving a template');
+                return;
+            }
+            document.getElementById('templateModal').style.display = 'block';
+        }
+
+        function openTemplateModal() {
+            loadTemplates();
+            document.getElementById('templates').classList.add('active');
+            document.getElementById('builder').classList.remove('active');
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab')[2].classList.add('active');
+        }
+
+        function closeTemplateModal() {
+            document.getElementById('templateModal').style.display = 'none';
+        }
+
+        function confirmSaveTemplate() {
+            const name = document.getElementById('templateName').value.trim();
+            const description = document.getElementById('templateDescription').value.trim();
+            
+            if (!name) {
+                showToast('Please enter a template name');
+                return;
+            }
+            
+            const template = {
+                id: Date.now(),
+                name,
+                description,
+                strategy: [...strategy],
+                dateCreated: new Date().toISOString()
+            };
+            
+            let templates = JSON.parse(localStorage.getItem('blueOceanTemplates') || '[]');
+            templates.push(template);
+            localStorage.setItem('blueOceanTemplates', JSON.stringify(templates));
+            
+            closeTemplateModal();
+            showToast('Template saved successfully!');
+            loadTemplates();
+        }
+
+        function loadTemplates() {
+            const templates = JSON.parse(localStorage.getItem('blueOceanTemplates') || '[]');
+            const predefinedTemplates = [
+                {
+                    id: 'cirque',
+                    name: 'Cirque du Soleil',
+                    description: 'Classic Blue Ocean example - circus industry transformation',
+                    isPredefined: true
+                },
+                {
+                    id: 'netflix',
+                    name: 'Netflix Streaming',
+                    description: 'From DVD-by-mail to streaming revolution',
+                    isPredefined: true
+                },
+                {
+                    id: 'uber',
+                    name: 'Uber Rideshare',
+                    description: 'Transportation industry disruption model',
+                    isPredefined: true
+                }
+            ];
+            
+            const allTemplates = [...predefinedTemplates, ...templates];
+            const grid = document.getElementById('templateGrid');
+            
+            if (allTemplates.length === 0) {
+                grid.innerHTML = '<p style="color: #888; text-align: center; grid-column: 1/-1;">No templates available. Create your first strategy and save it as a template!</p>';
+                return;
+            }
+            
+            grid.innerHTML = allTemplates.map(template => `
+                <div class="template-card" onclick="loadTemplate('${template.id}', ${template.isPredefined || false})">
+                    <h4 style="color: var(--primary); margin: 0 0 10px 0;">
+                        ${template.isPredefined ? '<i class="fa-solid fa-star"></i> ' : ''}${template.name}
+                    </h4>
+                    <p style="color: #aaa; margin: 0 0 15px 0; font-size: 0.9rem;">${template.description}</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--accent); font-size: 0.8rem;">
+                            ${template.isPredefined ? 'Built-in Template' : new Date(template.dateCreated).toLocaleDateString()}
+                        </span>
+                        ${!template.isPredefined ? `
+                            <button onclick="event.stopPropagation(); deleteTemplate('${template.id}')" 
+                                    style="background: #e74c3c; padding: 5px 8px; font-size: 0.8rem;">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadTemplate(templateId, isPredefined) {
+            if (isPredefined) {
+                if (templateId === 'cirque') {
+                    loadDemo();
+                } else if (templateId === 'netflix') {
+                    loadNetflixTemplate();
+                } else if (templateId === 'uber') {
+                    loadUberTemplate();
+                }
+            } else {
+                const templates = JSON.parse(localStorage.getItem('blueOceanTemplates') || '[]');
+                const template = templates.find(t => t.id.toString() === templateId);
+                if (template) {
+                    strategy = [...template.strategy];
+                    renderTable();
+                    showToast(`Template "${template.name}" loaded successfully!`);
+                }
+            }
+            
+            // Switch back to builder tab
+            switchTab('builder');
+            document.querySelectorAll('.tab')[0].classList.add('active');
+            document.querySelectorAll('.tab')[1].classList.remove('active');
+            document.querySelectorAll('.tab')[2].classList.remove('active');
+        }
+
+        function loadNetflixTemplate() {
+            strategy = [
+                createStrategyItem('Eliminate', 'Physical Stores', 'Eliminated need for physical rental locations', 'High', 'High'),
+                createStrategyItem('Eliminate', 'Late Fees', 'Removed penalty-based revenue model', 'High', 'High'),
+                createStrategyItem('Reduce', 'Content Acquisition Costs', 'Reduced licensing costs through original content', 'Medium', 'High'),
+                createStrategyItem('Raise', 'Content Quality', 'Invested heavily in original programming', 'High', 'High'),
+                createStrategyItem('Raise', 'User Experience', 'Enhanced recommendation algorithms and interface', 'High', 'Medium'),
+                createStrategyItem('Create', 'Binge-Watching Culture', 'Released entire seasons at once', 'Medium', 'High'),
+                createStrategyItem('Create', 'Global Content Strategy', 'Localized content for international markets', 'High', 'High')
+            ];
+            renderTable();
+            showToast('Netflix streaming template loaded!');
+        }
+
+        function loadUberTemplate() {
+            strategy = [
+                createStrategyItem('Eliminate', 'Car Ownership Requirement', 'No need to own a vehicle for transportation', 'High', 'High'),
+                createStrategyItem('Eliminate', 'Cash Transactions', 'Cashless payment system', 'Medium', 'Medium'),
+                createStrategyItem('Reduce', 'Wait Times', 'Reduced average wait time for rides', 'High', 'High'),
+                createStrategyItem('Reduce', 'Geographic Limitations', 'Expanded beyond traditional taxi zones', 'Medium', 'High'),
+                createStrategyItem('Raise', 'Convenience', 'App-based booking and tracking', 'High', 'High'),
+                createStrategyItem('Raise', 'Vehicle Quality', 'Higher standards than traditional taxis', 'Medium', 'Medium'),
+                createStrategyItem('Create', 'Ride Sharing Economy', 'Created new income opportunity for drivers', 'High', 'High'),
+                createStrategyItem('Create', 'Dynamic Pricing', 'Supply and demand-based pricing model', 'Medium', 'Medium')
+            ];
+            renderTable();
+            showToast('Uber rideshare template loaded!');
+        }
+
+        function deleteTemplate(templateId) {
+            if (confirm('Are you sure you want to delete this template?')) {
+                let templates = JSON.parse(localStorage.getItem('blueOceanTemplates') || '[]');
+                templates = templates.filter(t => t.id.toString() !== templateId);
+                localStorage.setItem('blueOceanTemplates', JSON.stringify(templates));
+                loadTemplates();
+                showToast('Template deleted successfully');
+            }
+        }
+
+        // Export functions
+        function exportJSON() {
+            if (strategy.length === 0) {
+                showToast('Add some strategic actions before exporting');
+                return;
+            }
+            
+            const exportData = {
+                strategy,
+                metadata: {
+                    exportDate: new Date().toISOString(),
+                    toolVersion: '2.0',
+                    totalActions: strategy.length
+                }
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `blue-ocean-strategy-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            showToast('Strategy exported as JSON successfully!');
+        }
+
+        // Enhanced PDF export
+        function exportPDF() {
+            if (!strategy.length) {
+                showToast("Add at least one strategic action before exporting!");
+                return;
+            }
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'pt', 'a4');
+            let y = 50;
+            
+            // Header
+            doc.setFontSize(24);
+            doc.setTextColor(12, 206, 234);
+            doc.text("Blue Ocean Strategy Report", 40, y);
+            y += 30;
+            
+            doc.setFontSize(14);
+            doc.setTextColor(42, 219, 175);
+            doc.text("Four Actions Framework Analysis", 40, y);
+            y += 20;
+            
+            doc.setFontSize(10);
+            doc.setTextColor(110);
+            doc.text(`Generated: ${new Date().toLocaleString()}`, 40, y);
+            doc.text(`Total Actions: ${strategy.length}`, 300, y);
+            y += 30;
+            
+            // Executive Summary
+            doc.setFontSize(16);
+            doc.setTextColor(44, 183, 191);
+            doc.text("Executive Summary", 40, y);
+            y += 20;
+            
+            const counts = {
+                eliminate: strategy.filter(s => s.type === 'Eliminate').length,
+                reduce: strategy.filter(s => s.type === 'Reduce').length,
+                raise: strategy.filter(s => s.type === 'Raise').length,
+                create: strategy.filter(s => s.type === 'Create').length
+            };
+            
+            doc.setFontSize(10);
+            doc.setTextColor(90);
+            const summaryText = `This Blue Ocean Strategy contains ${strategy.length} strategic actions across the four action framework: ${counts.eliminate} eliminate, ${counts.reduce} reduce, ${counts.raise} raise, and ${counts.create} create actions. The strategy focuses on ${counts.create > counts.eliminate ? 'value innovation' : 'cost optimization'} as the primary driver.`;
+            
+            const summaryLines = doc.splitTextToSize(summaryText, 500);
+            summaryLines.forEach(line => {
+                doc.text(line, 40, y);
+                y += 12;
+            });
+            y += 20;
+            
+            // Strategic Actions by Quadrant
+            const quadrants = [
+                {key: 'Eliminate', label: 'Eliminate', color: [231, 76, 60], icon: '✕'},
+                {key: 'Reduce', label: 'Reduce', color: [248, 196, 113], icon: '↓'},
+                {key: 'Raise', label: 'Raise', color: [52, 152, 219], icon: '↑'},
+                {key: 'Create', label: 'Create', color: [46, 204, 113], icon: '+'}
+            ];
+            
+            quadrants.forEach(q => {
+                const items = strategy.filter(r => r.type === q.label);
+                
+                if (y > 700) {
+                    doc.addPage();
+                    y = 50;
+                }
+                
+                doc.setFontSize(14);
+                doc.setTextColor(...q.color);
+                doc.text(`${q.icon} ${q.label} (${items.length} actions)`, 40, y);
+                y += 20;
+                
+                if (!items.length) {
+                    doc.setFontSize(9);
+                    doc.setTextColor(145);
+                    doc.text("[ No actions listed ]", 60, y);
+                    y += 15;
+                } else {
+                    items.forEach(action => {
+                        if (y > 750) {
+                            doc.addPage();
+                            y = 50;
+                        }
+                        
+                        doc.setFontSize(11);
+                        doc.setTextColor(...q.color);
+                        doc.text(`• ${action.factor}`, 60, y);
+                        y += 15;
+                        
+                        if (action.description) {
+                            doc.setFontSize(9);
+                            doc.setTextColor(70);
+                            const descLines = doc.splitTextToSize(action.description, 450);
+                            descLines.forEach(line => {
+                                doc.text(line, 75, y);
+                                y += 11;
+                            });
+                        }
+                        
+                        // Priority and Impact
+                        doc.setFontSize(8);
+                        doc.setTextColor(100);
+                        doc.text(`Priority: ${action.priority} | Impact: ${action.impact}`, 75, y);
+                        y += 15;
+                    });
+                }
+                y += 10;
+            });
+            
+            // Add detailed table
+            if (y > 600) {
+                doc.addPage();
+                y = 50;
+            }
+            
+            doc.setFontSize(16);
+            doc.setTextColor(11, 190, 231);
+            doc.text("Detailed Action Matrix", 40, y);
+            y += 25;
+            
+            // Table headers
+            doc.setFontSize(10);
+            doc.setTextColor(55, 180, 210);
+            const headers = ["Action", "Factor", "Priority", "Impact", "Description"];
+            const colWidths = [60, 120, 60, 60, 220];
+            let x = 40;
+            
+            headers.forEach((header, i) => {
+                doc.text(header, x, y);
+                x += colWidths[i];
+            });
+            
+            y += 5;
+            doc.setDrawColor(180);
+            doc.line(40, y, 520, y);
+            y += 15;
+            
+            strategy.forEach((action, i) => {
+                if (y > 750) {
+                    doc.addPage();
+                    y = 50;
+                }
+                
+                const color = {
+                    Eliminate: [231, 76, 60],
+                    Reduce: [248, 196, 113],
+                    Raise: [52, 152, 219],
+                    Create: [46, 204, 113]
+                }[action.type] || [50, 50, 50];
+                
+                x = 40;
+                doc.setFontSize(9);
+                
+                // Action type
+                doc.setTextColor(...color);
+                doc.text(action.type, x, y);
+                x += colWidths[0];
+                
+                // Factor
+                doc.setTextColor(35, 170, 190);
+                const factorLines = doc.splitTextToSize(action.factor, colWidths[1] - 5);
+                doc.text(factorLines[0], x, y);
+                x += colWidths[1];
+                
+                // Priority
+                doc.setTextColor(90);
+                doc.text(action.priority, x, y);
+                x += colWidths[2];
+                
+                // Impact
+                doc.text(action.impact, x, y);
+                x += colWidths[3];
+                
+                // Description
+                if (action.description) {
+                    const descLines = doc.splitTextToSize(action.description, colWidths[4] - 5);
+                    doc.text(descLines[0], x, y);
+                }
+                
+                y += 20;
+            });
+            
+            // Footer
+            const pages = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pages; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.setTextColor(40, 220, 213);
+                doc.text(`Blue Ocean Strategy Maker | Advanced Strategic Planning Tool | Page ${i}/${pages}`, 40, 820);
+            }
+            
+            doc.save(`blue-ocean-strategy-${new Date().toISOString().split('T')[0]}.pdf`);
+            showToast('Enhanced PDF exported successfully!');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize
+        renderTable();
+        
+        // Handle file import
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (file && file.type === 'application/json') {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (data.strategy && Array.isArray(data.strategy)) {
+                            strategy = data.strategy;
+                            renderTable();
+                            showToast('Strategy imported successfully!');
+                        } else {
+                            showToast('Invalid file format');
+                        }
+                    } catch (error) {
+                        showToast('Error reading file');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Add import button to action buttons (you can add this to the HTML if needed)
+        window.addEventListener('load', function() {
+            const actionBtns = document.querySelector('.action-btns');
+            const importBtn = document.createElement('input');
+            importBtn.type = 'file';
+            importBtn.accept = '.json';
+            importBtn.style.display = 'none';
+            importBtn.addEventListener('change', handleFileImport);
+            actionBtns.appendChild(importBtn);
+            
+            const importTrigger = document.createElement('button');
+            importTrigger.innerHTML = '<i class="fa-solid fa-upload"></i> Import JSON';
+            importTrigger.onclick = () => importBtn.click();
+            actionBtns.appendChild(importTrigger);
+        });
+    </script>
+</body>
+</html>
